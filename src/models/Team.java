@@ -1,3 +1,8 @@
+package models;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+
 public class Team {
 
     // private variables
@@ -8,7 +13,7 @@ public class Team {
 
     // private team vars
     private int teamNumber;
-    private string teamName;
+    private String teamName;
 
     // private connections
     private ArrayList<Heat> heats;
@@ -18,7 +23,7 @@ public class Team {
     private Calendar endTime;
     private Seconds totalSeconds;
 
-    public Team(TeamType teamType, Sitrep sitrep, LeagueType teamLeague, String notes, int teamNumber, string teamName) {
+    public Team(TeamType teamType, Sitrep sitrep, LeagueType teamLeague, String notes, int teamNumber, String teamName) {
         this.teamType = teamType;
         this.sitRep = sitrep;
         this.teamLeague = teamLeague;

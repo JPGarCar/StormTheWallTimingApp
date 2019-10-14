@@ -1,17 +1,19 @@
-import java.lang.Calendar;
+package models;
+
+import java.util.Calendar;
 
 public class Seconds {
-    private numSeconds = int;
+    private int numSeconds;
 
     public Seconds(int seconds) {
         numSeconds = seconds;
     }
 
-    public Seconds(Calenar date1, Calendar date2) {
+    public Seconds(Calendar date1, Calendar date2) {
 
     }
 
-    public getSeconds() {
+    public int getSeconds() {
         return numSeconds;
     }
 }

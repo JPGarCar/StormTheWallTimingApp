@@ -1,3 +1,8 @@
+package models;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+
 public class Day {
     //private vars
     private Calendar day;
