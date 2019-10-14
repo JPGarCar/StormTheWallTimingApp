@@ -1,0 +1,26 @@
+public class Heat {
+
+    // private vars
+    private Calendar timeToStart;
+    private LeagueType leagueType;
+    private TeamType teamType;
+    private int heatNumber;
+
+    // private time vars
+    private Calendar startTime;
+
+    // private connections
+    private ArrayList<Team> teams;
+    private Day dayToRace;
+
+    public Heat(Calendar timeToStart, LeagueType leagueType, TeamType teamType, int heatNumber, Day dayToRace) {
+        this.timeToStart = timeToStart;
+        this.leagueType = leagueType;
+        this.teamType = teamType;
+        this.heatNumber = heatNumber;
+
+        teams = new ArrayList<Team>();
+        this.dayToRace = dayToRace;
+
+    }
+}

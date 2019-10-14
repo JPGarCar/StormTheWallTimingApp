@@ -1,0 +1,7 @@
+public enum TeamType {
+    COREC = "CoRec";
+    WOMEN = "Women";
+    OPEN = "Open";
+    IRON = "Ironman";
+    ULTRA = "Ultra Ironman";
+}
