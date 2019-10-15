@@ -25,12 +25,14 @@ public class FinalTime {
         calculateFinalTime();
     }
 
+    // MODIFIES: this
+    // EFFECTS: add a new start and stop time
     public void addTimes(Calendar startTime, Calendar stopTime) {
         this.startTime = startTime;
         this.stopTime = stopTime;
     }
 
-
+    // EFFECTS: public function to call calculateSeconds and calculateFinalTime
     public void calculate() {
         if (startTime != null && stopTime != null) {
             calculateSeconds();
@@ -52,7 +54,20 @@ public class FinalTime {
         minutes = (seconds / 60);
         seconds = seconds % 60;
         milliseconds = millisecondOfSet % 1000;
-
     }
+
+    public int getMinutes() {
+        return minutes;
+    }
+
+    public int getSeconds() {
+        return seconds;
+    }
+
+    public int getMilliseconds() {
+        return milliseconds;
+    }
+
+
 
 }

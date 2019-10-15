@@ -26,6 +26,35 @@ public class Heat {
 
         teams = new ArrayList<Team>();
         this.dayToRace = dayToRace;
-
     }
+
+    public int getHeatNumber() {
+        return heatNumber;
+    }
+
+    public LeagueType getLeagueType() {
+        return leagueType;
+    }
+
+    public TeamType getTeamType() {
+        return teamType;
+    }
+
+    public Day getDayToRace() {
+        return dayToRace;
+    }
+
+    public Calendar getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Calendar startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getTimeToStartString() {
+        return timeToStart.get(Calendar.HOUR_OF_DAY) + ":" + timeToStart.get(Calendar.MINUTE);
+    }
+
+
 }
