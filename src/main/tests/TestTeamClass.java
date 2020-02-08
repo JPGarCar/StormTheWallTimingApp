@@ -51,7 +51,7 @@ public class TestTeamClass {
     @Test
     public void testAddingHeats() {
         Day day = new Day(Calendar.getInstance(),1);
-        Heat heat = new Heat(Calendar.getInstance(), LeagueType.COMP, TeamType.COREC, 1, day);
+        Heat heat = new Heat(null, LeagueType.COMP, TeamType.COREC, 1, day);
         team.addHeat(heat);
         assertTrue(team.getHeats().contains(heat));
         assertEquals(1, team.getRemainingHeats().size());

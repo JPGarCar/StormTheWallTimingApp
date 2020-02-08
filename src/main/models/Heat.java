@@ -27,7 +27,7 @@ public class Heat {
         this.teamType = teamType;
         this.heatNumber = heatNumber;
 
-        teams = new ArrayList<Team>();
+        teams = new ArrayList<>();
         this.dayToRace = dayToRace;
     }
 
@@ -67,12 +67,18 @@ public class Heat {
 
     // EFFECTS: add a team to the heat
     public void addTeam(Team team) {
-        teams.add(team);
+        if (!teams.contains(team)) {
+            teams.add(team);
+        }
     }
 
     // EFFECTS: add all the teams from a list of teams
     public void addTeams(ArrayList<Team> teams) {
-        teams.addAll(teams);
+        for (Team team : teams) {
+            addTeam(team);
+        }
     }
+
+
 
 }
