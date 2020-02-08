@@ -34,7 +34,23 @@ public class Day {
 
     // EFFECTS: add a heat to the list of heats
     public void addHeat(Heat heat) {
-        heats.add(heat);
+        if (!heats.contains(heat)) {
+            heats.add(heat);
+            heat.setDayToRace(this);
+        }
+    }
+
+    // EFFECTS: adds all the heats to this day
+    public void addHeats(ArrayList<Heat> heats) {
+        for (Heat heat : heats) {
+            addHeat(heat);
+        }
+    }
+
+    // EFFECTS: remove the heat from this day
+    public void removeHeat(Heat heat) {
+        heats.remove(heat);
+        // TODO delete the heat object by setting everything to null
     }
 
     // EFFECTS: Return the number of heats in the day

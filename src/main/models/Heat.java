@@ -28,7 +28,7 @@ public class Heat {
         this.heatNumber = heatNumber;
 
         teams = new ArrayList<>();
-        this.dayToRace = dayToRace;
+        setDay(dayToRace);
     }
 
     // GETTERS AND SETTERS
@@ -60,6 +60,12 @@ public class Heat {
         this.startTime = startTime;
     }
 
+    public void setDayToRace(Day dayToRace) {
+        if (this.dayToRace == null) {
+            setDay(dayToRace);
+        }
+    }
+
     // EFFECTS: return the time to start as a string
     public String getTimeToStartString() {
         return timeToStart.get(Calendar.HOUR_OF_DAY) + ":" + timeToStart.get(Calendar.MINUTE);
@@ -86,6 +92,12 @@ public class Heat {
             teams.remove(team);
             team.removeHeat(this);
         }
+    }
+
+    // EFFECTS: add a day to the heat and this heat to that day
+    private void setDay(Day day) {
+        this.dayToRace = day;
+        day.addHeat(this);
     }
 
 
