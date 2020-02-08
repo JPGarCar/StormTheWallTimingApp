@@ -73,6 +73,8 @@ public class Team {
     }
 
     //SETTERS
+
+    // TODO something to think is the fact that there will be multiple start and end and final times after the first round so it might be good to change final time to a list and all Final times have a heat connected to them.
     public void setStartTime(Calendar startTime) {
         this.startTime = startTime;
     }
