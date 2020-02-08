@@ -12,12 +12,17 @@ public class TeamHeat {
         this.heat = heat;
     }
 
-    public void addEndTime(Calendar endTime) {
+    public void setEndTime(Calendar endTime) {
         this.endTime = endTime;
-        finalTime = new FinalTime(heat.getStartTime(), this.endTime);
+        finalTime = new FinalTime(heat.getStartTime(), endTime);
     }
 
     public FinalTime getFinalTime() {
         return finalTime;
+    }
+
+    // EFFECTS: return the heat´s number associated with the TeamHeat
+    public int getHeatNumber() {
+        return heat.getHeatNumber();
     }
 }

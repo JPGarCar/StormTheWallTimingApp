@@ -15,15 +15,18 @@ public class TestFinalTimeClass {
     @BeforeEach
     public void BeforeEach() {
         Calendar calendarFinal = Calendar.getInstance();
+        Calendar startTime = Calendar.getInstance();
+        startTime.clear();
+        startTime.setTimeInMillis(calendarFinal.getTimeInMillis());
         calendarFinal.add(Calendar.MINUTE, 5);
-        finalTime = new FinalTime(Calendar.getInstance(), calendarFinal);
+        finalTime = new FinalTime(startTime, calendarFinal);
     }
 
     @Test
     public void testPrivateCalculations() {
-        assertEquals(5, finalTime.getMinutes());
-        assertEquals(0, finalTime.getSeconds());
         assertEquals(0, finalTime.getMilliseconds());
+        assertEquals(0, finalTime.getSeconds());
+        assertEquals(5, finalTime.getMinutes());
     }
 
     @Test

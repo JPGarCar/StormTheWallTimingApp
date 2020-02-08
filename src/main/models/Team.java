@@ -21,22 +21,24 @@ public class Team {
 
     // private connections
     private ArrayList<Heat> heats;
+    private ArrayList<TeamHeat> doneHeats;
+    private ArrayList<TeamHeat> remainingHeats;
 
     // private time vars
-    private Calendar startTime;
-    private Calendar endTime;
-    private FinalTime finalTime;
 
     // CONSTRUCTOR
-    public Team(TeamType teamType, Sitrep sitrep, LeagueType teamLeague, String notes, int teamNumber, String teamName) {
+    public Team(TeamType teamType, LeagueType teamLeague, int teamNumber, String teamName) {
         this.teamType = teamType;
-        this.sitRep = sitrep;
         this.teamLeague = teamLeague;
-        this.notes = notes;
         this.teamNumber = teamNumber;
         this.teamName = teamName;
+        this.sitRep = null;
+        this.notes = "";
 
-        heats = new ArrayList<Heat>();
+        heats = new ArrayList<>();
+        doneHeats = new ArrayList<>();
+        remainingHeats = new ArrayList<>();
+
     }
 
     // GETTERS
@@ -64,47 +66,66 @@ public class Team {
         return teamLeague;
     }
 
-    public FinalTime getFinalTime() {
-        return finalTime;
-    }
-
     public ArrayList<Heat> getHeats() {
         return heats;
     }
 
-    //SETTERS
-
-    // TODO something to think is the fact that there will be multiple start and end and final times after the first round so it might be good to change final time to a list and all Final times have a heat connected to them.
-    public void setStartTime(Calendar startTime) {
-        this.startTime = startTime;
+    public ArrayList<TeamHeat> getRemainingHeats() {
+        return remainingHeats;
     }
 
-    public void setEndTime(Calendar endTime) {
-        this.endTime = endTime;
-        setFinalTime();
+    public ArrayList<TeamHeat> getDoneHeats() {
+        return doneHeats;
     }
 
-    public void setHeats(ArrayList<Heat> heats) {
-        this.heats = heats;
+    // EFFECTS: set the end time to the appropriate TeamHeat, depends on the heat number given.
+    //          will also move the TeamHeat who got a final time to the done heat list
+    public void setEndTime(int heatNumber, Calendar endTime) {
+        for (int i = 0; i < remainingHeats.size(); i++) {
+            TeamHeat remainingHeat = remainingHeats.get(i);
+            if (remainingHeat.getHeatNumber() == heatNumber) {
+                remainingHeat.setEndTime(endTime);
+                doneHeats.add(remainingHeat);
+                remainingHeats.remove(remainingHeat);
+                i--;
+            }
+        }
     }
 
+    // EFFECTS: add the heats in the input array to the heats array and the remaining heats queue
+    public void addHeats(ArrayList<Heat> heats) {
+        for (Heat heat : heats) {
+            addHeat(heat);
+        }
+    }
+
+    // Helper function: creates a TeamHeat out of a Heat
+    private TeamHeat heatToTeamHeat(Heat heat) {
+        return new TeamHeat(heat);
+    }
+
+    // EFFECTS: add one heat to the heat array and remaining heat queue
     public void addHeat(Heat heat) {
         if (!heats.contains(heat)) {
             heats.add(heat);
+            remainingHeats.add(heatToTeamHeat(heat));
         }
         else {
             // TODO add exception
         }
     }
 
+    // EFFECTS: add notes to the note section
     public void addNotes(String notes) {
-        this.notes += "/n" + notes;
+        if (this.notes.equals("")) {
+            this.notes += notes;
+        } else {
+            this.notes += "\n" + notes;
+        }
     }
 
-    // MODIFIES: this
-    // EFFECTS: calls a new FinalTime
-    private void setFinalTime() {
-        finalTime = new FinalTime(startTime, endTime);
+    // EFFECTS: set the sitrep
+    public void setSitRep(Sitrep sitRep) {
+        this.sitRep = sitRep;
     }
-
 }
