@@ -1,5 +1,8 @@
 package models;
 
+import models.enums.LeagueType;
+import models.enums.TeamType;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -28,6 +31,7 @@ public class Heat {
         this.dayToRace = dayToRace;
     }
 
+    // GETTERS AND SETTERS
     public int getHeatNumber() {
         return heatNumber;
     }
@@ -48,13 +52,27 @@ public class Heat {
         return startTime;
     }
 
+    public ArrayList<Team> getTeams() {
+        return teams;
+    }
+
     public void setStartTime(Calendar startTime) {
         this.startTime = startTime;
     }
 
+    // EFFECTS: return the time to start as a string
     public String getTimeToStartString() {
         return timeToStart.get(Calendar.HOUR_OF_DAY) + ":" + timeToStart.get(Calendar.MINUTE);
     }
 
+    // EFFECTS: add a team to the heat
+    public void addTeam(Team team) {
+        teams.add(team);
+    }
+
+    // EFFECTS: add all the teams from a list of teams
+    public void addTeams(ArrayList<Team> teams) {
+        teams.addAll(teams);
+    }
 
 }

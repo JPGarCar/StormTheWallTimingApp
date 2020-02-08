@@ -1,7 +1,5 @@
 package models;
 
-import com.sun.istack.internal.localization.NullLocalizable;
-
 import java.util.Calendar;
 
 public class FinalTime {
@@ -14,9 +12,6 @@ public class FinalTime {
     // private time vars
     private Calendar startTime;
     private Calendar stopTime;
-
-    public FinalTime() {
-    }
 
     public FinalTime(Calendar startTime, Calendar stopTime) {
         this.startTime = startTime;
@@ -56,6 +51,7 @@ public class FinalTime {
         milliseconds = millisecondOfSet % 1000;
     }
 
+    // getters
     public int getMinutes() {
         return minutes;
     }

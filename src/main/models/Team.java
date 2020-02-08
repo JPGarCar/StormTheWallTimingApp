@@ -1,5 +1,9 @@
 package models;
 
+import models.enums.LeagueType;
+import models.enums.Sitrep;
+import models.enums.TeamType;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
