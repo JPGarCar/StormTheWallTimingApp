@@ -67,6 +67,8 @@ public class TestTeamClass {
         team.addHeats(heats);
         assertEquals(3, team.getHeats().size());
         assertEquals(3, team.getRemainingHeats().size());
+
+        assertEquals(1, heat.getTeams().size());
     }
 
     @Test
@@ -86,7 +88,21 @@ public class TestTeamClass {
         assertFalse(team.getHeats().isEmpty());
     }
 
+    @Test
+    public void TestRemoveHeat() {
+        Day day = new Day(Calendar.getInstance(),1);
+        Heat heat = new Heat(null, LeagueType.COMP, TeamType.COREC, 1, day);
+        team.addHeat(heat);
+        assertEquals(1, team.getHeats().size());
+        assertFalse(heat.getTeams().isEmpty());
 
+        team.removeHeat(heat);
+        assertTrue(team.getHeats().isEmpty());
+        assertTrue(team.getRemainingHeats().isEmpty());
+        assertTrue(team.getDoneHeats().isEmpty());
+        assertTrue(heat.getTeams().isEmpty());
+
+    }
 
 
 

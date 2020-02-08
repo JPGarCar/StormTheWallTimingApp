@@ -52,5 +52,24 @@ public class TestHeatClass {
         heat.addTeams(teams);
         assertEquals(3, heat.getTeams().size());
 
+        assertEquals(1, team.getHeats().size());
+
     }
+
+    @Test
+    public void TestRemoveTeam() {
+        Calendar timeToStart = Calendar.getInstance();
+        Day day = new Day(Calendar.getInstance(), 1);
+        heat = new Heat(timeToStart, LeagueType.JFF, TeamType.OPEN, 123, day);
+
+        Team team = new Team(TeamType.COREC, LeagueType.COMP, 312, "The Storm Troopers");
+        heat.addTeam(team);
+        assertFalse(heat.getTeams().isEmpty());
+
+        heat.removeTeam(team);
+        assertTrue(heat.getTeams().isEmpty());
+        assertTrue(team.getHeats().isEmpty());
+    }
+
+
 }

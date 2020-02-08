@@ -104,11 +104,12 @@ public class Team {
         return new TeamHeat(heat);
     }
 
-    // EFFECTS: add one heat to the heat array and remaining heat queue
+    // EFFECTS: add one heat to the heat array and remaining heat queue and add this team to the heat
     public void addHeat(Heat heat) {
         if (!heats.contains(heat)) {
             heats.add(heat);
             remainingHeats.add(heatToTeamHeat(heat));
+            heat.addTeam(this);
         }
         else {
             // TODO add exception
@@ -127,5 +128,27 @@ public class Team {
     // EFFECTS: set the sitrep
     public void setSitRep(Sitrep sitRep) {
         this.sitRep = sitRep;
+    }
+
+    // EFFECTS: remove heat from this team in all three possible array lists and removes this team from heat
+    public void removeHeat(Heat heat) {
+        if (heats.contains(heat)) {
+            heats.remove(heat);
+            heat.removeTeam(this);
+            for (int i = 0; i < remainingHeats.size(); i++) {
+                TeamHeat teamHeat = remainingHeats.get(i);
+                if (teamHeat.getHeatNumber() == heat.getHeatNumber()) {
+                    remainingHeats.remove(teamHeat);
+                    i--;
+                }
+            }
+            for (int i = 0; i < doneHeats.size(); i++) {
+                TeamHeat teamHeat = doneHeats.get(i);
+                if (teamHeat.getHeatNumber() == heat.getHeatNumber()) {
+                    remainingHeats.remove(teamHeat);
+                    i--;
+                }
+            }
+        }
     }
 }

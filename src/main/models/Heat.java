@@ -65,10 +65,11 @@ public class Heat {
         return timeToStart.get(Calendar.HOUR_OF_DAY) + ":" + timeToStart.get(Calendar.MINUTE);
     }
 
-    // EFFECTS: add a team to the heat
+    // EFFECTS: add a team to the heat and add this heat to the team
     public void addTeam(Team team) {
         if (!teams.contains(team)) {
             teams.add(team);
+            team.addHeat(this);
         }
     }
 
@@ -76,6 +77,14 @@ public class Heat {
     public void addTeams(ArrayList<Team> teams) {
         for (Team team : teams) {
             addTeam(team);
+        }
+    }
+
+    // EFFECTS: remove a team from this heat and this heat from the team
+    public void removeTeam(Team team) {
+        if (teams.contains(team)) {
+            teams.remove(team);
+            team.removeHeat(this);
         }
     }
 
