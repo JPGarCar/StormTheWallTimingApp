@@ -6,11 +6,53 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.mainController">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.mainController">
    <children>
-      <Button layoutX="188.0" layoutY="50.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="225.0" text="Button" />
-      <Button layoutX="71.0" layoutY="150.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="137.0" text="Button" />
-      <Button fx:id="randomButton" layoutX="329.0" layoutY="156.0" mnemonicParsing="false" onAction="#generateRandom" prefHeight="57.0" prefWidth="168.0" text="Click for Random Number" />
-      <Label fx:id="myMessage" layoutX="329.0" layoutY="231.0" prefHeight="50.0" prefWidth="183.0" />
+      <Pane layoutY="53.0" prefHeight="546.0" prefWidth="225.0" style="-fx-background-color: red;">
+         <children>
+            <Button layoutX="113.0" layoutY="8.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="76.0" text="Stage Heat" />
+            <TextField layoutX="7.0" layoutY="10.0" prefHeight="9.0" prefWidth="95.0" />
+            <Pane layoutX="6.0" layoutY="92.0" prefHeight="404.0" prefWidth="210.0" style="-fx-background-color: green;">
+               <children>
+                  <ScrollPane prefHeight="404.0" prefWidth="210.0">
+                     <content>
+                        <VBox prefHeight="402.0" prefWidth="208.0" />
+                     </content>
+                  </ScrollPane>
+               </children>
+            </Pane>
+            <Button layoutX="45.0" layoutY="511.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="120.0" text="Start Heat" />
+         </children>
+      </Pane>
+      <Pane layoutX="601.0" layoutY="330.0" prefHeight="269.0" prefWidth="199.0" style="-fx-background-color: blue;">
+         <children>
+            <ScrollPane layoutY="38.0" prefHeight="231.0" prefWidth="199.0">
+               <content>
+                  <VBox prefHeight="229.0" prefWidth="197.0" />
+               </content>
+            </ScrollPane>
+            <Label alignment="CENTER" layoutX="40.0" layoutY="11.0" prefHeight="17.0" prefWidth="114.0" text="Finished Teams" textAlignment="CENTER" textFill="WHITE" />
+         </children>
+      </Pane>
+      <Pane layoutX="601.0" layoutY="53.0" prefHeight="278.0" prefWidth="199.0" style="-fx-background-color: orange;">
+         <children>
+            <TextField layoutX="9.0" layoutY="10.0" prefHeight="25.0" prefWidth="94.0" />
+            <Button layoutX="113.0" layoutY="10.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="80.0" text="End Team" />
+         </children>
+      </Pane>
+      <Pane layoutY="1.0" prefHeight="53.0" prefWidth="798.0" style="-fx-background-color: pink;" />
+      <ScrollPane layoutX="225.0" layoutY="53.0" prefHeight="547.0" prefWidth="376.0">
+         <content>
+            <VBox prefHeight="545.0" prefWidth="373.0">
+               <children>
+                  <ScrollPane prefHeight="545.0" prefWidth="373.0">
+                     <content>
+                        <VBox prefHeight="543.0" prefWidth="371.0" />
+                     </content>
+                  </ScrollPane>
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
    </children>
 </AnchorPane>
