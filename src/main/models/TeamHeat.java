@@ -1,20 +1,29 @@
 package models;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+
 import java.util.Calendar;
 
 public class TeamHeat {
 
-    private Heat heat;
-    private FinalTime finalTime;
-    private Calendar endTime;
+    private int heatID;
 
-    public TeamHeat(Heat heat) {
-        this.heat = heat;
+    @JsonBackReference
+    private Team team;
+
+    private FinalTime finalTime;
+
+    public TeamHeat() {
+
+    }
+
+    public TeamHeat(int heatID, Team team) {
+        this.heatID = heatID;
+        this.team = team;
     }
 
     public void setEndTime(Calendar endTime) {
-        this.endTime = endTime;
-        finalTime = new FinalTime(heat.getStartTime(), endTime);
+        finalTime = new FinalTime(getHeatFromTeam().getStartTime(), endTime);
     }
 
     public FinalTime getFinalTime() {
@@ -22,7 +31,32 @@ public class TeamHeat {
     }
 
     // EFFECTS: return the heat´s number associated with the TeamHeat
-    public int getHeatNumber() {
-        return heat.getHeatNumber();
+    private Heat getHeatFromTeam() {
+        for (Heat heat : team.getHeats()) {
+            if (heat.getHeatNumber() == heatID) {
+                return heat;
+            }
+        }
+        return null;
+    }
+
+    public int getHeatID() {
+        return heatID;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setFinalTime(FinalTime finalTime) {
+        this.finalTime = finalTime;
+    }
+
+    public void setHeatID(int heatID) {
+        this.heatID = heatID;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }

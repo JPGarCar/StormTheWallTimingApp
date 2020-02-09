@@ -1,11 +1,16 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import models.enums.LeagueType;
 import models.enums.TeamType;
+import org.codehaus.jackson.annotate.JsonBackReference;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
+//@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 public class Heat {
 
     // private vars
@@ -19,8 +24,15 @@ public class Heat {
     private Calendar startTime;
 
     // private connections
+    @JsonManagedReference
     private ArrayList<Team> teams;
+
+    @JsonBackReference
     private Day dayToRace;
+
+    public Heat() {
+
+    }
 
     public Heat(Calendar timeToStart, LeagueType leagueType, TeamType teamType, int heatNumber, Day dayToRace) {
         this.timeToStart = timeToStart;
@@ -58,11 +70,43 @@ public class Heat {
         return teams;
     }
 
+    public Calendar getTimeToStart() {
+        return timeToStart;
+    }
+
     public void setStartTime(Calendar startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setHasStarted(boolean hasStarted) {
+        this.hasStarted = hasStarted;
+    }
+
+    public void setHeatNumber(int heatNumber) {
+        this.heatNumber = heatNumber;
+    }
+
+    public void setLeagueType(LeagueType leagueType) {
+        this.leagueType = leagueType;
+    }
+
+    public void setTeams(ArrayList<Team> teams) {
+        this.teams = teams;
+    }
+
+    public void setTeamType(TeamType teamType) {
+        this.teamType = teamType;
+    }
+
+    public void setTimeToStart(Calendar timeToStart) {
+        this.timeToStart = timeToStart;
+    }
+
+    public void markStartTimeStarted(Calendar startTime) {
         this.startTime = startTime;
         hasStarted = true;
         for (Team team : teams) {
-            team.setCurrentHeat(this);
+            team.setCurrentHeatIDFromHeat(this);
         }
     }
 
@@ -77,7 +121,7 @@ public class Heat {
     }
 
     // EFFECTS: return the time to start as a string
-    public String getTimeToStartString() {
+    public String timeToStartString() {
         return timeToStart.get(Calendar.HOUR_OF_DAY) + ":" + timeToStart.get(Calendar.MINUTE);
     }
 

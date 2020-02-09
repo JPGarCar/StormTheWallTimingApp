@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -28,9 +29,10 @@
           </Menu>
         </menus>
       </MenuBar>
-      <HBox alignment="CENTER_LEFT" prefHeight="40.0" VBox.vgrow="NEVER">
+      <HBox alignment="CENTER_LEFT" prefHeight="40.0" spacing="15.0" VBox.vgrow="NEVER">
          <children>
             <Button fx:id="populateButton" mnemonicParsing="false" onAction="#populateHeatList" text="Populate" />
+            <Button mnemonicParsing="false" onAction="#populateFromSaveData" text="Populate From Save Data" />
          </children>
          <padding>
             <Insets left="10.0" right="10.0" />
@@ -42,8 +44,11 @@
                <children>
                   <HBox alignment="CENTER" prefHeight="53.0" prefWidth="317.0" spacing="15.0" VBox.vgrow="NEVER">
                      <children>
-                        <TextField id="steageHeatNumber" fx:id="stageHeatNumber" prefHeight="25.0" prefWidth="89.0" HBox.hgrow="ALWAYS" />
-                        <Button id="stageHeatButton" fx:id="stageHeatButton" mnemonicParsing="false" onAction="#stageHeat" prefHeight="25.0" prefWidth="88.0" text="Stage Heat" HBox.hgrow="ALWAYS" />
+                        <TextField id="steageHeatNumber" fx:id="stageHeatNumber" onAction="#stageHeat" prefHeight="25.0" prefWidth="89.0" HBox.hgrow="ALWAYS" />
+                        <Button id="stageHeatButton" fx:id="stageHeatButton" mnemonicParsing="false" onAction="#stageHeat" prefHeight="40.0" prefWidth="95.0" text="Stage Heat" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font></Button>
                      </children>
                      <VBox.margin>
                         <Insets />
@@ -77,10 +82,13 @@
                         </HBox>
                      </children>
                   </VBox>
-                  <ListView id="heatTeamList" fx:id="stageHeatTeamList" maxHeight="10000.0" maxWidth="10000.0" VBox.vgrow="ALWAYS" />
-                  <HBox alignment="CENTER" prefHeight="42.0" prefWidth="197.0" VBox.vgrow="NEVER">
+                  <ListView id="heatTeamList" fx:id="stageHeatTeamList" maxHeight="10000.0" maxWidth="10000.0" prefHeight="471.0" prefWidth="317.0" VBox.vgrow="ALWAYS" />
+                  <HBox alignment="CENTER" prefHeight="61.0" prefWidth="317.0" VBox.vgrow="NEVER">
                      <children>
-                        <Button id="startHeatButton" fx:id="startHeatButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#startHeat" text="Start Heat" HBox.hgrow="ALWAYS" />
+                        <Button id="startHeatButton" fx:id="startHeatButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#startHeat" text="Start Heat" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font></Button>
                      </children>
                   </HBox>
                </children>
@@ -90,10 +98,13 @@
               <items>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                        <HBox alignment="CENTER" prefHeight="59.0" prefWidth="296.0" spacing="10.0">
                            <children>
-                              <TextField id="stopTeamNumber" fx:id="stopTeamNumber" onAction="#endTeamForButton" prefHeight="25.0" prefWidth="89.0" HBox.hgrow="ALWAYS" />
-                              <Button id="stopTeamButton" fx:id="stopTeamButton" mnemonicParsing="false" onAction="#endTeamForButton" prefHeight="25.0" prefWidth="88.0" text="Stop Team" HBox.hgrow="ALWAYS" />
+                              <TextField id="stopTeamNumber" fx:id="stopTeamNumber" alignment="CENTER" onAction="#endTeamForButton" prefHeight="25.0" prefWidth="173.0" HBox.hgrow="ALWAYS" />
+                              <Button id="stopTeamButton" fx:id="stopTeamButton" mnemonicParsing="false" onAction="#endTeamForButton" prefHeight="39.0" prefWidth="104.0" text="Stop Team" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font></Button>
                            </children>
                         </HBox>
                      </children>

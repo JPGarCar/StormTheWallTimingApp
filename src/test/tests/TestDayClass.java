@@ -4,7 +4,6 @@ import models.Day;
 import models.Heat;
 import models.enums.LeagueType;
 import models.enums.TeamType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +20,7 @@ public class TestDayClass {
         Calendar calendar = Calendar.getInstance();
         day = new Day(calendar, 1);
 
-        assertEquals(calendar, day.getDay());
+        assertEquals(calendar, day.getDayToRun());
         assertEquals(1, day.getDayNumber());
         assertTrue(day.getHeats().isEmpty());
         assertEquals(0, day.numberOfHeats());

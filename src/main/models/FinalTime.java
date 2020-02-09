@@ -13,11 +13,43 @@ public class FinalTime {
     private Calendar startTime;
     private Calendar stopTime;
 
+    public FinalTime() {
+
+    }
+
     public FinalTime(Calendar startTime, Calendar stopTime) {
         this.startTime = startTime;
         this.stopTime = stopTime;
         calculateSeconds();
         calculateFinalTime();
+    }
+
+    public void setStartTime(Calendar startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setMillisecondOfSet(long millisecondOfSet) {
+        this.millisecondOfSet = millisecondOfSet;
+    }
+
+    public void setMilliseconds(int milliseconds) {
+        this.milliseconds = milliseconds;
+    }
+
+    public void setMinutes(int minutes) {
+        this.minutes = minutes;
+    }
+
+    public void setSeconds(int seconds) {
+        this.seconds = seconds;
+    }
+
+    public void setStopTime(Calendar stopTime) {
+        this.stopTime = stopTime;
+    }
+
+    public long getMillisecondOfSet() {
+        return millisecondOfSet;
     }
 
     // MODIFIES: this
@@ -64,6 +96,14 @@ public class FinalTime {
 
     public int getMilliseconds() {
         return milliseconds;
+    }
+
+    public Calendar getStartTime() {
+        return startTime;
+    }
+
+    public Calendar getStopTime() {
+        return stopTime;
     }
 
     @Override

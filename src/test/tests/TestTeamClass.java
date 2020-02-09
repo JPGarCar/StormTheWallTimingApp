@@ -3,7 +3,6 @@ package tests;
 import models.Day;
 import models.Heat;
 import models.Team;
-import models.TeamHeat;
 import models.enums.LeagueType;
 import models.enums.Sitrep;
 import models.enums.TeamType;
@@ -77,7 +76,7 @@ public class TestTeamClass {
         Calendar startTime = Calendar.getInstance();
         Heat heat = new Heat(null, LeagueType.COMP, TeamType.COREC, 1, day);
         team.addHeat(heat);
-        heat.setStartTime(startTime);
+        heat.markStartTimeStarted(startTime);
 
         Calendar endTime = Calendar.getInstance();
         endTime.add(Calendar.MINUTE, 5);

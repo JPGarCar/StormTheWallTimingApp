@@ -4,10 +4,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -17,7 +14,9 @@ import models.Team;
 import models.enums.LeagueType;
 import models.enums.Sitrep;
 import models.enums.TeamType;
+import persistance.PersistanceWithJackson;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -139,20 +138,9 @@ public class mainController {
     private Label heatTypeLabel;
 
     private Day day = new Day(Calendar.getInstance(), 1);
-    private Heat stagedHeat;
-    private ArrayList<Team> runningTeams = new ArrayList<>();
+    private MainPageController controller = new MainPageController();
 
-
-    @FXML
-    private void populateHeatList() {
-        for (int i = 0; i < 5; i++) {
-            Heat heat = new Heat(Calendar.getInstance(), LeagueType.JFF, TeamType.OPEN, i, day);
-            for (int j = 0; j < 3; j++) {
-                heat.addTeam(new Team(TeamType.OPEN, LeagueType.JFF, j*i, "Cool Name" + (j+i)));
-            }
-            day.addHeat(heat);
-        }
-
+    private void initStuff() {
         stageHeatNumber.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -171,13 +159,48 @@ public class mainController {
             }
         });
 
-        stageHeatNumber.setText("1");
+        stageHeatNumber.setText(Integer.toString(day.getAtHeat()));
+    }
+
+    @FXML
+    private void populateFromSaveData() {
+        day = PersistanceWithJackson.toJavaDate();
+        controller = PersistanceWithJackson.toJavaController();
+
+        ArrayList<HBoxWithThreeStrings>  threeStrings = new ArrayList<>();
+        for (Team team : controller.getFinishedTeams()) {
+            threeStrings.add(new HBoxWithThreeStrings(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString()));
+        }
+
+        ArrayList<HBoxWithButton>  withButtons = new ArrayList<>();
+        for (Team team : controller.getRunningTeams()) {
+            withButtons.add(new HBoxWithButton(Integer.toString(team.getTeamNumber()), team.getTeamName(), "Finish"));
+        }
+
+
+        finishedTeamsList.setItems(FXCollections.observableList(threeStrings));
+        runningTeamsList.setItems(FXCollections.observableList(withButtons));
+        initStuff();
+    }
+
+    @FXML
+    private void populateHeatList() {
+        for (int i = 0; i < 5; i++) {
+            Heat heat = new Heat(Calendar.getInstance(), LeagueType.JFF, TeamType.OPEN, i, day);
+            for (int j = 0; j < 3; j++) {
+                heat.addTeam(new Team(TeamType.OPEN, LeagueType.JFF, j*i, "Cool Name" + (j+i)));
+            }
+            day.addHeat(heat);
+        }
+        day.setAtHeat(1);
+        initStuff();
+
     }
 
     @FXML
     private void stageHeat() {
-        stagedHeat = day.getHeatByID(Integer.parseInt(stageHeatNumber.getText()));
-
+        controller.setStagedHeat(day.getHeatByID(Integer.parseInt(stageHeatNumber.getText())));
+        Heat stagedHeat = controller.getStagedHeat();
         if (!stagedHeat.isHasStarted()) {
             ArrayList<HBoxWithTwoStrings> list = new ArrayList<>();
             for (Team team : stagedHeat.getTeams()) {
@@ -187,7 +210,7 @@ public class mainController {
             ObservableList<HBoxWithTwoStrings> myObservableList = FXCollections.observableList(list);
             stageHeatTeamList.setItems(myObservableList);
 
-            timeToStartLabel.setText(stagedHeat.getTimeToStartString());
+            timeToStartLabel.setText(stagedHeat.timeToStartString());
             teamTypeLabel.setText(stagedHeat.getTeamType().name());
             heatTypeLabel.setText(stagedHeat.getLeagueType().name());
 
@@ -196,21 +219,22 @@ public class mainController {
 
     @FXML
     private void startHeat() {
-        if (stagedHeat != null) {
-            stagedHeat.setStartTime(Calendar.getInstance());
+        if (controller.getStagedHeat() != null) {
+            Heat stagedHeat = controller.getStagedHeat();
+            stagedHeat.markStartTimeStarted(Calendar.getInstance());
 
             runningTeamsList.setItems(FXCollections.concat(runningTeamsList.getItems(), getObservableList(stagedHeat.getTeams())));
 
-            runningTeams.addAll(stagedHeat.getTeams());
-            stageHeatNumber.setText(Integer.toString(Integer.parseInt(stageHeatNumber.getText()) + 1));
+            controller.getRunningTeams().addAll(stagedHeat.getTeams());
+            day.atNextHeat();
+            stageHeatNumber.setText(Integer.toString(day.getAtHeat()));
             stageHeatTeamList.setItems(null);
-            stagedHeat = null;
 
             timeToStartLabel.setText("Stage Heat to Get Info");
             teamTypeLabel.setText("Stage Heat to Get Info");
             heatTypeLabel.setText("Stage Heat to Get Info");
-
         }
+        saveData();
     }
 
     // EFFECTS: returns an observable list with all the teams given
@@ -236,11 +260,12 @@ public class mainController {
     // ASSUME: id is part of a current team running
     private void endTeam(int id) {
         ArrayList<HBoxWithThreeStrings> finalTeamL = new ArrayList<>();
-
+        ArrayList<Team> runningTeams = controller.getRunningTeams();
         for (Team team : runningTeams) {
             if (team.getTeamNumber() == id) {
                 team.setEndTime(Calendar.getInstance());
                 runningTeams.remove(team);
+                controller.addFinishedTeam(team);
                 finalTeamL.add(new HBoxWithThreeStrings(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString()));
                 break;
             }
@@ -248,19 +273,23 @@ public class mainController {
 
         runningTeamsList.setItems(getObservableList(runningTeams));
         finishedTeamsList.setItems(FXCollections.concat(FXCollections.observableList(finalTeamL), finishedTeamsList.getItems()));
+        saveData();
     }
 
     // Update the status of a specific team
     private void updateStatus(int id, String sitrep) {
-        for (Team team : stagedHeat.getTeams()) {
+        for (Team team : controller.getStagedHeat().getTeams()) {
             if (team.getTeamNumber() == id) {
                 team.setSitRep(Sitrep.valueOf(sitrep));
             }
         }
     }
 
-    // TODO add currentHeatAt to day
-
+    // EFFECTS: save the data to json
+    private void saveData() {
+        PersistanceWithJackson.toJsonDay(day);
+        PersistanceWithJackson.toJsonController(controller);
+    }
 
 }
 

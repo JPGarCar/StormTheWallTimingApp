@@ -1,12 +1,17 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import models.enums.LeagueType;
 import models.enums.Sitrep;
 import models.enums.TeamType;
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
+//@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 public class Team {
 
     // private variables
@@ -20,12 +25,20 @@ public class Team {
     private String teamName;
 
     // private connections
+    @JsonBackReference
     private ArrayList<Heat> heats;
-    private ArrayList<TeamHeat> doneHeats;
-    private ArrayList<TeamHeat> remainingHeats;
-    private Heat currentHeat;
 
-    // private time vars
+    @JsonManagedReference
+    private ArrayList<TeamHeat> doneHeats;
+
+    @JsonManagedReference
+    private ArrayList<TeamHeat> remainingHeats;
+
+    private int currentHeatID;
+
+    public Team() {
+
+    }
 
     // CONSTRUCTOR
     public Team(TeamType teamType, LeagueType teamLeague, int teamNumber, String teamName) {
@@ -35,7 +48,7 @@ public class Team {
         this.teamName = teamName;
         this.sitRep = Sitrep.NONE;
         this.notes = "";
-        currentHeat = null;
+        currentHeatID = -1;
 
         heats = new ArrayList<>();
         doneHeats = new ArrayList<>();
@@ -80,8 +93,48 @@ public class Team {
         return doneHeats;
     }
 
-    public void setCurrentHeat(Heat currentHeat) {
-        this.currentHeat = currentHeat;
+    public void setTeamType(TeamType teamType) {
+        this.teamType = teamType;
+    }
+
+    public void setHeats(ArrayList<Heat> heats) {
+        this.heats = heats;
+    }
+
+    public void setCurrentHeatID(int currentHeatID) {
+        this.currentHeatID = currentHeatID;
+    }
+
+    public void setDoneHeats(ArrayList<TeamHeat> doneHeats) {
+        this.doneHeats = doneHeats;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public void setRemainingHeats(ArrayList<TeamHeat> remainingHeats) {
+        this.remainingHeats = remainingHeats;
+    }
+
+    public void setTeamLeague(LeagueType teamLeague) {
+        this.teamLeague = teamLeague;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public void setTeamNumber(int teamNumber) {
+        this.teamNumber = teamNumber;
+    }
+
+    public int getCurrentHeatID() {
+        return currentHeatID;
+    }
+
+    public void setCurrentHeatIDFromHeat(Heat currentHeatID) {
+        this.currentHeatID = currentHeatID.getHeatNumber();
     }
 
     // EFFECTS: set the end time to the appropriate TeamHeat, depends on the heat number given.
@@ -89,7 +142,7 @@ public class Team {
     public void setEndTime(Calendar endTime) {
         for (int i = 0; i < remainingHeats.size(); i++) {
             TeamHeat remainingHeat = remainingHeats.get(i);
-            if (remainingHeat.getHeatNumber() == currentHeat.getHeatNumber()) {
+            if (remainingHeat.getHeatID() == currentHeatID) {
                 remainingHeat.setEndTime(endTime);
                 doneHeats.add(remainingHeat);
                 remainingHeats.remove(remainingHeat);
@@ -107,7 +160,7 @@ public class Team {
 
     // Helper function: creates a TeamHeat out of a Heat
     private TeamHeat heatToTeamHeat(Heat heat) {
-        return new TeamHeat(heat);
+        return new TeamHeat(heat.getHeatNumber(), this);
     }
 
     // EFFECTS: add one heat to the heat array and remaining heat queue and add this team to the heat
@@ -143,14 +196,14 @@ public class Team {
             heat.removeTeam(this);
             for (int i = 0; i < remainingHeats.size(); i++) {
                 TeamHeat teamHeat = remainingHeats.get(i);
-                if (teamHeat.getHeatNumber() == heat.getHeatNumber()) {
+                if (teamHeat.getHeatID() == heat.getHeatNumber()) {
                     remainingHeats.remove(teamHeat);
                     i--;
                 }
             }
             for (int i = 0; i < doneHeats.size(); i++) {
                 TeamHeat teamHeat = doneHeats.get(i);
-                if (teamHeat.getHeatNumber() == heat.getHeatNumber()) {
+                if (teamHeat.getHeatID() == heat.getHeatNumber()) {
                     remainingHeats.remove(teamHeat);
                     i--;
                 }

@@ -40,6 +40,9 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="java-json.jar" level="project" />
+    <orderEntry type="library" name="java-json" level="project" />
+    <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-core:2.10.2" level="project" />
+    <orderEntry type="library" name="jackson-all-1.9.0" level="project" />
+    <orderEntry type="library" name="jackson-annotations-2.10.2" level="project" />
   </component>
 </module>

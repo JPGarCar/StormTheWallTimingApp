@@ -2,10 +2,10 @@ package tests;
 
 import models.Day;
 import models.Heat;
+import models.Team;
 import models.TeamHeat;
 import models.enums.LeagueType;
 import models.enums.TeamType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
@@ -21,18 +21,21 @@ public class TestTeamHeatClass {
     public void TestConstructor() {
         Day day = new Day(Calendar.getInstance(),1);
         Heat heat = new Heat(Calendar.getInstance(), LeagueType.COMP, TeamType.COREC, 1, day);
-        teamHeat = new TeamHeat(heat);
+        Team team = new Team(TeamType.OPEN, LeagueType.JFF, 1232, "The Invinsibles");
+        teamHeat = new TeamHeat(heat.getHeatNumber(), team);
 
-        assertNotNull(teamHeat.getHeatNumber());
-        assertEquals(heat.getHeatNumber(), teamHeat.getHeatNumber());
+        assertNotNull(teamHeat.getHeatID());
+        assertEquals(heat.getHeatNumber(), teamHeat.getHeatID());
     }
 
     @Test
     public void TestSetEndTime() {
         Day day = new Day(Calendar.getInstance(),1);
         Heat heat = new Heat(null, LeagueType.COMP, TeamType.COREC, 1, day);
-        heat.setStartTime(Calendar.getInstance());
-        teamHeat = new TeamHeat(heat);
+        heat.markStartTimeStarted(Calendar.getInstance());
+        Team team = new Team(TeamType.OPEN, LeagueType.JFF, 1232, "The Invinsibles");
+        team.addHeat(heat);
+        teamHeat = new TeamHeat(heat.getHeatNumber(), team);
 
         Calendar endTime = Calendar.getInstance();
         endTime.add(Calendar.MINUTE, 5);
