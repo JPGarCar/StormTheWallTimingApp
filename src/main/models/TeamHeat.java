@@ -7,38 +7,29 @@ import java.util.Calendar;
 
 public class TeamHeat {
 
+    // private fields
     private int heatID;
+    private FinalTime finalTime;
 
+    // private connections
     @JsonBackReference
     private Team team;
 
-    private FinalTime finalTime;
 
+
+    // DUMMY CONSTRUCTOR for Jackson JSON
     public TeamHeat() {
-
     }
 
+    // CONSTRUCTOR
     public TeamHeat(int heatID, Team team) {
         this.heatID = heatID;
         this.team = team;
     }
 
-    public void calculateEndTime(Calendar endTime) {
-        finalTime = new FinalTime(getHeatFromTeam().getStartTime(), endTime);
-    }
-
+    // GETTERS AND SETTERS, used for Jackson JSON
     public FinalTime getFinalTime() {
         return finalTime;
-    }
-
-    // EFFECTS: return the heat´s number associated with the TeamHeat
-    private Heat getHeatFromTeam() {
-        for (Heat heat : team.getHeats()) {
-            if (heat.getHeatNumber() == heatID) {
-                return heat;
-            }
-        }
-        return null;
     }
 
     public int getHeatID() {
@@ -60,4 +51,22 @@ public class TeamHeat {
     public void setTeam(Team team) {
         this.team = team;
     }
+
+    // EFFECTS: constructs a FinalTime with the heat's start and input end time
+    // EXPECTS: heat has start time
+    public void calculateEndTime(Calendar endTime) {
+        finalTime = new FinalTime(getHeatFromTeam().getStartTime(), endTime);
+    }
+
+
+    // EFFECTS: return the heat´s number associated with the TeamHeat
+    private Heat getHeatFromTeam() {
+        for (Heat heat : team.getHeats()) {
+            if (heat.getHeatNumber() == heatID) {
+                return heat;
+            }
+        }
+        return null;
+    }
+
 }

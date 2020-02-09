@@ -3,6 +3,7 @@ package models;
 import java.util.Calendar;
 
 public class FinalTime {
+
     // private vars
     private long millisecondOfSet;
     private int minutes;
@@ -13,10 +14,11 @@ public class FinalTime {
     private Calendar startTime;
     private Calendar stopTime;
 
+    // DUMMY CONSTRUCTOR for Jackson JSON
     public FinalTime() {
-
     }
 
+    // CONSTRUCTOR
     public FinalTime(Calendar startTime, Calendar stopTime) {
         this.startTime = startTime;
         this.stopTime = stopTime;
@@ -24,6 +26,7 @@ public class FinalTime {
         calculateFinalTime();
     }
 
+    // SETTERS AND GETTERS, used for Jackson JSON
     public void setStartTime(Calendar startTime) {
         this.startTime = startTime;
     }
@@ -52,40 +55,6 @@ public class FinalTime {
         return millisecondOfSet;
     }
 
-    // MODIFIES: this
-    // EFFECTS: add a new start and stop time
-    public void addTimes(Calendar startTime, Calendar stopTime) {
-        this.startTime = startTime;
-        this.stopTime = stopTime;
-    }
-
-    // EFFECTS: public function to call calculateSeconds and calculateFinalTime
-    public void calculate() {
-        if (startTime != null && stopTime != null) {
-            calculateSeconds();
-            calculateFinalTime();
-        }
-    }
-
-    // MODIFIES: this.numSeconds
-    // EFFECTS : will calculate the time difference between the start and stop time
-    // EXPECTS : start time should be before the stop time in terms of real time
-    private void calculateSeconds() {
-        long milliStart = startTime.getTimeInMillis();
-        long milliEnd = stopTime.getTimeInMillis();
-        millisecondOfSet = milliEnd - milliStart;
-    }
-
-    // MODIFIES: this
-    // EFFECTS: will calculate the seconds, minutes and milliseconds of the final time
-    private void calculateFinalTime() {
-        seconds = (int) (millisecondOfSet / 1000);
-        minutes = (seconds / 60);
-        seconds = seconds % 60;
-        milliseconds = (int) (millisecondOfSet % 1000);
-    }
-
-    // getters
     public int getMinutes() {
         return minutes;
     }
@@ -104,6 +73,39 @@ public class FinalTime {
 
     public Calendar getStopTime() {
         return stopTime;
+    }
+
+    // MODIFIES: startTime, stopTime
+    // EFFECTS: add a new start and stop time
+    public void addTimes(Calendar startTime, Calendar stopTime) {
+        this.startTime = startTime;
+        this.stopTime = stopTime;
+    }
+
+    // EFFECTS: public function to call calculateSeconds and calculateFinalTime
+    public void calculate() {
+        if (startTime != null && stopTime != null) {
+            calculateSeconds();
+            calculateFinalTime();
+        }
+    }
+
+    // MODIFIES: millisecondOfSet
+    // EFFECTS : will calculate the time difference between the start and stop time
+    // EXPECTS : start time should be before the stop time in terms of real time
+    private void calculateSeconds() {
+        long milliStart = startTime.getTimeInMillis();
+        long milliEnd = stopTime.getTimeInMillis();
+        millisecondOfSet = milliEnd - milliStart;
+    }
+
+    // MODIFIES: seconds, minutes, milliseconds
+    // EFFECTS: will calculate the seconds, minutes and milliseconds of the final time
+    private void calculateFinalTime() {
+        seconds = (int) (millisecondOfSet / 1000);
+        minutes = (seconds / 60);
+        seconds = seconds % 60;
+        milliseconds = (int) (millisecondOfSet % 1000);
     }
 
     @Override
