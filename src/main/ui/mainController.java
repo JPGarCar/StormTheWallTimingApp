@@ -16,7 +16,6 @@ import models.enums.Sitrep;
 import models.enums.TeamType;
 import persistance.PersistanceWithJackson;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -263,7 +262,7 @@ public class mainController {
         ArrayList<Team> runningTeams = controller.getRunningTeams();
         for (Team team : runningTeams) {
             if (team.getTeamNumber() == id) {
-                team.setEndTime(Calendar.getInstance());
+                team.markEndTime(Calendar.getInstance());
                 runningTeams.remove(team);
                 controller.addFinishedTeam(team);
                 finalTeamL.add(new HBoxWithThreeStrings(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString()));

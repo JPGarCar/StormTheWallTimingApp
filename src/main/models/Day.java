@@ -1,7 +1,7 @@
 package models;
 
-import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,7 +17,7 @@ public class Day {
     private ArrayList<Heat> heats;
 
     public Day() {
-
+        heats = new ArrayList<>();
     }
 
     public Day(Calendar dayToRun, int dayNumber) {

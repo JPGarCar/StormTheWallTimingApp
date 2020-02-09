@@ -80,7 +80,7 @@ public class TestTeamClass {
 
         Calendar endTime = Calendar.getInstance();
         endTime.add(Calendar.MINUTE, 5);
-        team.setEndTime(endTime);
+        team.markEndTime(endTime);
 
         assertTrue(team.getRemainingHeats().isEmpty());
         assertEquals(1, team.getDoneHeats().size());

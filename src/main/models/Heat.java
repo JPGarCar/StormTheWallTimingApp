@@ -1,16 +1,13 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import models.enums.LeagueType;
 import models.enums.TeamType;
-import org.codehaus.jackson.annotate.JsonBackReference;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
-//@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 public class Heat {
 
     // private vars
@@ -24,14 +21,13 @@ public class Heat {
     private Calendar startTime;
 
     // private connections
-    @JsonManagedReference
     private ArrayList<Team> teams;
 
     @JsonBackReference
     private Day dayToRace;
 
     public Heat() {
-
+        teams = new ArrayList<>();
     }
 
     public Heat(Calendar timeToStart, LeagueType leagueType, TeamType teamType, int heatNumber, Day dayToRace) {

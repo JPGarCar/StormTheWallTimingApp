@@ -1,6 +1,7 @@
 package models;
 
-import org.codehaus.jackson.annotate.JsonBackReference;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.util.Calendar;
 
@@ -22,7 +23,7 @@ public class TeamHeat {
         this.team = team;
     }
 
-    public void setEndTime(Calendar endTime) {
+    public void calculateEndTime(Calendar endTime) {
         finalTime = new FinalTime(getHeatFromTeam().getStartTime(), endTime);
     }
 

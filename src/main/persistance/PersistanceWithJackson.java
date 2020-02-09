@@ -1,9 +1,10 @@
 package persistance;
 
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationConfig;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import models.Day;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import ui.MainPageController;
 import ui.mainController;
 
@@ -14,9 +15,10 @@ public class PersistanceWithJackson {
 
     public static void toJsonDay(Day day){
         ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 
         try {
-            File json = new File("day.json");
+            File json = new File("day2.json");
             mapper.writeValue(json, day);
         } catch (IOException e) {
             e.printStackTrace();
@@ -27,7 +29,7 @@ public class PersistanceWithJackson {
         ObjectMapper mapper = new ObjectMapper();
         Day day = new Day();
         try {
-            File json = new File("day.json");
+            File json = new File("day2.json");
             day = mapper.readValue(json, Day.class);
         } catch (IOException e) {
             e.printStackTrace();
@@ -37,6 +39,7 @@ public class PersistanceWithJackson {
 
     public static void toJsonController(MainPageController controller){
         ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 
         try {
             File json = new File("controller.json");

@@ -1,17 +1,14 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import models.enums.LeagueType;
 import models.enums.Sitrep;
 import models.enums.TeamType;
-import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
-//@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 public class Team {
 
     // private variables
@@ -25,7 +22,7 @@ public class Team {
     private String teamName;
 
     // private connections
-    @JsonBackReference
+
     private ArrayList<Heat> heats;
 
     @JsonManagedReference
@@ -37,7 +34,9 @@ public class Team {
     private int currentHeatID;
 
     public Team() {
-
+        doneHeats = new ArrayList<>();
+        remainingHeats = new ArrayList<>();
+        heats = new ArrayList<>();
     }
 
     // CONSTRUCTOR
@@ -139,11 +138,11 @@ public class Team {
 
     // EFFECTS: set the end time to the appropriate TeamHeat, depends on the heat number given.
     //          will also move the TeamHeat who got a final time to the done heat list
-    public void setEndTime(Calendar endTime) {
+    public void markEndTime(Calendar endTime) {
         for (int i = 0; i < remainingHeats.size(); i++) {
             TeamHeat remainingHeat = remainingHeats.get(i);
             if (remainingHeat.getHeatID() == currentHeatID) {
-                remainingHeat.setEndTime(endTime);
+                remainingHeat.calculateEndTime(endTime);
                 doneHeats.add(remainingHeat);
                 remainingHeats.remove(remainingHeat);
                 i--;

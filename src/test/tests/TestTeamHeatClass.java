@@ -39,7 +39,7 @@ public class TestTeamHeatClass {
 
         Calendar endTime = Calendar.getInstance();
         endTime.add(Calendar.MINUTE, 5);
-        teamHeat.setEndTime(endTime);
+        teamHeat.calculateEndTime(endTime);
 
         assertNotNull(teamHeat.getFinalTime());
     }
