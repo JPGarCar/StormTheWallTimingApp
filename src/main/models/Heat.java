@@ -13,6 +13,7 @@ public class Heat {
     private LeagueType leagueType;
     private TeamType teamType;
     private int heatNumber;
+    private boolean hasStarted;
 
     // private time vars
     private Calendar startTime;
@@ -26,6 +27,7 @@ public class Heat {
         this.leagueType = leagueType;
         this.teamType = teamType;
         this.heatNumber = heatNumber;
+        this.hasStarted = false;
 
         teams = new ArrayList<>();
         setDay(dayToRace);
@@ -58,6 +60,14 @@ public class Heat {
 
     public void setStartTime(Calendar startTime) {
         this.startTime = startTime;
+        hasStarted = true;
+        for (Team team : teams) {
+            team.setCurrentHeat(this);
+        }
+    }
+
+    public boolean isHasStarted() {
+        return hasStarted;
     }
 
     public void setDayToRace(Day dayToRace) {
@@ -99,7 +109,6 @@ public class Heat {
         this.dayToRace = day;
         day.addHeat(this);
     }
-
 
 
 }

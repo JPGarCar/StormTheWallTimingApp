@@ -4,7 +4,8 @@ public enum Sitrep {
     DNA("DNA"),
     DNS("DNS"),
     DNF("DNF"),
-    DQ("DQ");
+    DQ("DQ"),
+    NONE("None");
 
     Sitrep(String value) {
 

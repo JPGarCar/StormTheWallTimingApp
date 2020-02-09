@@ -31,7 +31,7 @@ public class TestTeamClass {
         assertEquals(LeagueType.COMP, team.getTeamLeague());
         assertEquals(312, team.getTeamNumber());
         assertEquals("The Storm Troopers", team.getTeamName());
-        assertNull(team.getSitRep());
+        assertEquals(Sitrep.NONE, team.getSitRep());
         assertTrue(team.getHeats().isEmpty());
         assertTrue(team.getRemainingHeats().isEmpty());
         assertTrue(team.getDoneHeats().isEmpty());
@@ -81,7 +81,7 @@ public class TestTeamClass {
 
         Calendar endTime = Calendar.getInstance();
         endTime.add(Calendar.MINUTE, 5);
-        team.setEndTime(1, endTime);
+        team.setEndTime(endTime);
 
         assertTrue(team.getRemainingHeats().isEmpty());
         assertEquals(1, team.getDoneHeats().size());

@@ -63,4 +63,14 @@ public class Day {
         return dayNumber;
     }
 
+    // EFFECTS: returns heat with specific heat id
+    public Heat getHeatByID(int id) {
+        for (Heat heat : heats) {
+            if (heat.getHeatNumber() == id) {
+                return heat;
+            }
+        }
+        return null;
+    }
+
 }

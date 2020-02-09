@@ -66,6 +66,8 @@ public class FinalTime {
         return milliseconds;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "" + getMinutes() + ":" + getSeconds() + ":" + getMilliseconds();
+    }
 }

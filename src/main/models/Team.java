@@ -23,6 +23,7 @@ public class Team {
     private ArrayList<Heat> heats;
     private ArrayList<TeamHeat> doneHeats;
     private ArrayList<TeamHeat> remainingHeats;
+    private Heat currentHeat;
 
     // private time vars
 
@@ -32,8 +33,9 @@ public class Team {
         this.teamLeague = teamLeague;
         this.teamNumber = teamNumber;
         this.teamName = teamName;
-        this.sitRep = null;
+        this.sitRep = Sitrep.NONE;
         this.notes = "";
+        currentHeat = null;
 
         heats = new ArrayList<>();
         doneHeats = new ArrayList<>();
@@ -78,12 +80,16 @@ public class Team {
         return doneHeats;
     }
 
+    public void setCurrentHeat(Heat currentHeat) {
+        this.currentHeat = currentHeat;
+    }
+
     // EFFECTS: set the end time to the appropriate TeamHeat, depends on the heat number given.
     //          will also move the TeamHeat who got a final time to the done heat list
-    public void setEndTime(int heatNumber, Calendar endTime) {
+    public void setEndTime(Calendar endTime) {
         for (int i = 0; i < remainingHeats.size(); i++) {
             TeamHeat remainingHeat = remainingHeats.get(i);
-            if (remainingHeat.getHeatNumber() == heatNumber) {
+            if (remainingHeat.getHeatNumber() == currentHeat.getHeatNumber()) {
                 remainingHeat.setEndTime(endTime);
                 doneHeats.add(remainingHeat);
                 remainingHeats.remove(remainingHeat);
