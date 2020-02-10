@@ -16,13 +16,13 @@ public class Team {
     private Sitrep sitRep;
     private LeagueType teamLeague;
     private String notes;
+    private int currentHeatID;
 
     // private team vars
     private int teamNumber;
     private String teamName;
 
     // private connections
-
     private ArrayList<Heat> heats;
 
     @JsonManagedReference
@@ -31,8 +31,7 @@ public class Team {
     @JsonManagedReference
     private ArrayList<TeamHeat> remainingHeats;
 
-    private int currentHeatID;
-
+    // DUMMY CONSTRUCTOR used by Jackson JSON
     public Team() {
         doneHeats = new ArrayList<>();
         remainingHeats = new ArrayList<>();
@@ -55,7 +54,7 @@ public class Team {
 
     }
 
-    // GETTERS
+    // GETTERS AND SETTERS, used by Jackson JSON
     public TeamType getTeamType() {
         return teamType;
     }

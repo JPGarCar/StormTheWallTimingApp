@@ -15,8 +15,7 @@ public class FinalTime {
     private Calendar stopTime;
 
     // DUMMY CONSTRUCTOR for Jackson JSON
-    public FinalTime() {
-    }
+    public FinalTime() {}
 
     // CONSTRUCTOR
     public FinalTime(Calendar startTime, Calendar stopTime) {

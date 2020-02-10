@@ -7,12 +7,15 @@ import java.util.ArrayList;
 
 public class MainPageController {
 
+    // private vars
     private Heat stagedHeat;
     private ArrayList<Team> runningTeams = new ArrayList<>();
     private ArrayList<Team> finishedTeams = new ArrayList<>();
 
+    // DUMMY CONSTRUCTOR for Jackson JSON
     public MainPageController() {}
 
+    // GETTERS AND SETTERS, used by Jackson JSON
     public ArrayList<Team> getFinishedTeams() {
         return finishedTeams;
     }

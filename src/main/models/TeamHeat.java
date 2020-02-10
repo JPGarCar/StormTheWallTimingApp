@@ -15,8 +15,6 @@ public class TeamHeat {
     @JsonBackReference
     private Team team;
 
-
-
     // DUMMY CONSTRUCTOR for Jackson JSON
     public TeamHeat() {
     }

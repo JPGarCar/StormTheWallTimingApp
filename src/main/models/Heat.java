@@ -26,10 +26,12 @@ public class Heat {
     @JsonBackReference
     private Day dayToRace;
 
+    // DUMMY CONSTRUCTOR used by Jackson JSON
     public Heat() {
         teams = new ArrayList<>();
     }
 
+    // CONSTRUCTOR
     public Heat(Calendar timeToStart, LeagueType leagueType, TeamType teamType, int heatNumber, Day dayToRace) {
         this.timeToStart = timeToStart;
         this.leagueType = leagueType;
@@ -41,7 +43,7 @@ public class Heat {
         setDay(dayToRace);
     }
 
-    // GETTERS AND SETTERS
+    // GETTERS AND SETTERS, used by Jackson JSON
     public int getHeatNumber() {
         return heatNumber;
     }
@@ -98,6 +100,8 @@ public class Heat {
         this.timeToStart = timeToStart;
     }
 
+    // MODIFIES: startTime, hasStarted, teams(children)
+    // EFFECTS: sets the heat's startTime, marks hasStarted to true, and sets this heat's team's current heat to this
     public void markStartTimeStarted(Calendar startTime) {
         this.startTime = startTime;
         hasStarted = true;
@@ -106,6 +110,7 @@ public class Heat {
         }
     }
 
+    // EFFECTS: returns value of hasStarted
     public boolean isHasStarted() {
         return hasStarted;
     }

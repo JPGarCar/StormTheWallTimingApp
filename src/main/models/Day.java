@@ -1,8 +1,6 @@
 package models;
 
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -16,10 +14,12 @@ public class Day {
     @JsonManagedReference
     private ArrayList<Heat> heats;
 
+    // DUMMY CONSTRUCTOR, used by Jackson JSON
     public Day() {
         heats = new ArrayList<>();
     }
 
+    // CONSTRUCTOR
     public Day(Calendar dayToRun, int dayNumber) {
         this.dayToRun = dayToRun;
         heats = new ArrayList<Heat>();
@@ -27,7 +27,7 @@ public class Day {
         atHeat = 1;
     }
 
-    // EFFECTS: return the day var
+    // SETTERS AND GETTERS, used by Jackson JSON
     public Calendar getDayToRun() {
         return dayToRun;
     }
