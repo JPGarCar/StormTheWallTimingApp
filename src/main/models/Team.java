@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.*;
 import models.enums.LeagueType;
 import models.enums.Sitrep;
 import models.enums.TeamType;
+import models.exceptions.AddHeatException;
+import models.exceptions.NoCurrentHeatIDException;
+import models.exceptions.NoHeatsException;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -135,9 +138,18 @@ public class Team {
         this.currentHeatID = currentHeatID.getHeatNumber();
     }
 
+    public void setSitRep(Sitrep sitRep) {
+        this.sitRep = sitRep;
+    }
+
     // EFFECTS: set the end time to the appropriate TeamHeat, depends on the heat number given.
     //          will also move the TeamHeat who got a final time to the done heat list
-    public void markEndTime(Calendar endTime) {
+    public void markEndTime(Calendar endTime) throws NoHeatsException, NoCurrentHeatIDException {
+        if (remainingHeats.size() == 0) {
+            throw new NoHeatsException("its end time");
+        } else if (currentHeatID == -1) {
+            throw new NoCurrentHeatIDException();
+        }
         for (int i = 0; i < remainingHeats.size(); i++) {
             TeamHeat remainingHeat = remainingHeats.get(i);
             if (remainingHeat.getHeatID() == currentHeatID) {
@@ -162,14 +174,14 @@ public class Team {
     }
 
     // EFFECTS: add one heat to the heat array and remaining heat queue and add this team to the heat
-    public void addHeat(Heat heat) {
+    public void addHeat(Heat heat) throws AddHeatException {
         if (!heats.contains(heat)) {
             heats.add(heat);
             remainingHeats.add(heatToTeamHeat(heat));
             heat.addTeam(this);
         }
         else {
-            // TODO add exception
+            throw new AddHeatException("because there is already a heat with that name");  // TODO might not work because of many to many connection
         }
     }
 
@@ -182,13 +194,8 @@ public class Team {
         }
     }
 
-    // EFFECTS: set the sitrep
-    public void setSitRep(Sitrep sitRep) {
-        this.sitRep = sitRep;
-    }
-
     // EFFECTS: remove heat from this team in all three possible array lists and removes this team from heat
-    public void removeHeat(Heat heat) {
+    public void removeHeat(Heat heat) throws NoHeatsException{
         if (heats.contains(heat)) {
             heats.remove(heat);
             heat.removeTeam(this);
@@ -206,6 +213,8 @@ public class Team {
                     i--;
                 }
             }
+        } else {
+            throw new NoHeatsException();
         }
     }
 }

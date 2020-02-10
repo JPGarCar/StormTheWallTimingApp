@@ -18,7 +18,7 @@ public class PersistanceWithJackson {
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 
         try {
-            File json = new File("day2.json");
+            File json = new File("day.json");
             mapper.writeValue(json, day);
         } catch (IOException e) {
             e.printStackTrace();
@@ -29,7 +29,7 @@ public class PersistanceWithJackson {
         ObjectMapper mapper = new ObjectMapper();
         Day day = new Day();
         try {
-            File json = new File("day2.json");
+            File json = new File("day.json");
             day = mapper.readValue(json, Day.class);
         } catch (IOException e) {
             e.printStackTrace();

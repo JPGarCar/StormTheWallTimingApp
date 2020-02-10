@@ -1,22 +1,318 @@
-{"dayToRun":1581246659121,"dayNumber":1,"atHeat":4,"heats":[
-  {"timeToStart":1581246660882,"leagueType":"JFF","teamType":"OPEN","heatNumber":0,"hasStarted":false,"startTime":null,"teams":[
-    {"teamType":"OPEN","sitRep":"NONE","teamLeague":"JFF","notes":"","teamNumber":0,"teamName":"Cool Name0","doneHeats":[],"remainingHeats":[{"heatID":0,"finalTime":null}],"currentHeatID":-1},
-    {"teamType":"OPEN","sitRep":"NONE","teamLeague":"JFF","notes":"","teamNumber":0,"teamName":"Cool Name1","doneHeats":[],"remainingHeats":[{"heatID":0,"finalTime":null}],"currentHeatID":-1},
-    {"teamType":"OPEN","sitRep":"NONE","teamLeague":"JFF","notes":"","teamNumber":0,"teamName":"Cool Name2","doneHeats":[],"remainingHeats":[{"heatID":0,"finalTime":null}],"currentHeatID":-1}]},
-  {"timeToStart":1581246660884,"leagueType":"JFF","teamType":"OPEN","heatNumber":1,"hasStarted":true,"startTime":1581246662938,"teams":[
-    {"teamType":"OPEN","sitRep":"NONE","teamLeague":"JFF","notes":"","teamNumber":0,"teamName":"Cool Name1","doneHeats":[{"heatID":1,"finalTime":{"millisecondOfSet":6199,"minutes":0,"seconds":6,"milliseconds":199,"startTime":1581246662938,"stopTime":1581246669137}}],"remainingHeats":[],"currentHeatID":1},
-    {"teamType":"OPEN","sitRep":"NONE","teamLeague":"JFF","notes":"","teamNumber":1,"teamName":"Cool Name2","doneHeats":[{"heatID":1,"finalTime":{"millisecondOfSet":6695,"minutes":0,"seconds":6,"milliseconds":695,"startTime":1581246662938,"stopTime":1581246669633}}],"remainingHeats":[],"currentHeatID":1},
-    {"teamType":"OPEN","sitRep":"NONE","teamLeague":"JFF","notes":"","teamNumber":2,"teamName":"Cool Name3","doneHeats":[{"heatID":1,"finalTime":{"millisecondOfSet":7240,"minutes":0,"seconds":7,"milliseconds":240,"startTime":1581246662938,"stopTime":1581246670178}}],"remainingHeats":[],"currentHeatID":1}]},
-  {"timeToStart":1581246660884,"leagueType":"JFF","teamType":"OPEN","heatNumber":2,"hasStarted":true,"startTime":1581246667728,"teams":[
-    {"teamType":"OPEN","sitRep":"NONE","teamLeague":"JFF","notes":"","teamNumber":0,"teamName":"Cool Name2","doneHeats":[{"heatID":2,"finalTime":{"millisecondOfSet":2890,"minutes":0,"seconds":2,"milliseconds":890,"startTime":1581246667728,"stopTime":1581246670618}}],"remainingHeats":[],"currentHeatID":2},
-    {"teamType":"OPEN","sitRep":"DNS","teamLeague":"JFF","notes":"","teamNumber":2,"teamName":"Cool Name3","doneHeats":[{"heatID":2,"finalTime":{"millisecondOfSet":3416,"minutes":0,"seconds":3,"milliseconds":416,"startTime":1581246667728,"stopTime":1581246671144}}],"remainingHeats":[],"currentHeatID":2},
-    {"teamType":"OPEN","sitRep":"DNF","teamLeague":"JFF","notes":"","teamNumber":4,"teamName":"Cool Name4","doneHeats":[{"heatID":2,"finalTime":{"millisecondOfSet":3841,"minutes":0,"seconds":3,"milliseconds":841,"startTime":1581246667728,"stopTime":1581246671569}}],"remainingHeats":[],"currentHeatID":2}]},
-  {"timeToStart":1581246660884,"leagueType":"JFF","teamType":"OPEN","heatNumber":3,"hasStarted":true,"startTime":1581246682225,"teams":[
-    {"teamType":"OPEN","sitRep":"NONE","teamLeague":"JFF","notes":"","teamNumber":0,"teamName":"Cool Name3","doneHeats":[],"remainingHeats":[{"heatID":3,"finalTime":null}],"currentHeatID":3},
-    {"teamType":"OPEN","sitRep":"NONE","teamLeague":"JFF","notes":"","teamNumber":3,"teamName":"Cool Name4","doneHeats":[],"remainingHeats":[{"heatID":3,"finalTime":null}],"currentHeatID":3},
-    {"teamType":"OPEN","sitRep":"NONE","teamLeague":"JFF","notes":"","teamNumber":6,"teamName":"Cool Name5","doneHeats":[],"remainingHeats":[{"heatID":3,"finalTime":null}],"currentHeatID":3}]},
-  {"timeToStart":1581246660884,"leagueType":"JFF","teamType":"OPEN","heatNumber":4,"hasStarted":false,"startTime":null,"teams":[
-    {"teamType":"OPEN","sitRep":"NONE","teamLeague":"JFF","notes":"","teamNumber":0,"teamName":"Cool Name4","doneHeats":[],"remainingHeats":[{"heatID":4,"finalTime":null}],"currentHeatID":-1},
-    {"teamType":"OPEN","sitRep":"NONE","teamLeague":"JFF","notes":"","teamNumber":4,"teamName":"Cool Name5","doneHeats":[],"remainingHeats":[{"heatID":4,"finalTime":null}],"currentHeatID":-1},
-    {"teamType":"OPEN","sitRep":"NONE","teamLeague":"JFF","notes":"","teamNumber":8,"teamName":"Cool Name6","doneHeats":[],"remainingHeats":[{"heatID":4,"finalTime":null}],"currentHeatID":-1}
-  ]}]}
+{
+  "dayToRun" : 1581358403993,
+  "dayNumber" : 1,
+  "atHeat" : 3,
+  "heats" : [ {
+    "@UUID" : "809f7cdf-f7f5-424a-b1b5-2a054cf644ae",
+    "timeToStart" : 1581358406088,
+    "leagueType" : "JFF",
+    "teamType" : "OPEN",
+    "heatNumber" : 0,
+    "hasStarted" : false,
+    "startTime" : null,
+    "teams" : [ {
+      "@UUID" : "ead25174-c987-4c75-9bbc-4cf4a5bbe18e",
+      "teamType" : "OPEN",
+      "sitRep" : "NONE",
+      "teamLeague" : "JFF",
+      "notes" : "",
+      "currentHeatID" : -1,
+      "teamNumber" : 0,
+      "teamName" : "Cool Name0",
+      "heats" : [ "809f7cdf-f7f5-424a-b1b5-2a054cf644ae" ],
+      "doneHeats" : [ ],
+      "remainingHeats" : [ {
+        "heatID" : 0,
+        "finalTime" : null
+      } ]
+    }, {
+      "@UUID" : "e3901574-c830-44c8-ba00-6a71c82f3238",
+      "teamType" : "OPEN",
+      "sitRep" : "NONE",
+      "teamLeague" : "JFF",
+      "notes" : "",
+      "currentHeatID" : -1,
+      "teamNumber" : 0,
+      "teamName" : "Cool Name1",
+      "heats" : [ "809f7cdf-f7f5-424a-b1b5-2a054cf644ae" ],
+      "doneHeats" : [ ],
+      "remainingHeats" : [ {
+        "heatID" : 0,
+        "finalTime" : null
+      } ]
+    }, {
+      "@UUID" : "12ba2a1b-7c17-452c-a168-d906c4ac7580",
+      "teamType" : "OPEN",
+      "sitRep" : "NONE",
+      "teamLeague" : "JFF",
+      "notes" : "",
+      "currentHeatID" : -1,
+      "teamNumber" : 0,
+      "teamName" : "Cool Name2",
+      "heats" : [ "809f7cdf-f7f5-424a-b1b5-2a054cf644ae" ],
+      "doneHeats" : [ ],
+      "remainingHeats" : [ {
+        "heatID" : 0,
+        "finalTime" : null
+      } ]
+    } ]
+  }, {
+    "@UUID" : "0eaeb1c1-5e06-4c60-a8b7-346d326d4c5d",
+    "timeToStart" : 1581358406090,
+    "leagueType" : "JFF",
+    "teamType" : "OPEN",
+    "heatNumber" : 1,
+    "hasStarted" : true,
+    "startTime" : 1581358410034,
+    "teams" : [ {
+      "@UUID" : "a6bdf5f8-86a9-4280-a02f-1c80ecae5bec",
+      "teamType" : "OPEN",
+      "sitRep" : "NONE",
+      "teamLeague" : "JFF",
+      "notes" : "",
+      "currentHeatID" : 1,
+      "teamNumber" : 0,
+      "teamName" : "Cool Name1",
+      "heats" : [ "0eaeb1c1-5e06-4c60-a8b7-346d326d4c5d" ],
+      "doneHeats" : [ {
+        "heatID" : 1,
+        "finalTime" : {
+          "millisecondOfSet" : 7199,
+          "minutes" : 0,
+          "seconds" : 7,
+          "milliseconds" : 199,
+          "startTime" : 1581358410034,
+          "stopTime" : 1581358417233
+        }
+      } ],
+      "remainingHeats" : [ ]
+    }, {
+      "@UUID" : "a1da64c9-3e8a-4528-9d04-46cee318fbb2",
+      "teamType" : "OPEN",
+      "sitRep" : "NONE",
+      "teamLeague" : "JFF",
+      "notes" : "",
+      "currentHeatID" : 1,
+      "teamNumber" : 1,
+      "teamName" : "Cool Name2",
+      "heats" : [ "0eaeb1c1-5e06-4c60-a8b7-346d326d4c5d" ],
+      "doneHeats" : [ {
+        "heatID" : 1,
+        "finalTime" : {
+          "millisecondOfSet" : 8356,
+          "minutes" : 0,
+          "seconds" : 8,
+          "milliseconds" : 356,
+          "startTime" : 1581358410034,
+          "stopTime" : 1581358418390
+        }
+      } ],
+      "remainingHeats" : [ ]
+    }, {
+      "@UUID" : "dcbb2c33-ec12-4010-9e40-d432e6061073",
+      "teamType" : "OPEN",
+      "sitRep" : "DNA",
+      "teamLeague" : "JFF",
+      "notes" : "",
+      "currentHeatID" : 1,
+      "teamNumber" : 2,
+      "teamName" : "Cool Name3",
+      "heats" : [ "0eaeb1c1-5e06-4c60-a8b7-346d326d4c5d" ],
+      "doneHeats" : [ {
+        "heatID" : 1,
+        "finalTime" : {
+          "millisecondOfSet" : 9343,
+          "minutes" : 0,
+          "seconds" : 9,
+          "milliseconds" : 343,
+          "startTime" : 1581358410034,
+          "stopTime" : 1581358419377
+        }
+      } ],
+      "remainingHeats" : [ ]
+    } ]
+  }, {
+    "@UUID" : "9f1b237f-d519-4bd9-aa60-15d38ce657ec",
+    "timeToStart" : 1581358406090,
+    "leagueType" : "JFF",
+    "teamType" : "OPEN",
+    "heatNumber" : 2,
+    "hasStarted" : true,
+    "startTime" : 1581358438039,
+    "teams" : [ {
+      "@UUID" : "78c6a0e7-bf4d-4876-ac75-f226b4a4b661",
+      "teamType" : "OPEN",
+      "sitRep" : "NONE",
+      "teamLeague" : "JFF",
+      "notes" : "",
+      "currentHeatID" : 2,
+      "teamNumber" : 0,
+      "teamName" : "Cool Name2",
+      "heats" : [ "9f1b237f-d519-4bd9-aa60-15d38ce657ec" ],
+      "doneHeats" : [ {
+        "heatID" : 2,
+        "finalTime" : {
+          "millisecondOfSet" : 2841,
+          "minutes" : 0,
+          "seconds" : 2,
+          "milliseconds" : 841,
+          "startTime" : 1581358438039,
+          "stopTime" : 1581358440880
+        }
+      } ],
+      "remainingHeats" : [ ]
+    }, {
+      "@UUID" : "c6a4039e-ab86-4b56-b49e-eee897f977dc",
+      "teamType" : "OPEN",
+      "sitRep" : "NONE",
+      "teamLeague" : "JFF",
+      "notes" : "",
+      "currentHeatID" : 2,
+      "teamNumber" : 2,
+      "teamName" : "Cool Name3",
+      "heats" : [ "9f1b237f-d519-4bd9-aa60-15d38ce657ec" ],
+      "doneHeats" : [ {
+        "heatID" : 2,
+        "finalTime" : {
+          "millisecondOfSet" : 8912,
+          "minutes" : 0,
+          "seconds" : 8,
+          "milliseconds" : 912,
+          "startTime" : 1581358438039,
+          "stopTime" : 1581358446951
+        }
+      } ],
+      "remainingHeats" : [ ]
+    }, {
+      "@UUID" : "e75f7755-c16f-43d1-abd0-7803af301019",
+      "teamType" : "OPEN",
+      "sitRep" : "NONE",
+      "teamLeague" : "JFF",
+      "notes" : "",
+      "currentHeatID" : 2,
+      "teamNumber" : 4,
+      "teamName" : "Cool Name4",
+      "heats" : [ "9f1b237f-d519-4bd9-aa60-15d38ce657ec" ],
+      "doneHeats" : [ {
+        "heatID" : 2,
+        "finalTime" : {
+          "millisecondOfSet" : 5122,
+          "minutes" : 0,
+          "seconds" : 5,
+          "milliseconds" : 122,
+          "startTime" : 1581358438039,
+          "stopTime" : 1581358443161
+        }
+      } ],
+      "remainingHeats" : [ ]
+    } ]
+  }, {
+    "@UUID" : "77c6ff4a-dfaf-416e-bf87-640d8942012c",
+    "timeToStart" : 1581358406090,
+    "leagueType" : "JFF",
+    "teamType" : "OPEN",
+    "heatNumber" : 3,
+    "hasStarted" : false,
+    "startTime" : null,
+    "teams" : [ {
+      "@UUID" : "014ec145-082a-4cbd-bde5-effe5c80b070",
+      "teamType" : "OPEN",
+      "sitRep" : "NONE",
+      "teamLeague" : "JFF",
+      "notes" : "",
+      "currentHeatID" : -1,
+      "teamNumber" : 0,
+      "teamName" : "Cool Name3",
+      "heats" : [ "77c6ff4a-dfaf-416e-bf87-640d8942012c" ],
+      "doneHeats" : [ ],
+      "remainingHeats" : [ {
+        "heatID" : 3,
+        "finalTime" : null
+      } ]
+    }, {
+      "@UUID" : "2b86f517-65fb-4bfa-8b80-c60830058ca3",
+      "teamType" : "OPEN",
+      "sitRep" : "NONE",
+      "teamLeague" : "JFF",
+      "notes" : "",
+      "currentHeatID" : -1,
+      "teamNumber" : 3,
+      "teamName" : "Cool Name4",
+      "heats" : [ "77c6ff4a-dfaf-416e-bf87-640d8942012c" ],
+      "doneHeats" : [ ],
+      "remainingHeats" : [ {
+        "heatID" : 3,
+        "finalTime" : null
+      } ]
+    }, {
+      "@UUID" : "0b488218-b711-4b08-9284-a4039d81a20c",
+      "teamType" : "OPEN",
+      "sitRep" : "NONE",
+      "teamLeague" : "JFF",
+      "notes" : "",
+      "currentHeatID" : -1,
+      "teamNumber" : 6,
+      "teamName" : "Cool Name5",
+      "heats" : [ "77c6ff4a-dfaf-416e-bf87-640d8942012c" ],
+      "doneHeats" : [ ],
+      "remainingHeats" : [ {
+        "heatID" : 3,
+        "finalTime" : null
+      } ]
+    } ]
+  }, {
+    "@UUID" : "654eab44-8b05-4284-a8cc-c7f8b9c7d9df",
+    "timeToStart" : 1581358406090,
+    "leagueType" : "JFF",
+    "teamType" : "OPEN",
+    "heatNumber" : 4,
+    "hasStarted" : false,
+    "startTime" : null,
+    "teams" : [ {
+      "@UUID" : "3a5b532f-57ff-4f0c-ad70-4e32963d99f5",
+      "teamType" : "OPEN",
+      "sitRep" : "NONE",
+      "teamLeague" : "JFF",
+      "notes" : "",
+      "currentHeatID" : -1,
+      "teamNumber" : 0,
+      "teamName" : "Cool Name4",
+      "heats" : [ "654eab44-8b05-4284-a8cc-c7f8b9c7d9df" ],
+      "doneHeats" : [ ],
+      "remainingHeats" : [ {
+        "heatID" : 4,
+        "finalTime" : null
+      } ]
+    }, {
+      "@UUID" : "8f1e7a56-e84a-444c-bc6e-d485f4f6097a",
+      "teamType" : "OPEN",
+      "sitRep" : "NONE",
+      "teamLeague" : "JFF",
+      "notes" : "",
+      "currentHeatID" : -1,
+      "teamNumber" : 4,
+      "teamName" : "Cool Name5",
+      "heats" : [ "654eab44-8b05-4284-a8cc-c7f8b9c7d9df" ],
+      "doneHeats" : [ ],
+      "remainingHeats" : [ {
+        "heatID" : 4,
+        "finalTime" : null
+      } ]
+    }, {
+      "@UUID" : "8539044a-39ab-409e-8b7f-439c7e0a8a35",
+      "teamType" : "OPEN",
+      "sitRep" : "NONE",
+      "teamLeague" : "JFF",
+      "notes" : "",
+      "currentHeatID" : -1,
+      "teamNumber" : 8,
+      "teamName" : "Cool Name6",
+      "heats" : [ "654eab44-8b05-4284-a8cc-c7f8b9c7d9df" ],
+      "doneHeats" : [ ],
+      "remainingHeats" : [ {
+        "heatID" : 4,
+        "finalTime" : null
+      } ]
+    } ]
+  } ]
+}

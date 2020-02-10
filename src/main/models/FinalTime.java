@@ -1,5 +1,7 @@
 package models;
 
+import models.exceptions.NoTimeException;
+
 import java.util.Calendar;
 
 public class FinalTime {
@@ -21,8 +23,7 @@ public class FinalTime {
     public FinalTime(Calendar startTime, Calendar stopTime) {
         this.startTime = startTime;
         this.stopTime = stopTime;
-        calculateSeconds();
-        calculateFinalTime();
+        calculate();
     }
 
     // SETTERS AND GETTERS, used for Jackson JSON
@@ -82,11 +83,13 @@ public class FinalTime {
     }
 
     // EFFECTS: public function to call calculateSeconds and calculateFinalTime
-    public void calculate() {
-        if (startTime != null && stopTime != null) {
-            calculateSeconds();
-            calculateFinalTime();
+    public void calculate() throws NoTimeException {
+        if (startTime == null) {
+            throw new NoTimeException("start time", "calculate final time seconds");
+        } else if (stopTime == null) {
+            throw new NoTimeException("stop time", "calculate final time seconds");
         }
+        calculateFinalTime();
     }
 
     // MODIFIES: millisecondOfSet
@@ -101,6 +104,7 @@ public class FinalTime {
     // MODIFIES: seconds, minutes, milliseconds
     // EFFECTS: will calculate the seconds, minutes and milliseconds of the final time
     private void calculateFinalTime() {
+        calculateSeconds();
         seconds = (int) (millisecondOfSet / 1000);
         minutes = (seconds / 60);
         seconds = seconds % 60;

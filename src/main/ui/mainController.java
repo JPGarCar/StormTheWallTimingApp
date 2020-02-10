@@ -22,6 +22,9 @@ import java.util.Calendar;
 
 public class mainController {
 
+    // Constants used for our widgets
+    final double HBoxSpacing = 10;
+
     // special class for the list, has two texts, a drop down and a button at the end
     public class HBoxForRunningTeam extends HBox {
         Label label = new Label();
@@ -30,7 +33,7 @@ public class mainController {
         ComboBox comboBox = new ComboBox();
 
         HBoxForRunningTeam(String idText, String labelText, String buttonText, Sitrep sitrep) {
-            super();
+            super(HBoxSpacing);
 
             id.setText(idText);
             id.setMaxWidth(25);
@@ -51,18 +54,18 @@ public class mainController {
                 updateStatus(Integer.parseInt(idText), comboBox.getValue().toString());
             });
 
-            this.getChildren().addAll(id, label, button);
+            this.getChildren().addAll(id, label, comboBox, button);
         }
     }
 
     // special class for the list, has two texts and a drop down at the end
-    public class HBoxForStageAndDone extends HBox {
+    public class HBoxForStage extends HBox {
         Label label = new Label();
         Label id = new Label();
         ComboBox comboBox = new ComboBox();
 
-        HBoxForStageAndDone(String idText, String teamName, Sitrep sitrep) {
-            super();
+        HBoxForStage(String idText, String teamName, Sitrep sitrep) {
+            super(HBoxSpacing);
 
             id.setText(idText);
             id.setMaxWidth(25);
@@ -84,25 +87,32 @@ public class mainController {
     }
 
     // special class for the list, has three texts on the horizontal box
-    public class HBoxWithThreeStrings extends HBox {
+    public class HBoxForFinishedTeam extends HBox {
         Label label = new Label();
         Label id = new Label();
         Label thirdLabel = new Label();
+        ComboBox comboBox = new ComboBox();
 
-        HBoxWithThreeStrings(String idText, String labelText, String thirdText) {
-            super();
+        HBoxForFinishedTeam(String idText, String teamName, String finalTime, Sitrep sitrep) {
+            super(HBoxSpacing);
 
             id.setText(idText);
             id.setMaxWidth(25);
             HBox.setHgrow(id, Priority.ALWAYS);
 
-            label.setText(labelText);
+            label.setText(teamName);
             label.setMaxWidth(Double.MAX_VALUE);
             HBox.setHgrow(label, Priority.ALWAYS);
 
-            thirdLabel.setText(thirdText);
+            thirdLabel.setText(finalTime);
 
-            this.getChildren().addAll(id, label, thirdLabel);
+            comboBox.setItems(FXCollections.observableList(Arrays.asList(Sitrep.values())));
+            comboBox.setValue(sitrep.name());
+            comboBox.setOnAction(event -> {
+                updateStatus(Integer.parseInt(idText), comboBox.getValue().toString());
+            });
+
+            this.getChildren().addAll(id, label, comboBox, thirdLabel);
         }
     }
 
@@ -147,14 +157,14 @@ public class mainController {
     // EFFECTS: take team out of the running team list, set its final time and show in finished team list
     // ASSUME: id is part of a current team running
     private void endTeam(int id) {
-        ArrayList<HBoxWithThreeStrings> finalTeamL = new ArrayList<>();
+        ArrayList<HBoxForFinishedTeam> finalTeamL = new ArrayList<>();
         ArrayList<Team> runningTeams = controller.getRunningTeams();
         for (Team team : runningTeams) {
             if (team.getTeamNumber() == id) {
                 team.markEndTime(Calendar.getInstance());
                 runningTeams.remove(team);
                 controller.addFinishedTeam(team);
-                finalTeamL.add(new HBoxWithThreeStrings(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString()));
+                finalTeamL.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString(), team.getSitRep()));
                 break;
             }
         }
@@ -186,10 +196,10 @@ public class mainController {
     private TextField stageHeatNumber;
 
     @FXML
-    private ListView<HBoxWithThreeStrings> finishedTeamsList;
+    private ListView<HBoxForFinishedTeam> finishedTeamsList;
 
     @FXML
-    private ListView<HBoxForStageAndDone> stageHeatTeamList;
+    private ListView<HBoxForStage> stageHeatTeamList;
 
     @FXML
     private TextField stopTeamNumber;
@@ -209,9 +219,9 @@ public class mainController {
         day = PersistanceWithJackson.toJavaDate();
         controller = PersistanceWithJackson.toJavaController();
 
-        ArrayList<HBoxWithThreeStrings>  threeStrings = new ArrayList<>();
+        ArrayList<HBoxForFinishedTeam>  threeStrings = new ArrayList<>();
         for (Team team : controller.getFinishedTeams()) {
-            threeStrings.add(new HBoxWithThreeStrings(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString()));
+            threeStrings.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString(), team.getSitRep()));
         }
 
         ArrayList<HBoxForRunningTeam>  withButtons = new ArrayList<>();
@@ -244,12 +254,12 @@ public class mainController {
         controller.setStagedHeat(day.getHeatByID(Integer.parseInt(stageHeatNumber.getText())));
         Heat stagedHeat = controller.getStagedHeat();
         if (!stagedHeat.isHasStarted()) {
-            ArrayList<HBoxForStageAndDone> list = new ArrayList<>();
+            ArrayList<HBoxForStage> list = new ArrayList<>();
             for (Team team : stagedHeat.getTeams()) {
-                list.add(new HBoxForStageAndDone(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getSitRep()));
+                list.add(new HBoxForStage(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getSitRep()));
             }
 
-            ObservableList<HBoxForStageAndDone> myObservableList = FXCollections.observableList(list);
+            ObservableList<HBoxForStage> myObservableList = FXCollections.observableList(list);
             stageHeatTeamList.setItems(myObservableList);
 
             timeToStartLabel.setText(stagedHeat.timeToStartString());
