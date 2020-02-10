@@ -14,6 +14,7 @@ import models.Team;
 import models.enums.LeagueType;
 import models.enums.Sitrep;
 import models.enums.TeamType;
+import models.exceptions.*;
 import persistance.PersistanceWithJackson;
 
 import java.util.ArrayList;
@@ -45,7 +46,17 @@ public class mainController {
 
             button.setText(buttonText);
             button.setOnAction(event -> {
-                endTeam(Integer.parseInt(idText));
+                try {
+                    endTeam(Integer.parseInt(idText));
+                } catch (NoHeatsException e) {
+                    e.printStackTrace();
+                } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
+                    couldNotCalculateFinalTimeExcpetion.printStackTrace();
+                } catch (NoCurrentHeatIDException e) {
+                    e.printStackTrace();
+                } catch (NoTeamException e) {
+                    e.printStackTrace();
+                }
             });
 
             comboBox.setItems(FXCollections.observableList(Arrays.asList(Sitrep.values())));
@@ -156,7 +167,7 @@ public class mainController {
 
     // EFFECTS: take team out of the running team list, set its final time and show in finished team list
     // ASSUME: id is part of a current team running
-    private void endTeam(int id) {
+    private void endTeam(int id) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion, NoCurrentHeatIDException, NoTeamException {
         ArrayList<HBoxForFinishedTeam> finalTeamL = new ArrayList<>();
         ArrayList<Team> runningTeams = controller.getRunningTeams();
         for (Team team : runningTeams) {
@@ -237,12 +248,20 @@ public class mainController {
 
     @FXML
     private void populateHeatList() {
-        for (int i = 0; i < 5; i++) {
-            Heat heat = new Heat(Calendar.getInstance(), LeagueType.JFF, TeamType.OPEN, i, day);
-            for (int j = 0; j < 3; j++) {
-                heat.addTeam(new Team(TeamType.OPEN, LeagueType.JFF, j*i, "Cool Name" + (j+i)));
+        for (int i = 1; i < 5; i++) {
+            Heat heat = null;
+            try {
+                heat = new Heat(Calendar.getInstance(), LeagueType.JFF, TeamType.OPEN, i, day);
+            } catch (AddHeatException e) {
+                e.printStackTrace();
             }
-            day.addHeat(heat);
+            for (int j = 1; j < 8; j++) {
+                try {
+                    heat.addTeam(new Team(TeamType.OPEN, LeagueType.JFF, j*i, "Cool Name" + (j+i)));
+                } catch (AddTeamException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         day.setAtHeat(1);
         initStuff();
@@ -251,7 +270,11 @@ public class mainController {
 
     @FXML
     private void stageHeat() {
-        controller.setStagedHeat(day.getHeatByID(Integer.parseInt(stageHeatNumber.getText())));
+        try {
+            controller.setStagedHeat(day.getHeatByID(Integer.parseInt(stageHeatNumber.getText())));
+        } catch (NoHeatWithIDException e) {
+            e.printStackTrace();
+        }
         Heat stagedHeat = controller.getStagedHeat();
         if (!stagedHeat.isHasStarted()) {
             ArrayList<HBoxForStage> list = new ArrayList<>();
@@ -292,7 +315,17 @@ public class mainController {
     @FXML
     private void endTeamForButton() {
         if (!stopTeamNumber.getText().equals("")) {
-            endTeam(Integer.parseInt(stopTeamNumber.getText()));
+            try {
+                endTeam(Integer.parseInt(stopTeamNumber.getText()));
+            } catch (NoHeatsException e) {
+                e.printStackTrace();
+            } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
+                couldNotCalculateFinalTimeExcpetion.printStackTrace();
+            } catch (NoCurrentHeatIDException e) {
+                e.printStackTrace();
+            } catch (NoTeamException e) {
+                e.printStackTrace();
+            }
         }
         stopTeamNumber.setText("");
     }

@@ -3,6 +3,10 @@ package models;
 import com.fasterxml.jackson.annotation.*;
 import models.enums.LeagueType;
 import models.enums.TeamType;
+import models.exceptions.AddHeatException;
+import models.exceptions.AddTeamException;
+import models.exceptions.NoHeatsException;
+import models.exceptions.NoTeamException;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,7 +36,7 @@ public class Heat {
     }
 
     // CONSTRUCTOR
-    public Heat(Calendar timeToStart, LeagueType leagueType, TeamType teamType, int heatNumber, Day dayToRace) {
+    public Heat(Calendar timeToStart, LeagueType leagueType, TeamType teamType, int heatNumber, Day dayToRace) throws AddHeatException {
         this.timeToStart = timeToStart;
         this.leagueType = leagueType;
         this.teamType = teamType;
@@ -40,7 +44,7 @@ public class Heat {
         this.hasStarted = false;
 
         teams = new ArrayList<>();
-        setDay(dayToRace);
+        setDayToRace(dayToRace);
     }
 
     // GETTERS AND SETTERS, used by Jackson JSON
@@ -115,10 +119,13 @@ public class Heat {
         return hasStarted;
     }
 
-    public void setDayToRace(Day dayToRace) {
-        if (this.dayToRace == null) {
-            setDay(dayToRace);
+    public void setDayToRace(Day day) {
+        try {
+            day.addHeat(this);
+        } catch (AddHeatException e) {
+            // nothing because we expect this due to one to one connection
         }
+        this.dayToRace = day;
     }
 
     // EFFECTS: return the time to start as a string
@@ -127,33 +134,38 @@ public class Heat {
     }
 
     // EFFECTS: add a team to the heat and add this heat to the team
-    public void addTeam(Team team) {
+    public void addTeam(Team team) throws AddTeamException {
         if (!teams.contains(team)) {
             teams.add(team);
-            team.addHeat(this);
+            try {
+                team.addHeat(this);
+            } catch (AddHeatException e) {
+                // do nothing as we expect this to happen because of the many to many connection
+            }
+        } else {
+            throw new AddTeamException();
         }
     }
 
     // EFFECTS: add all the teams from a list of teams
-    public void addTeams(ArrayList<Team> teams) {
+    public void addTeams(ArrayList<Team> teams) throws AddTeamException {
         for (Team team : teams) {
             addTeam(team);
         }
     }
 
     // EFFECTS: remove a team from this heat and this heat from the team
-    public void removeTeam(Team team) {
+    public void removeTeam(Team team) throws NoTeamException {
         if (teams.contains(team)) {
             teams.remove(team);
-            team.removeHeat(this);
+            try {
+                team.removeHeat(this);
+            } catch (NoHeatsException e) {
+                // do nothing as we expect this to happen because of the many to many connection
+            }
+        } else {
+            throw new NoTeamException();
         }
     }
-
-    // EFFECTS: add a day to the heat and this heat to that day
-    private void setDay(Day day) {
-        this.dayToRace = day;
-        day.addHeat(this);
-    }
-
 
 }

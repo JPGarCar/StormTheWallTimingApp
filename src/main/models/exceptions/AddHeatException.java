@@ -1,13 +1,9 @@
 package models.exceptions;
 
-public class AddHeatException extends RuntimeException {
+public class AddHeatException extends Exception {
 
-    public AddHeatException() {
-        super("Can not add heat");
-    }
-
-    public AddHeatException(String reason) {
-        super("Can not add heat because: " + reason);
+    public AddHeatException(String s) {
+        super("Can not add heat " + s);
     }
 
 }

@@ -6,6 +6,7 @@ import models.Team;
 import models.enums.LeagueType;
 import models.enums.Sitrep;
 import models.enums.TeamType;
+import models.exceptions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +49,7 @@ public class TestTeamClass {
 
 
     @Test
-    public void testAddingHeats() {
+    public void testAddingHeats() throws AddHeatException {
         Day day = new Day(Calendar.getInstance(),1);
         Heat heat = new Heat(null, LeagueType.COMP, TeamType.COREC, 1, day);
         team.addHeat(heat);
@@ -71,7 +72,7 @@ public class TestTeamClass {
     }
 
     @Test
-    public void testSetEndTime() {
+    public void testSetEndTime() throws AddHeatException {
         Day day = new Day(Calendar.getInstance(),1);
         Calendar startTime = Calendar.getInstance();
         Heat heat = new Heat(null, LeagueType.COMP, TeamType.COREC, 1, day);
@@ -80,7 +81,17 @@ public class TestTeamClass {
 
         Calendar endTime = Calendar.getInstance();
         endTime.add(Calendar.MINUTE, 5);
-        team.markEndTime(endTime);
+        try {
+            team.markEndTime(endTime);
+        } catch (NoHeatsException e) {
+            e.printStackTrace();
+        } catch (NoCurrentHeatIDException e) {
+            e.printStackTrace();
+        } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
+            couldNotCalculateFinalTimeExcpetion.printStackTrace();
+        } catch (NoTeamException e) {
+            e.printStackTrace();
+        }
 
         assertTrue(team.getRemainingHeats().isEmpty());
         assertEquals(1, team.getDoneHeats().size());
@@ -88,7 +99,7 @@ public class TestTeamClass {
     }
 
     @Test
-    public void TestRemoveHeat() {
+    public void TestRemoveHeat() throws AddHeatException, NoHeatsException {
         Day day = new Day(Calendar.getInstance(),1);
         Heat heat = new Heat(null, LeagueType.COMP, TeamType.COREC, 1, day);
         team.addHeat(heat);

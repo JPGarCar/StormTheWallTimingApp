@@ -1,6 +1,7 @@
 package tests;
 
 import models.FinalTime;
+import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,11 @@ public class TestFinalTimeClass {
         startTime.clear();
         startTime.setTimeInMillis(calendarFinal.getTimeInMillis());
         calendarFinal.add(Calendar.MINUTE, 5);
-        finalTime = new FinalTime(startTime, calendarFinal);
+        try {
+            finalTime = new FinalTime(startTime, calendarFinal);
+        } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
+            couldNotCalculateFinalTimeExcpetion.printStackTrace();
+        }
     }
 
     @Test
@@ -36,7 +41,11 @@ public class TestFinalTimeClass {
         finalCalendar.add(Calendar.SECOND, 23);
         finalCalendar.add(Calendar.MILLISECOND, 12);
         finalTime.addTimes(Calendar.getInstance(), finalCalendar);
-        finalTime.calculate();
+        try {
+            finalTime.calculate();
+        } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
+            couldNotCalculateFinalTimeExcpetion.printStackTrace();
+        }
         assertEquals(34, finalTime.getMinutes());
         assertEquals(23, finalTime.getSeconds());
         assertEquals(12, finalTime.getMilliseconds());

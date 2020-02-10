@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import models.enums.LeagueType;
 import models.enums.Sitrep;
 import models.enums.TeamType;
-import models.exceptions.AddHeatException;
-import models.exceptions.NoCurrentHeatIDException;
-import models.exceptions.NoHeatsException;
+import models.exceptions.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -144,9 +142,9 @@ public class Team {
 
     // EFFECTS: set the end time to the appropriate TeamHeat, depends on the heat number given.
     //          will also move the TeamHeat who got a final time to the done heat list
-    public void markEndTime(Calendar endTime) throws NoHeatsException, NoCurrentHeatIDException {
+    public void markEndTime(Calendar endTime) throws NoHeatsException, NoCurrentHeatIDException, CouldNotCalculateFinalTimeExcpetion, NoTeamException {
         if (remainingHeats.size() == 0) {
-            throw new NoHeatsException("its end time");
+            throw new NoHeatsException("it's end time");
         } else if (currentHeatID == -1) {
             throw new NoCurrentHeatIDException();
         }
@@ -162,7 +160,7 @@ public class Team {
     }
 
     // EFFECTS: add the heats in the input array to the heats array and the remaining heats queue
-    public void addHeats(ArrayList<Heat> heats) {
+    public void addHeats(ArrayList<Heat> heats) throws AddHeatException {
         for (Heat heat : heats) {
             addHeat(heat);
         }
@@ -178,10 +176,14 @@ public class Team {
         if (!heats.contains(heat)) {
             heats.add(heat);
             remainingHeats.add(heatToTeamHeat(heat));
-            heat.addTeam(this);
+            try {
+                heat.addTeam(this);
+            } catch (AddTeamException e) {
+                // do nothing as we expect this because of the many to many connection
+            }
         }
         else {
-            throw new AddHeatException("because there is already a heat with that name");  // TODO might not work because of many to many connection
+            throw new AddHeatException("because this team already has a heat with that ID.");
         }
     }
 
@@ -195,10 +197,14 @@ public class Team {
     }
 
     // EFFECTS: remove heat from this team in all three possible array lists and removes this team from heat
-    public void removeHeat(Heat heat) throws NoHeatsException{
+    public void removeHeat(Heat heat) throws NoHeatsException {
         if (heats.contains(heat)) {
             heats.remove(heat);
-            heat.removeTeam(this);
+            try {
+                heat.removeTeam(this);
+            } catch (NoTeamException e) {
+                // do nothing as we expect this here due to many to many connection
+            }
             for (int i = 0; i < remainingHeats.size(); i++) {
                 TeamHeat teamHeat = remainingHeats.get(i);
                 if (teamHeat.getHeatID() == heat.getHeatNumber()) {

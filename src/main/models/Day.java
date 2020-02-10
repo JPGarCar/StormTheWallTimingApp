@@ -1,6 +1,9 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import models.exceptions.AddHeatException;
+import models.exceptions.NoHeatWithIDException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -56,6 +59,10 @@ public class Day {
         this.dayNumber = dayNumber;
     }
 
+    public int getDayNumber(){
+        return dayNumber;
+    }
+
     // EFFECTS: returns the month/day/year of the Day
     public String toString() {
         return dayToRun.get(Calendar.MONTH) + "/" + dayToRun.get(Calendar.DAY_OF_MONTH) + "/" + dayToRun.get(Calendar.YEAR);
@@ -67,15 +74,17 @@ public class Day {
     }
 
     // EFFECTS: add a heat to the list of heats
-    public void addHeat(Heat heat) {
+    public void addHeat(Heat heat) throws AddHeatException {
         if (!heats.contains(heat)) {
             heats.add(heat);
             heat.setDayToRace(this);
+        } else {
+            throw new AddHeatException("because this heat is already in this day. The ID's match.");
         }
     }
 
     // EFFECTS: adds all the heats to this day
-    public void addHeats(ArrayList<Heat> heats) {
+    public void addHeats(ArrayList<Heat> heats) throws AddHeatException {
         for (Heat heat : heats) {
             addHeat(heat);
         }
@@ -92,19 +101,14 @@ public class Day {
         return heats.size();
     }
 
-    // EFFECTS: return day number int
-    public int getDayNumber(){
-        return dayNumber;
-    }
-
     // EFFECTS: returns heat with specific heat id
-    public Heat getHeatByID(int id) {
+    public Heat getHeatByID(int id) throws NoHeatWithIDException {
         for (Heat heat : heats) {
             if (heat.getHeatNumber() == id) {
                 return heat;
             }
         }
-        return null;
+        throw new NoHeatWithIDException();
     }
 
 }

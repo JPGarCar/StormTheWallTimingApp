@@ -5,6 +5,9 @@ import models.Heat;
 import models.Team;
 import models.enums.LeagueType;
 import models.enums.TeamType;
+import models.exceptions.AddHeatException;
+import models.exceptions.AddTeamException;
+import models.exceptions.NoTeamException;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -17,7 +20,7 @@ public class TestHeatClass {
     Heat heat;
 
     @Test
-    public void TestConstructor() {
+    public void TestConstructor() throws AddHeatException {
         Calendar timeToStart = Calendar.getInstance();
         Day day = new Day(Calendar.getInstance(), 1);
         heat = new Heat(timeToStart, LeagueType.JFF, TeamType.OPEN, 123, day);
@@ -31,7 +34,7 @@ public class TestHeatClass {
     }
 
     @Test
-    public void TestAddTeams() {
+    public void TestAddTeams() throws AddHeatException, AddTeamException {
         Calendar timeToStart = Calendar.getInstance();
         Day day = new Day(Calendar.getInstance(), 1);
         heat = new Heat(timeToStart, LeagueType.JFF, TeamType.OPEN, 123, day);
@@ -57,7 +60,7 @@ public class TestHeatClass {
     }
 
     @Test
-    public void TestRemoveTeam() {
+    public void TestRemoveTeam() throws AddHeatException, AddTeamException, NoTeamException {
         Calendar timeToStart = Calendar.getInstance();
         Day day = new Day(Calendar.getInstance(), 1);
         heat = new Heat(timeToStart, LeagueType.JFF, TeamType.OPEN, 123, day);

@@ -1,6 +1,6 @@
 package models;
 
-import models.exceptions.NoTimeException;
+import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
 
 import java.util.Calendar;
 
@@ -20,7 +20,7 @@ public class FinalTime {
     public FinalTime() {}
 
     // CONSTRUCTOR
-    public FinalTime(Calendar startTime, Calendar stopTime) {
+    public FinalTime(Calendar startTime, Calendar stopTime) throws CouldNotCalculateFinalTimeExcpetion {
         this.startTime = startTime;
         this.stopTime = stopTime;
         calculate();
@@ -83,11 +83,11 @@ public class FinalTime {
     }
 
     // EFFECTS: public function to call calculateSeconds and calculateFinalTime
-    public void calculate() throws NoTimeException {
+    public void calculate() throws CouldNotCalculateFinalTimeExcpetion {
         if (startTime == null) {
-            throw new NoTimeException("start time", "calculate final time seconds");
+            throw new CouldNotCalculateFinalTimeExcpetion("start time");
         } else if (stopTime == null) {
-            throw new NoTimeException("stop time", "calculate final time seconds");
+            throw new CouldNotCalculateFinalTimeExcpetion("stop time");
         }
         calculateFinalTime();
     }

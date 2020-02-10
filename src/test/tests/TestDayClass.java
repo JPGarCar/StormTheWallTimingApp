@@ -4,6 +4,7 @@ import models.Day;
 import models.Heat;
 import models.enums.LeagueType;
 import models.enums.TeamType;
+import models.exceptions.AddHeatException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,7 +28,7 @@ public class TestDayClass {
     }
 
     @Test
-    public void TestAddAndRemoveHeat() {
+    public void TestAddAndRemoveHeat() throws AddHeatException {
         Calendar calendar = Calendar.getInstance();
         day = new Day(calendar, 1);
 

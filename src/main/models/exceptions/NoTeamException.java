@@ -1,6 +1,6 @@
 package models.exceptions;
 
-public class NoTeamException extends RuntimeException{
+public class NoTeamException extends Exception{
 
     public NoTeamException() {
         super("There is no team available to grab.");

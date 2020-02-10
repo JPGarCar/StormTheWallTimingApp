@@ -2,7 +2,9 @@ package models;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
 import models.exceptions.NoHeatsException;
+import models.exceptions.NoTeamException;
 
 import java.util.Calendar;
 
@@ -52,16 +54,20 @@ public class TeamHeat {
     }
 
     // EFFECTS: constructs a FinalTime with the heat's start and input end time
-    // EXPECTS: heat has start time
-    public void calculateEndTime(Calendar endTime) {
-        finalTime = new FinalTime(getHeatFromTeam().getStartTime(), endTime);
+    public void calculateEndTime(Calendar endTime) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion, NoTeamException {
+        Heat heat = getHeatFromTeam();
+        if (heat == null) {
+            throw new NoHeatsException();
+        }
+
+        finalTime = new FinalTime(heat.getStartTime(), endTime);
     }
 
 
     // EFFECTS: return the heat´s number associated with the TeamHeat
-    private Heat getHeatFromTeam() throws NoHeatsException {
+    private Heat getHeatFromTeam() throws NoTeamException {
         if (team == null) {
-            throw new NoHeatsException("heats");
+            throw new NoTeamException("heats");
         }
         for (Heat heat : team.getHeats()) {
             if (heat.getHeatNumber() == heatID) {
