@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
-public class mainController {
+public class mainTimingController {
 
     // Constants used for our widgets
     final double HBoxSpacing = 10;
@@ -129,7 +129,7 @@ public class mainController {
 
     // private vars, for now it contains the MainPageController and the Day being used
     private Day day = new Day(Calendar.getInstance(), 1);
-    private MainPageController controller = new MainPageController();
+    private TimingController controller = new TimingController();
 
     // EFFECTS: makes sure text properties only accept numerical values and initializes the
     //          stageHeatNumber to the current heat available
@@ -248,14 +248,14 @@ public class mainController {
 
     @FXML
     private void populateHeatList() {
-        for (int i = 1; i < 5; i++) {
+        for (int i = 1; i < 200; i++) {
             Heat heat = null;
             try {
                 heat = new Heat(Calendar.getInstance(), LeagueType.JFF, TeamType.OPEN, i, day);
             } catch (AddHeatException e) {
                 e.printStackTrace();
             }
-            for (int j = 1; j < 8; j++) {
+            for (int j = 1; j < 5; j++) {
                 try {
                     heat.addTeam(new Team(TeamType.OPEN, LeagueType.JFF, j*i, "Cool Name" + (j+i)));
                 } catch (AddTeamException e) {

@@ -2,11 +2,10 @@ package persistance;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import jdk.nashorn.internal.runtime.Timing;
 import models.Day;
-import ui.MainPageController;
-import ui.mainController;
+import ui.TimingController;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +36,7 @@ public class PersistanceWithJackson {
         return day;
     }
 
-    public static void toJsonController(MainPageController controller){
+    public static void toJsonController(TimingController controller){
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 
@@ -49,11 +48,11 @@ public class PersistanceWithJackson {
         }
     }
 
-    public static MainPageController toJavaController() {
+    public static TimingController toJavaController() {
         ObjectMapper mapper = new ObjectMapper();
         try {
             File json = new File("controller.json");
-            return mapper.readValue(json, MainPageController.class);
+            return mapper.readValue(json, TimingController.class);
         } catch (IOException e) {
             e.printStackTrace();
         }

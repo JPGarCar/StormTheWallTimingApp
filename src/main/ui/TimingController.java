@@ -5,7 +5,7 @@ import models.Team;
 
 import java.util.ArrayList;
 
-public class MainPageController {
+public class TimingController {
 
     // private vars
     private Heat stagedHeat;
@@ -13,7 +13,7 @@ public class MainPageController {
     private ArrayList<Team> finishedTeams = new ArrayList<>();
 
     // DUMMY CONSTRUCTOR for Jackson JSON
-    public MainPageController() {}
+    public TimingController() {}
 
     // GETTERS AND SETTERS, used by Jackson JSON
     public ArrayList<Team> getFinishedTeams() {

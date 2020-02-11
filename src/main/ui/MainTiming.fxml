@@ -8,7 +8,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.mainController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.mainTimingController">
    <children>
       <MenuBar>
         <menus>
@@ -32,6 +32,7 @@
       <HBox alignment="CENTER_LEFT" prefHeight="40.0" spacing="15.0" VBox.vgrow="NEVER">
          <children>
             <Button fx:id="populateButton" mnemonicParsing="false" onAction="#populateHeatList" text="Populate" />
+            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Storm The Wall Timing System" HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" onAction="#populateFromSaveData" text="Populate From Save Data" />
          </children>
          <padding>
