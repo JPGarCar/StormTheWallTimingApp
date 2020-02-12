@@ -150,17 +150,17 @@
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="633.0" spacing="12.0" VBox.vgrow="NEVER">
                      <children>
-                        <Label text="Heat #">
+                        <Label prefHeight="19.0" prefWidth="48.0" text="Heat #">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <Label layoutX="15.0" layoutY="14.0" text="Team #">
+                        <Label layoutX="15.0" layoutY="14.0" prefHeight="19.0" prefWidth="57.0" text="Team #">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <Label layoutX="59.0" layoutY="14.0" prefHeight="19.0" prefWidth="341.0" text="Team Name" HBox.hgrow="ALWAYS">
+                        <Label layoutX="59.0" layoutY="14.0" prefHeight="19.0" prefWidth="291.0" text="Team Name" HBox.hgrow="ALWAYS">
                            <font>
                               <Font size="13.0" />
                            </font>
@@ -170,7 +170,7 @@
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <Label layoutX="182.0" layoutY="14.0" text="Status">
+                        <Label layoutX="182.0" layoutY="14.0" prefHeight="19.0" prefWidth="63.0" text="Status">
                            <font>
                               <Font size="13.0" />
                            </font>

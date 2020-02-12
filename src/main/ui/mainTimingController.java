@@ -30,24 +30,35 @@ public class mainTimingController {
 
     // Constants used for our widgets
     final double HBoxSpacing = 10;
+    final double HBoxSpacingRunning = 12;
 
     // special class for the list, has two texts, a drop down and a button at the end
     public class HBoxForRunningTeam extends HBox {
-        Label label = new Label();
+        Label teamName = new Label();
         Label id = new Label();
+        Label heatNumber = new Label();
+        Label teamType = new Label();
         Button button = new Button();
         ComboBox comboBox = new ComboBox();
 
-        HBoxForRunningTeam(String idText, String labelText, String buttonText, Sitrep sitrep) {
-            super(HBoxSpacing);
+        HBoxForRunningTeam(String idText, String labelText, String buttonText, Sitrep sitrep, String heatNumberText, String teamTypeText) {
+            super(HBoxSpacingRunning);
+
+            heatNumber.setText(heatNumberText);
+            heatNumber.setMaxWidth(40);
+            HBox.setHgrow(heatNumber, Priority.ALWAYS);
+
+            teamType.setText(teamTypeText);
+            teamType.setMaxWidth(45);
+            HBox.setHgrow(teamType, Priority.ALWAYS);
 
             id.setText(idText);
-            id.setMaxWidth(25);
+            id.setMaxWidth(40);
             HBox.setHgrow(id, Priority.ALWAYS);
 
-            label.setText(labelText);
-            label.setMaxWidth(Double.MAX_VALUE);
-            HBox.setHgrow(label, Priority.ALWAYS);
+            teamName.setText(labelText);
+            teamName.setMaxWidth(Double.MAX_VALUE);
+            HBox.setHgrow(teamName, Priority.ALWAYS);
 
             button.setText(buttonText);
             button.setOnAction(event -> {
@@ -70,7 +81,7 @@ public class mainTimingController {
                 updateStatus(Integer.parseInt(idText), comboBox.getValue().toString());
             });
 
-            this.getChildren().addAll(id, label, comboBox, button);
+            this.getChildren().addAll(heatNumber, id, teamName, teamType, comboBox, button);
         }
     }
 
@@ -164,7 +175,7 @@ public class mainTimingController {
 
         ArrayList<HBoxForRunningTeam> list = new ArrayList<>();
         for (Team team : teams) {
-            list.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), "Finish",  team.getSitRep()));
+            list.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), "Finish",  team.getSitRep(), Integer.toString(team.getCurrentHeatID()), team.getTeamType().name()));
         }
 
         return FXCollections.observableList(list);
@@ -245,7 +256,7 @@ public class mainTimingController {
 
         ArrayList<HBoxForRunningTeam>  withButtons = new ArrayList<>();
         for (Team team : controller.getRunningTeams()) {
-            withButtons.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), "Finish",  team.getSitRep()));
+            withButtons.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), "Finish",  team.getSitRep(), Integer.toString(team.getCurrentHeatID()), team.getTeamType().name()));
         }
 
 
