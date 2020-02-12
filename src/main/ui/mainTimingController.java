@@ -5,9 +5,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.stage.Stage;
 import models.Day;
 import models.Heat;
 import models.Team;
@@ -17,6 +21,7 @@ import models.enums.TeamType;
 import models.exceptions.*;
 import persistance.PersistanceWithJackson;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -224,6 +229,9 @@ public class mainTimingController {
     @FXML
     private Label heatTypeLabel;
 
+    @FXML
+    private Button editHeatButton;
+
 
     @FXML
     private void populateFromSaveData() {
@@ -328,6 +336,20 @@ public class mainTimingController {
             }
         }
         stopTeamNumber.setText("");
+    }
+
+    @FXML
+    private void editHeatAction() {
+        Parent root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("EditHeatPage.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

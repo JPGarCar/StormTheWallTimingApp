@@ -32,6 +32,7 @@
       <HBox alignment="CENTER_LEFT" prefHeight="40.0" spacing="15.0" VBox.vgrow="NEVER">
          <children>
             <Button fx:id="populateButton" mnemonicParsing="false" onAction="#populateHeatList" text="Populate" />
+            <Button fx:id="backToMainMenueButton" layoutX="20.0" layoutY="18.0" mnemonicParsing="false" text="Back To Main Menue" />
             <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Storm The Wall Timing System" HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" onAction="#populateFromSaveData" text="Populate From Save Data" />
          </children>
@@ -43,10 +44,10 @@
         <items>
             <VBox prefHeight="533.0" prefWidth="196.0">
                <children>
-                  <HBox alignment="CENTER" prefHeight="53.0" prefWidth="317.0" spacing="15.0" VBox.vgrow="NEVER">
+                  <HBox alignment="CENTER" prefHeight="46.0" prefWidth="317.0" spacing="15.0" VBox.vgrow="NEVER">
                      <children>
                         <TextField id="steageHeatNumber" fx:id="stageHeatNumber" onAction="#stageHeat" prefHeight="25.0" prefWidth="89.0" HBox.hgrow="ALWAYS" />
-                        <Button id="stageHeatButton" fx:id="stageHeatButton" mnemonicParsing="false" onAction="#stageHeat" prefHeight="40.0" prefWidth="95.0" text="Stage Heat" HBox.hgrow="ALWAYS">
+                        <Button id="stageHeatButton" fx:id="stageHeatButton" mnemonicParsing="false" onAction="#stageHeat" prefHeight="33.0" prefWidth="95.0" text="Stage Heat" HBox.hgrow="ALWAYS">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font></Button>
@@ -58,56 +59,154 @@
                         <Insets left="10.0" right="10.0" />
                      </padding>
                   </HBox>
-                  <VBox prefHeight="142.0" prefWidth="317.0">
+                  <VBox alignment="CENTER" prefHeight="154.0" prefWidth="317.0" spacing="5.0">
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="297.0" spacing="15.0">
                            <children>
-                              <Label text="Time To Start:" />
+                              <Label text="Time To Start:">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font></Label>
                               <Label fx:id="timeToStartLabel" text="Stage Heat to Get Info" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
                            <children>
-                              <Label text="Team Type:" />
-                              <Label fx:id="teamTypeLabel" text="Stage Heat to Get Info" />
+                              <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="61.0" prefWidth="155.0">
+                                 <children>
+                                    <Label text="Team Type:">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="teamTypeLabel" text="Stage Heat to Get Info" />
+                                 </children>
+                              </VBox>
+                              <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="61.0" prefWidth="173.0" spacing="5.0">
+                                 <children>
+                                    <Label text="Heat Type:">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font></Label>
+                                    <Label fx:id="heatTypeLabel" text="Stage Heat to Get Info" />
+                                 </children>
+                              </VBox>
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
-                           <children>
-                              <Label text="Heat Type:" />
-                              <Label fx:id="heatTypeLabel" text="Stage Heat to Get Info" />
-                           </children>
-                        </HBox>
+                        <Button id="startHeatButton" fx:id="editHeatButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#editHeatAction" prefHeight="27.0" prefWidth="149.0" text="Edit Heat">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Button>
                      </children>
                   </VBox>
-                  <ListView id="heatTeamList" fx:id="stageHeatTeamList" maxHeight="10000.0" maxWidth="10000.0" prefHeight="471.0" prefWidth="317.0" VBox.vgrow="ALWAYS" />
-                  <HBox alignment="CENTER" prefHeight="61.0" prefWidth="317.0" VBox.vgrow="NEVER">
+                  <Separator prefWidth="200.0" VBox.vgrow="NEVER" />
+                  <VBox prefHeight="475.0" prefWidth="317.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="317.0" spacing="10.0" VBox.vgrow="NEVER">
+                           <children>
+                              <Label text="Team #">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="15.0" layoutY="15.0" maxWidth="1.7976931348623157E308" text="Team Name" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="58.0" layoutY="15.0" text="Status">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="5.0" right="5.0" />
+                           </padding>
+                        </HBox>
+                        <ListView id="heatTeamList" fx:id="stageHeatTeamList" maxHeight="10000.0" maxWidth="10000.0" prefHeight="471.0" prefWidth="317.0" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+                  <HBox alignment="CENTER" prefHeight="61.0" prefWidth="317.0" spacing="15.0" VBox.vgrow="NEVER">
                      <children>
                         <Button id="startHeatButton" fx:id="startHeatButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#startHeat" text="Start Heat" HBox.hgrow="ALWAYS">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font></Button>
+                        <Button id="startHeatButton" fx:id="undoHeatStart" alignment="CENTER" contentDisplay="CENTER" layoutX="113.0" layoutY="21.0" mnemonicParsing="false" text="Undo">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Button>
                      </children>
                   </HBox>
                </children>
             </VBox>
-            <ListView id="runningTeamsList" fx:id="runningTeamsList" maxHeight="10000.0" maxWidth="10000.0" />
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="633.0" spacing="12.0" VBox.vgrow="NEVER">
+                     <children>
+                        <Label text="Heat #">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="15.0" layoutY="14.0" text="Team #">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="59.0" layoutY="14.0" prefHeight="19.0" prefWidth="341.0" text="Team Name" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="107.0" layoutY="14.0" text="Team Type">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="182.0" layoutY="14.0" text="Status">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="250.0" layoutY="14.0" text="Finish">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="5.0" right="5.0" />
+                     </padding>
+                  </HBox>
+                  <ListView id="runningTeamsList" fx:id="runningTeamsList" prefHeight="453.0" prefWidth="633.0" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
             <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
               <items>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <HBox alignment="CENTER" prefHeight="59.0" prefWidth="296.0" spacing="10.0">
+                        <HBox alignment="CENTER" prefHeight="37.0" prefWidth="296.0" spacing="10.0">
                            <children>
                               <TextField id="stopTeamNumber" fx:id="stopTeamNumber" alignment="CENTER" onAction="#endTeamForButton" prefHeight="25.0" prefWidth="173.0" HBox.hgrow="ALWAYS" />
-                              <Button id="stopTeamButton" fx:id="stopTeamButton" mnemonicParsing="false" onAction="#endTeamForButton" prefHeight="39.0" prefWidth="104.0" text="Stop Team" HBox.hgrow="ALWAYS">
+                              <Button id="stopTeamButton" fx:id="stopTeamButton" mnemonicParsing="false" onAction="#endTeamForButton" prefHeight="31.0" prefWidth="104.0" text="Stop Team" HBox.hgrow="ALWAYS">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font></Button>
                            </children>
                         </HBox>
+                        <Separator prefWidth="200.0" VBox.vgrow="NEVER">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </VBox.margin>
+                        </Separator>
+                        <ListView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
