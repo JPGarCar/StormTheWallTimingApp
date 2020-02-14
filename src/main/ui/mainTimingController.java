@@ -212,7 +212,7 @@ public class mainTimingController {
                 couldNotCalculateFinalTimeExcpetion.printStackTrace();
             } catch (NoCurrentHeatIDException e) {
                 e.printStackTrace();
-            } catch (NoTeamException e) {
+            } catch (NoRemainingHeatsException e) {
                 e.printStackTrace();
             }
         }
@@ -239,7 +239,7 @@ public class mainTimingController {
             returnTeams(day.getAtHeat() - 1);
             try {
                 day.undoLastHeatStart();
-            } catch (NoHeatWithIDException e) {
+            } catch (NoHeatWithIDException | CanNotUndoHeatException e) {
                 e.printStackTrace();
             }
             stageHeatNumber.setText(Integer.toString(day.getAtHeat()));
