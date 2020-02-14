@@ -1,7 +1,9 @@
 package ui;
 
+
 import models.Heat;
 import models.Team;
+
 
 import java.util.ArrayList;
 
@@ -9,11 +11,18 @@ public class TimingController {
 
     // private vars
     private Heat stagedHeat;
-    private ArrayList<Team> runningTeams = new ArrayList<>();
-    private ArrayList<Team> finishedTeams = new ArrayList<>();
+    private ArrayList<Team> runningTeams;
+    private ArrayList<Team> finishedTeams;
+
+    private mainTimingController uiController;
+
 
     // DUMMY CONSTRUCTOR for Jackson JSON
-    public TimingController() {}
+    public TimingController(mainTimingController uiController) {
+        runningTeams = new ArrayList<>();
+        finishedTeams = new ArrayList<>();
+        this.uiController = uiController;
+    }
 
     // GETTERS AND SETTERS, used by Jackson JSON
     public ArrayList<Team> getFinishedTeams() {
@@ -42,5 +51,27 @@ public class TimingController {
 
     public void addFinishedTeam(Team team) {
         finishedTeams.add(team);
+        uiController.updateFinishedTeamList();
+    }
+
+    public void removeRunningTeam(Team team) {
+        runningTeams.remove(team);
+        uiController.updateRunningTeamList();
+    }
+
+    public void removeFinishedTeam(Team team) {
+        finishedTeams.remove(team);
+        uiController.updateFinishedTeamList();
+    }
+
+    public void addRunningTeam(Team team) {
+        runningTeams.add(team);
+        uiController.updateRunningTeamList();
+    }
+
+    public void addRunningTeams(ArrayList<Team> teamArrayList) {
+        for (Team team : teamArrayList) {
+            addRunningTeam(team);
+        }
     }
 }

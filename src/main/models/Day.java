@@ -111,4 +111,10 @@ public class Day {
         throw new NoHeatWithIDException();
     }
 
+    // EFFECTS: will delete start time for teams that heat just started, set heat to not started
+    public void undoLastHeatStart() throws NoHeatWithIDException {
+        getHeatByID(atHeat - 1).undoHeatStart();
+        atHeat --;
+    }
+
 }

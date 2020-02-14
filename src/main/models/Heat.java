@@ -110,7 +110,7 @@ public class Heat {
         this.startTime = startTime;
         hasStarted = true;
         for (Team team : teams) {
-            team.setCurrentHeatIDFromHeat(this);
+            team.setCurrentHeatID(heatNumber);
         }
     }
 
@@ -165,6 +165,15 @@ public class Heat {
             }
         } else {
             throw new NoTeamException();
+        }
+    }
+
+    // EFFECTS: restart the heat by deleting start time and changing hasStarted
+    public void undoHeatStart() {
+        hasStarted = false;
+        startTime = null;
+        for (Team team : teams) {
+            team.setCurrentHeatID(-1);
         }
     }
 

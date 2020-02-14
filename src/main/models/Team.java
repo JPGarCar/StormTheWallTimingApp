@@ -132,10 +132,6 @@ public class Team {
         return currentHeatID;
     }
 
-    public void setCurrentHeatIDFromHeat(Heat currentHeatID) {
-        this.currentHeatID = currentHeatID.getHeatNumber();
-    }
-
     public void setSitRep(Sitrep sitRep) {
         this.sitRep = sitRep;
     }
