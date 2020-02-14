@@ -1,22 +1,16 @@
 package ui;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import models.Day;
 import models.Heat;
 import models.Team;
 import models.enums.LeagueType;
-import models.enums.Sitrep;
 import models.enums.TeamType;
 import models.exceptions.*;
 import persistance.PersistanceWithJackson;
@@ -26,7 +20,6 @@ import ui.widgets.HBoxForStagedTeam;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 
 public class mainTimingController {
@@ -67,21 +60,15 @@ public class mainTimingController {
     // EFFECTS: makes sure text properties only accept numerical values and initializes the
     //          stageHeatNumber to the current heat available
     private void initStuff() {
-        stageHeatNumber.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (!newValue.matches("\\d{0,7}([\\.]\\d{0,4})?")) {
-                    stageHeatNumber.setText(oldValue);
-                }
+        stageHeatNumber.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d{0,7}([\\.]\\d{0,4})?")) {
+                stageHeatNumber.setText(oldValue);
             }
         });
 
-        stopTeamNumber.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (!newValue.matches("\\d{0,7}([\\.]\\d{0,4})?")) {
-                    stageHeatNumber.setText(oldValue);
-                }
+        stopTeamNumber.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d{0,7}([\\.]\\d{0,4})?")) {
+                stageHeatNumber.setText(oldValue);
             }
         });
         stageHeatNumber.setText(Integer.toString(day.getAtHeat()));

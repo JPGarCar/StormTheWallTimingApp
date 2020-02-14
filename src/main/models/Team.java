@@ -1,6 +1,7 @@
 package models;
 
 import com.fasterxml.jackson.annotation.*;
+import com.sun.istack.internal.NotNull;
 import models.enums.LeagueType;
 import models.enums.Sitrep;
 import models.enums.TeamType;
@@ -40,7 +41,7 @@ public class Team {
     }
 
     // CONSTRUCTOR
-    public Team(TeamType teamType, LeagueType teamLeague, int teamNumber, String teamName) {
+    public Team(@NotNull TeamType teamType, @NotNull LeagueType teamLeague, @NotNull int teamNumber, @NotNull String teamName) {
         this.teamType = teamType;
         this.teamLeague = teamLeague;
         this.teamNumber = teamNumber;
@@ -92,39 +93,39 @@ public class Team {
         return doneHeats;
     }
 
-    public void setTeamType(TeamType teamType) {
+    public void setTeamType(@NotNull TeamType teamType) {
         this.teamType = teamType;
     }
 
-    public void setHeats(ArrayList<Heat> heats) {
+    public void setHeats(@NotNull ArrayList<Heat> heats) {
         this.heats = heats;
     }
 
-    public void setCurrentHeatID(int currentHeatID) {
+    public void setCurrentHeatID(@NotNull int currentHeatID) {
         this.currentHeatID = currentHeatID;
     }
 
-    public void setDoneHeats(ArrayList<TeamHeat> doneHeats) {
+    public void setDoneHeats(@NotNull ArrayList<TeamHeat> doneHeats) {
         this.doneHeats = doneHeats;
     }
 
-    public void setNotes(String notes) {
+    public void setNotes(@NotNull String notes) {
         this.notes = notes;
     }
 
-    public void setRemainingHeats(ArrayList<TeamHeat> remainingHeats) {
+    public void setRemainingHeats(@NotNull ArrayList<TeamHeat> remainingHeats) {
         this.remainingHeats = remainingHeats;
     }
 
-    public void setTeamLeague(LeagueType teamLeague) {
+    public void setTeamLeague(@NotNull LeagueType teamLeague) {
         this.teamLeague = teamLeague;
     }
 
-    public void setTeamName(String teamName) {
+    public void setTeamName(@NotNull String teamName) {
         this.teamName = teamName;
     }
 
-    public void setTeamNumber(int teamNumber) {
+    public void setTeamNumber(@NotNull int teamNumber) {
         this.teamNumber = teamNumber;
     }
 
@@ -132,15 +133,15 @@ public class Team {
         return currentHeatID;
     }
 
-    public void setSitRep(Sitrep sitRep) {
+    public void setSitRep(@NotNull Sitrep sitRep) {
         this.sitRep = sitRep;
     }
 
     // EFFECTS: set the end time to the appropriate TeamHeat, depends on the heat number given.
     //          will also move the TeamHeat who got a final time to the done heat list
-    public void markEndTime(Calendar endTime) throws NoHeatsException, NoCurrentHeatIDException, CouldNotCalculateFinalTimeExcpetion, NoTeamException {
+    public void markEndTime(@NotNull Calendar endTime) throws NoHeatsException, NoCurrentHeatIDException, CouldNotCalculateFinalTimeExcpetion, NoRemainingHeatsException {
         if (remainingHeats.size() == 0) {
-            throw new NoHeatsException("it's end time");
+            throw new NoRemainingHeatsException();
         } else if (currentHeatID == -1) {
             throw new NoCurrentHeatIDException();
         }
@@ -163,7 +164,7 @@ public class Team {
     }
 
     // Helper function: creates a TeamHeat out of a Heat
-    private TeamHeat heatToTeamHeat(Heat heat) {
+    private TeamHeat heatToTeamHeat(@NotNull Heat heat) {
         return new TeamHeat(heat.getHeatNumber(), this);
     }
 

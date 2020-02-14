@@ -1,5 +1,6 @@
 package models;
 
+import com.sun.istack.internal.NotNull;
 import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
 
 import java.util.Calendar;
@@ -20,34 +21,34 @@ public class FinalTime {
     public FinalTime() {}
 
     // CONSTRUCTOR
-    public FinalTime(Calendar startTime, Calendar stopTime) throws CouldNotCalculateFinalTimeExcpetion {
+    public FinalTime(@NotNull Calendar startTime, @NotNull Calendar stopTime) throws CouldNotCalculateFinalTimeExcpetion {
         this.startTime = startTime;
         this.stopTime = stopTime;
         calculate();
     }
 
     // SETTERS AND GETTERS, used for Jackson JSON
-    public void setStartTime(Calendar startTime) {
+    public void setStartTime(@NotNull Calendar startTime) {
         this.startTime = startTime;
     }
 
-    public void setMillisecondOfSet(long millisecondOfSet) {
+    public void setMillisecondOfSet(@NotNull long millisecondOfSet) {
         this.millisecondOfSet = millisecondOfSet;
     }
 
-    public void setMilliseconds(int milliseconds) {
+    public void setMilliseconds(@NotNull int milliseconds) {
         this.milliseconds = milliseconds;
     }
 
-    public void setMinutes(int minutes) {
+    public void setMinutes(@NotNull int minutes) {
         this.minutes = minutes;
     }
 
-    public void setSeconds(int seconds) {
+    public void setSeconds(@NotNull int seconds) {
         this.seconds = seconds;
     }
 
-    public void setStopTime(Calendar stopTime) {
+    public void setStopTime(@NotNull Calendar stopTime) {
         this.stopTime = stopTime;
     }
 
@@ -77,17 +78,15 @@ public class FinalTime {
 
     // MODIFIES: startTime, stopTime
     // EFFECTS: add a new start and stop time
-    public void addTimes(Calendar startTime, Calendar stopTime) {
+    public void addTimes(@NotNull Calendar startTime, @NotNull Calendar stopTime) {
         this.startTime = startTime;
         this.stopTime = stopTime;
     }
 
     // EFFECTS: public function to call calculateSeconds and calculateFinalTime
     public void calculate() throws CouldNotCalculateFinalTimeExcpetion {
-        if (startTime == null) {
-            throw new CouldNotCalculateFinalTimeExcpetion("start time");
-        } else if (stopTime == null) {
-            throw new CouldNotCalculateFinalTimeExcpetion("stop time");
+        if (startTime == null || stopTime == null) {
+            throw new CouldNotCalculateFinalTimeExcpetion();
         }
         calculateFinalTime();
     }

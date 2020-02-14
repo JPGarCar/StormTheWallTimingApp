@@ -14,8 +14,6 @@ import models.exceptions.NoTeamException;
 import ui.TimingController;
 
 import java.util.Arrays;
-import java.util.concurrent.Callable;
-import java.util.function.Function;
 
 public class HBoxForRunningTeam extends CustomHBox {
     private static final double HBoxSpacingRunning = 20;

@@ -2,6 +2,7 @@ package models;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.sun.istack.internal.NotNull;
 import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
 import models.exceptions.NoHeatsException;
 import models.exceptions.NoTeamException;
@@ -23,7 +24,7 @@ public class TeamHeat {
     }
 
     // CONSTRUCTOR
-    public TeamHeat(int heatID, Team team) {
+    public TeamHeat(@NotNull int heatID,@NotNull Team team) {
         this.heatID = heatID;
         this.team = team;
     }
@@ -41,20 +42,20 @@ public class TeamHeat {
         return team;
     }
 
-    public void setFinalTime(FinalTime finalTime) {
+    public void setFinalTime(@NotNull FinalTime finalTime) {
         this.finalTime = finalTime;
     }
 
-    public void setHeatID(int heatID) {
+    public void setHeatID(@NotNull int heatID) {
         this.heatID = heatID;
     }
 
-    public void setTeam(Team team) {
+    public void setTeam(@NotNull Team team) {
         this.team = team;
     }
 
     // EFFECTS: constructs a FinalTime with the heat's start and input end time
-    public void calculateEndTime(Calendar endTime) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion, NoTeamException {
+    public void calculateEndTime(@NotNull Calendar endTime) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion {
         Heat heat = getHeatFromTeam();
         if (heat == null) {
             throw new NoHeatsException();
@@ -65,10 +66,7 @@ public class TeamHeat {
 
 
     // EFFECTS: return the heat´s number associated with the TeamHeat
-    private Heat getHeatFromTeam() throws NoTeamException {
-        if (team == null) {
-            throw new NoTeamException("heats");
-        }
+    private Heat getHeatFromTeam() {
         for (Heat heat : team.getHeats()) {
             if (heat.getHeatNumber() == heatID) {
                 return heat;

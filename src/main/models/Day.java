@@ -1,7 +1,9 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.sun.istack.internal.NotNull;
 import models.exceptions.AddHeatException;
+import models.exceptions.CanNotUndoHeatException;
 import models.exceptions.NoHeatWithIDException;
 
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ public class Day {
     }
 
     // CONSTRUCTOR
-    public Day(Calendar dayToRun, int dayNumber) {
+    public Day(@NotNull Calendar dayToRun, @NotNull int dayNumber) {
         this.dayToRun = dayToRun;
         heats = new ArrayList<Heat>();
         this.dayNumber = dayNumber;
@@ -39,7 +41,7 @@ public class Day {
         this.heats = heats;
     }
 
-    public void setAtHeat(int atHeat) {
+    public void setAtHeat(@NotNull int atHeat) {
         this.atHeat = atHeat;
     }
 
@@ -51,11 +53,11 @@ public class Day {
         atHeat++;
     }
 
-    public void setDayToRun(Calendar dayToRun) {
+    public void setDayToRun(@NotNull Calendar dayToRun) {
         this.dayToRun = dayToRun;
     }
 
-    public void setDayNumber(int dayNumber) {
+    public void setDayNumber(@NotNull int dayNumber) {
         this.dayNumber = dayNumber;
     }
 
@@ -112,7 +114,7 @@ public class Day {
     }
 
     // EFFECTS: will delete start time for teams that heat just started, set heat to not started
-    public void undoLastHeatStart() throws NoHeatWithIDException {
+    public void undoLastHeatStart() throws NoHeatWithIDException, CanNotUndoHeatException {
         getHeatByID(atHeat - 1).undoHeatStart();
         atHeat --;
     }

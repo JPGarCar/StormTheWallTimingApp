@@ -1,12 +1,10 @@
 package models;
 
 import com.fasterxml.jackson.annotation.*;
+import com.sun.istack.internal.NotNull;
 import models.enums.LeagueType;
 import models.enums.TeamType;
-import models.exceptions.AddHeatException;
-import models.exceptions.AddTeamException;
-import models.exceptions.NoHeatsException;
-import models.exceptions.NoTeamException;
+import models.exceptions.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,7 +34,7 @@ public class Heat {
     }
 
     // CONSTRUCTOR
-    public Heat(Calendar timeToStart, LeagueType leagueType, TeamType teamType, int heatNumber, Day dayToRace) throws AddHeatException {
+    public Heat(@NotNull Calendar timeToStart, @NotNull LeagueType leagueType, @NotNull TeamType teamType, @NotNull int heatNumber,@NotNull Day dayToRace) throws AddHeatException {
         this.timeToStart = timeToStart;
         this.leagueType = leagueType;
         this.teamType = teamType;
@@ -76,7 +74,7 @@ public class Heat {
         return timeToStart;
     }
 
-    public void setStartTime(Calendar startTime) {
+    public void setStartTime(@NotNull Calendar startTime) {
         this.startTime = startTime;
     }
 
@@ -84,29 +82,29 @@ public class Heat {
         this.hasStarted = hasStarted;
     }
 
-    public void setHeatNumber(int heatNumber) {
+    public void setHeatNumber(@NotNull int heatNumber) {
         this.heatNumber = heatNumber;
     }
 
-    public void setLeagueType(LeagueType leagueType) {
+    public void setLeagueType(@NotNull LeagueType leagueType) {
         this.leagueType = leagueType;
     }
 
-    public void setTeams(ArrayList<Team> teams) {
+    public void setTeams(@NotNull ArrayList<Team> teams) {
         this.teams = teams;
     }
 
-    public void setTeamType(TeamType teamType) {
+    public void setTeamType(@NotNull TeamType teamType) {
         this.teamType = teamType;
     }
 
-    public void setTimeToStart(Calendar timeToStart) {
+    public void setTimeToStart(@NotNull Calendar timeToStart) {
         this.timeToStart = timeToStart;
     }
 
     // MODIFIES: startTime, hasStarted, teams(children)
     // EFFECTS: sets the heat's startTime, marks hasStarted to true, and sets this heat's team's current heat to this
-    public void markStartTimeStarted(Calendar startTime) {
+    public void markStartTimeStarted(@NotNull Calendar startTime) {
         this.startTime = startTime;
         hasStarted = true;
         for (Team team : teams) {
@@ -119,7 +117,7 @@ public class Heat {
         return hasStarted;
     }
 
-    public void setDayToRace(Day day) {
+    public void setDayToRace(@NotNull Day day) {
         try {
             day.addHeat(this);
         } catch (AddHeatException e) {
@@ -169,11 +167,15 @@ public class Heat {
     }
 
     // EFFECTS: restart the heat by deleting start time and changing hasStarted
-    public void undoHeatStart() {
-        hasStarted = false;
-        startTime = null;
-        for (Team team : teams) {
-            team.setCurrentHeatID(-1);
+    public void undoHeatStart() throws CanNotUndoHeatException {
+        if (hasStarted) {
+            hasStarted = false;
+            startTime = null;
+            for (Team team : teams) {
+                team.setCurrentHeatID(-1);
+            }
+        } else {
+            throw new CanNotUndoHeatException();
         }
     }
 
