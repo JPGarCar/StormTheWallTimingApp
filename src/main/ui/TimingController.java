@@ -73,6 +73,8 @@ public class TimingController {
         this.uiController = uiController;
     }
 
+
+    // EFFECTS: add a team to the finished team list, included the task to move to final finished
     public void addFinishedTeam(Team team) {
         finishedTeams.add(team);
         uiController.updateFinishedTeamList();
@@ -91,24 +93,29 @@ public class TimingController {
         10000);
     }
 
+    // EFFECTS: remove a team from the running team list
     public void removeRunningTeam(Team team) {
         runningTeams.remove(team);
     }
 
+    // EFFECTS: remove a team from the running team list and update the ui running team list
     public void removeRunningTeamWithUpdate(Team team) {
         removeRunningTeam(team);
         uiController.updateRunningTeamList();
     }
 
+    // EFFECTS: add a team to the running team list
     public void addRunningTeam(Team team) {
         runningTeams.add(team);
     }
 
+    // EFFECTS: add a team to the running team list and update the ui running team list
     public void addRunningTeamWithUpdate(Team team) {
         addRunningTeam(team);
         uiController.addToRunningTeamListToTop(team);
     }
 
+    // EFFECTS: add multiple teams to the running team list, input as an array
     public void addRunningTeams(ArrayList<Team> teamArrayList) {
         for (Team team : teamArrayList) {
             addRunningTeam(team);
@@ -116,15 +123,18 @@ public class TimingController {
         uiController.updateRunningTeamList();
     }
 
+    // EFFECTS: remove a team from the finished team list
     public void removeFinishedTeam(Team team) {
         finishedTeams.remove(team);
     }
 
+    // EFFECTS: remove a team from the finished team list and update ui finished team list
     public void removeFinishedTeamWithUpdate(Team team) {
         removeFinishedTeam(team);
         uiController.updateFinishedTeamList();
     }
 
+    // EFFECTS: send team back to running team list and remove from finished list, undo end time too
     public void undoTeamFinish(int teamID) {
         for (Team team : finishedTeams) {
             if (team.getTeamNumber() == teamID) {
@@ -136,6 +146,7 @@ public class TimingController {
         }
     }
 
+    // EFFECTS: add a team to the final finished team list and update ui final finished team list
     public void addFinalFinishedTeam(Team team) {
         finalFinishedTeams.add(team);
         uiController.addToFinalFinishedTeamListToTop(team);

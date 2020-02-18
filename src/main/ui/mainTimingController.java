@@ -1,5 +1,6 @@
 package ui;
 
+import com.sun.istack.internal.NotNull;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,6 +32,7 @@ public class mainTimingController {
     private TimingController controller = new TimingController(this);
     private Calendar undoHeatTimer;
 
+    // EFFECTS: set running team list to the controller's running team list
     public void updateRunningTeamList() {
         ArrayList<HBoxForRunningTeam> hBoxForRunningTeams = new ArrayList<>();
         for (Team team : controller.getRunningTeams()) {
@@ -39,6 +41,7 @@ public class mainTimingController {
         runningTeamsList.setItems(FXCollections.observableList(hBoxForRunningTeams));
     }
 
+    // EFFECTS: add a team to the running team list, first is private, second and third are the public ones to use
     public void addToRunningTeamList(Team team, boolean top) {
         ArrayList<HBoxForRunningTeam> hBoxForRunningTeams = new ArrayList<>();
         hBoxForRunningTeams.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getSitRep(), team.getCurrentHeatID(), team.getTeamType().name(), controller));
@@ -48,15 +51,14 @@ public class mainTimingController {
             runningTeamsList.setItems(FXCollections.concat(runningTeamsList.getItems(), FXCollections.observableList(hBoxForRunningTeams)));
         }
     }
-
-    public void addToRunningTeamListToBottom(Team team) {
+    public void addToRunningTeamListToBottom(@NotNull Team team) {
         addToRunningTeamList(team, false);
     }
-
-    public void addToRunningTeamListToTop(Team team) {
+    public void addToRunningTeamListToTop(@NotNull Team team) {
         addToRunningTeamList(team, true);
     }
 
+    // EFFECTS: set finished but possible undo team list to the controller's finished team list
     public void updateFinishedTeamList() {
         ArrayList<HBoxForFinishedUndoTeam> hBoxForFinishedUndoTeams = new ArrayList<>();
         for (Team team : controller.getFinishedTeams()) {
@@ -65,7 +67,8 @@ public class mainTimingController {
         undoFinishedTeamList.setItems(FXCollections.observableList(hBoxForFinishedUndoTeams));
     }
 
-    public void addToFinishedTeamList(Team team, boolean top) {
+    // EFFECTS: add a team to the finished team list, first is private, second and third are the public ones to use
+    private void addToFinishedTeamList(Team team, boolean top) {
         ArrayList<HBoxForFinishedUndoTeam> hBoxForFinishedUndoTeams = new ArrayList<>();
         hBoxForFinishedUndoTeams.add(new HBoxForFinishedUndoTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString(), controller));
         if (top) {
@@ -74,16 +77,15 @@ public class mainTimingController {
             undoFinishedTeamList.setItems(FXCollections.concat(undoFinishedTeamList.getItems(), FXCollections.observableList(hBoxForFinishedUndoTeams)));
         }
     }
-
-    public void addToFinishedTeamListToTop(Team team) {
+    public void addToFinishedTeamListToTop(@NotNull Team team) {
         addToFinishedTeamList(team, true);
     }
-
-    public void addToFinishedTeamListToBottom(Team team) {
+    public void addToFinishedTeamListToBottom(@NotNull Team team) {
         addToFinishedTeamList(team, false);
     }
 
 
+    // EFFECTS: set the list of final finished teams to all those in the controller´s final finished teams list
     public void updateFinalFinishedTeamList() {
         ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
         for (Team team : controller.getFinalFinishedTeams()) {
@@ -93,7 +95,8 @@ public class mainTimingController {
         finishedTeamsList.setItems(FXCollections.observableList(hBoxForFinishedTeams));
     }
 
-    public void addToFinalFinishedTeamList(Team team, boolean top) {
+    // EFFECTS: add a team to the final finished team list, first is private, second and third are the public ones to use
+    private void addToFinalFinishedTeamList(Team team, boolean top) {
         ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
         hBoxForFinishedTeams.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString(),team.getSitRep(), controller));
         if (top) {
@@ -102,15 +105,14 @@ public class mainTimingController {
             finishedTeamsList.setItems(FXCollections.concat(finishedTeamsList.getItems(), FXCollections.observableList(hBoxForFinishedTeams)));
         }
     }
-
-    public void addToFinalFinishedTeamListToTop(Team team) {
+    public void addToFinalFinishedTeamListToTop(@NotNull Team team) {
         addToFinalFinishedTeamList(team, true);
     }
-
-    public void addToFinalFinishedTeamListToBottom(Team team) {
+    public void addToFinalFinishedTeamListToBottom(@NotNull Team team) {
         addToFinalFinishedTeamList(team, false);
     }
 
+    // EFFECTS: set the list for teams in the staged list from the controller's staged heat heat
     public void updateStagedHeatTeamList() {
         ArrayList<HBoxForStagedTeam> list = new ArrayList<>();
         for (Team team : controller.getStagedHeat().getTeams()) {
