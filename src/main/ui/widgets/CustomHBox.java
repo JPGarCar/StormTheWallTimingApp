@@ -3,6 +3,7 @@ package ui.widgets;
 import javafx.collections.FXCollections;
 import javafx.scene.layout.HBox;
 import models.Team;
+import models.TeamHeat;
 import models.enums.Sitrep;
 import models.exceptions.*;
 import ui.TimingController;
@@ -17,11 +18,11 @@ public abstract class CustomHBox extends HBox {
         super(spacing);
     }
 
-    // EFFECTS: update the status of a specific team
-    public void updateStatus(int id, String sitrep, TimingController timingController) {
+    // EFFECTS: update the status of a specific team, only use for team in stage heat list
+    public void updateStatus(int teamID, String sitrep, TimingController timingController) {
         for (Team team : timingController.getStagedHeat().getTeams()) {
-            if (team.getTeamNumber() == id) {
-                team.setSitRep(Sitrep.valueOf(sitrep));
+            if (team.getTeamNumber() == teamID) {
+                team.getTeamHeatByHeatID(timingController.getStagedHeat().getHeatNumber()).setSitrep(Sitrep.valueOf(sitrep));
             }
         }
     }

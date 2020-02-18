@@ -1,79 +1,64 @@
 {
   "stagedHeat" : {
-    "@UUID" : "89aa96ef-5201-4bf2-82f1-a2df0b226152",
-    "timeToStart" : 1581988770392,
+    "@UUID" : "ab94aa3e-42ae-4e92-b68b-92a36ce0c062",
+    "timeToStart" : 1582003074538,
     "leagueType" : "JFF",
     "teamType" : "OPEN",
     "heatNumber" : 1,
     "hasStarted" : true,
-    "startTime" : 1581988772151,
+    "startTime" : 1582003090504,
     "teams" : [ {
-      "@UUID" : "4b97e3fd-3109-4e29-b65d-f7454d592412",
+      "@UUID" : "e7937b69-e3f6-4961-89cc-3e91212027cc",
       "teamType" : "OPEN",
-      "sitRep" : "NONE",
-      "teamLeague" : "JFF",
-      "notes" : "",
-      "currentHeatID" : 1,
-      "possibleUndo" : false,
-      "teamNumber" : 1,
-      "teamName" : "Cool Name2",
-      "heats" : [ "89aa96ef-5201-4bf2-82f1-a2df0b226152" ],
-      "doneHeats" : [ ],
-      "remainingHeats" : [ {
-        "heatID" : 1,
-        "finalTime" : null
-      } ]
-    }, {
-      "@UUID" : "df59048e-c7ae-4cfc-84cf-ba12ead74040",
-      "teamType" : "OPEN",
-      "sitRep" : "NONE",
       "teamLeague" : "JFF",
       "notes" : "",
       "currentHeatID" : 1,
       "possibleUndo" : false,
       "teamNumber" : 2,
       "teamName" : "Cool Name3",
-      "heats" : [ "89aa96ef-5201-4bf2-82f1-a2df0b226152" ],
+      "heats" : [ "ab94aa3e-42ae-4e92-b68b-92a36ce0c062" ],
       "doneHeats" : [ ],
       "remainingHeats" : [ {
         "heatID" : 1,
-        "finalTime" : null
+        "finalTime" : null,
+        "sitrep" : "NONE"
       } ]
     }, {
-      "@UUID" : "9c8cefd8-ba76-40bd-b784-c265e128f406",
+      "@UUID" : "34256a33-b110-4dce-8e49-1cd33fde8cf4",
       "teamType" : "OPEN",
-      "sitRep" : "NONE",
       "teamLeague" : "JFF",
       "notes" : "",
       "currentHeatID" : 1,
       "possibleUndo" : false,
       "teamNumber" : 3,
       "teamName" : "Cool Name4",
-      "heats" : [ "89aa96ef-5201-4bf2-82f1-a2df0b226152" ],
+      "heats" : [ "ab94aa3e-42ae-4e92-b68b-92a36ce0c062" ],
       "doneHeats" : [ ],
       "remainingHeats" : [ {
         "heatID" : 1,
-        "finalTime" : null
+        "finalTime" : null,
+        "sitrep" : "NONE"
       } ]
     }, {
-      "@UUID" : "1d645a2c-0613-4377-b16c-4a101ea0fe90",
+      "@UUID" : "a1d8ca5c-dca6-4b2d-b460-0253559ac3c5",
       "teamType" : "OPEN",
-      "sitRep" : "NONE",
       "teamLeague" : "JFF",
       "notes" : "",
       "currentHeatID" : 1,
       "possibleUndo" : false,
       "teamNumber" : 4,
       "teamName" : "Cool Name5",
-      "heats" : [ "89aa96ef-5201-4bf2-82f1-a2df0b226152" ],
+      "heats" : [ "ab94aa3e-42ae-4e92-b68b-92a36ce0c062" ],
       "doneHeats" : [ ],
       "remainingHeats" : [ {
         "heatID" : 1,
-        "finalTime" : null
+        "finalTime" : null,
+        "sitrep" : "NONE"
       } ]
-    } ]
+    } ],
+    "teamsThatWillRun" : [ "e7937b69-e3f6-4961-89cc-3e91212027cc", "34256a33-b110-4dce-8e49-1cd33fde8cf4", "a1d8ca5c-dca6-4b2d-b460-0253559ac3c5" ]
   },
-  "runningTeams" : [ "4b97e3fd-3109-4e29-b65d-f7454d592412", "df59048e-c7ae-4cfc-84cf-ba12ead74040", "9c8cefd8-ba76-40bd-b784-c265e128f406", "1d645a2c-0613-4377-b16c-4a101ea0fe90" ],
+  "runningTeams" : [ "e7937b69-e3f6-4961-89cc-3e91212027cc", "34256a33-b110-4dce-8e49-1cd33fde8cf4", "a1d8ca5c-dca6-4b2d-b460-0253559ac3c5" ],
   "finishedTeams" : [ ],
   "finalFinishedTeams" : [ ]
 }

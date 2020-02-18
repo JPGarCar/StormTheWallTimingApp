@@ -3,6 +3,7 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sun.istack.internal.NotNull;
+import models.enums.Sitrep;
 import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
 import models.exceptions.NoHeatsException;
 import models.exceptions.NoTeamException;
@@ -14,6 +15,7 @@ public class TeamHeat {
     // private fields
     private int heatID;
     private FinalTime finalTime;
+    private Sitrep sitrep;
 
     // private connections
     @JsonBackReference
@@ -27,6 +29,7 @@ public class TeamHeat {
     public TeamHeat(@NotNull int heatID,@NotNull Team team) {
         this.heatID = heatID;
         this.team = team;
+        this.sitrep = Sitrep.NONE;
     }
 
     // GETTERS AND SETTERS, used for Jackson JSON
@@ -52,6 +55,14 @@ public class TeamHeat {
 
     public void setTeam(@NotNull Team team) {
         this.team = team;
+    }
+
+    public Sitrep getSitrep() {
+        return sitrep;
+    }
+
+    public void setSitrep(@NotNull Sitrep sitrep) {
+        this.sitrep = sitrep;
     }
 
     // EFFECTS: constructs a FinalTime with the heat's start and input end time

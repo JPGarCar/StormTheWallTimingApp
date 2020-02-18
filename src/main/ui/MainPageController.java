@@ -2,15 +2,18 @@ package ui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
+
 
 import java.io.IOException;
 
 public class MainPageController {
+
+    private TimingController controller;
+
+    public MainPageController(TimingController controller) {
+        this.controller = controller;
+    }
 
     @FXML
     private Button startRaceButton;
@@ -27,7 +30,9 @@ public class MainPageController {
     @FXML
     private void startRaceButtonAction() {
         try {
-            startRaceButton.getScene().setRoot(FXMLLoader.load(getClass().getResource("MainTiming.fxml")));
+            FXMLLoader root = new FXMLLoader(getClass().getResource("MainTiming.fxml"));
+            root.setControllerFactory(c -> new mainTimingController(controller));
+            startRaceButton.getScene().setRoot(root.load());
         } catch (IOException e) {
             System.out.println("Error on startRaceActionButton");
             e.printStackTrace();

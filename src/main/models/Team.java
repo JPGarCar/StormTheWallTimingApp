@@ -15,7 +15,6 @@ public class Team {
 
     // private variables
     private TeamType teamType;
-    private Sitrep sitRep;
     private LeagueType teamLeague;
     private String notes;
     private int currentHeatID;
@@ -47,7 +46,6 @@ public class Team {
         this.teamLeague = teamLeague;
         this.teamNumber = teamNumber;
         this.teamName = teamName;
-        this.sitRep = Sitrep.NONE;
         this.notes = "";
         currentHeatID = -1;
 
@@ -72,10 +70,6 @@ public class Team {
 
     public int getTeamNumber() {
         return teamNumber;
-    }
-
-    public Sitrep getSitRep() {
-        return sitRep;
     }
 
     public String getNotes() {
@@ -140,10 +134,6 @@ public class Team {
 
     public int getCurrentHeatID() {
         return currentHeatID;
-    }
-
-    public void setSitRep(@NotNull Sitrep sitRep) {
-        this.sitRep = sitRep;
     }
 
 
@@ -243,6 +233,16 @@ public class Team {
                 i--;
             }
         }
+    }
+
+    // EFFECTS: get teamHeat by heatID
+    public TeamHeat getTeamHeatByHeatID(int heatID) {
+        for (TeamHeat teamHeat : remainingHeats) {
+            if (teamHeat.getHeatID() == heatID) {
+                return teamHeat;
+            }
+        }
+        return null; // TODO send exception
     }
 
 }

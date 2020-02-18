@@ -23,13 +23,15 @@ public class TimingController {
     @JsonIgnore
     private mainTimingController uiController;
 
+    @JsonIgnore
+    private EditHeatPageController editHeatController;
+
 
     // DUMMY CONSTRUCTOR for Jackson JSON
-    public TimingController(mainTimingController uiController) {
+    public TimingController() {
         runningTeams = new ArrayList<>();
         finishedTeams = new ArrayList<>();
         finalFinishedTeams = new ArrayList<>();
-        this.uiController = uiController;
     }
 
     // GETTERS AND SETTERS, used by Jackson JSON
@@ -73,6 +75,13 @@ public class TimingController {
         this.uiController = uiController;
     }
 
+    public void setEditHeatController(@NotNull EditHeatPageController editHeatController) {
+        this.editHeatController = editHeatController;
+    }
+
+    public EditHeatPageController getEditHeatController() {
+        return editHeatController;
+    }
 
     // EFFECTS: add a team to the finished team list, included the task to move to final finished
     public void addFinishedTeam(Team team) {

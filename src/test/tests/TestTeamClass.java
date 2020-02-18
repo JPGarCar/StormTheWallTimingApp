@@ -31,7 +31,6 @@ public class TestTeamClass {
         assertEquals(LeagueType.COMP, team.getTeamLeague());
         assertEquals(312, team.getTeamNumber());
         assertEquals("The Storm Troopers", team.getTeamName());
-        assertEquals(Sitrep.NONE, team.getSitRep());
         assertTrue(team.getHeats().isEmpty());
         assertTrue(team.getRemainingHeats().isEmpty());
         assertTrue(team.getDoneHeats().isEmpty());
@@ -39,9 +38,6 @@ public class TestTeamClass {
 
     @Test
     public void testSetters() {
-        team.setSitRep(Sitrep.DNS);
-        assertEquals(Sitrep.DNS, team.getSitRep());
-
         team.addNotes("Notes");
         assertEquals("Notes", team.getNotes());
     }

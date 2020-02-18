@@ -3,6 +3,7 @@ package models;
 import com.fasterxml.jackson.annotation.*;
 import com.sun.istack.internal.NotNull;
 import models.enums.LeagueType;
+import models.enums.Sitrep;
 import models.enums.TeamType;
 import models.exceptions.*;
 
@@ -177,6 +178,28 @@ public class Heat {
         } else {
             throw new CanNotUndoHeatException();
         }
+    }
+
+    // get a team from this heat from its id
+    public Team getTeamFromHeatByID(int teamID) {
+        for (Team team : teams) {
+            if (team.getTeamNumber() == teamID) {
+                return team;
+            }
+        }
+
+        return null; // TODO send exception
+    }
+
+    // EFFECTS: return only those heats with teamHeats that don't have DNS
+    public ArrayList<Team> getTeamsThatWillRun() {
+        ArrayList<Team> runnableTeams = new ArrayList<>();
+        for (Team team : teams) {
+            if (team.getTeamHeatByHeatID(heatNumber).getSitrep() != Sitrep.DNS) {
+                runnableTeams.add(team);
+            }
+        }
+        return runnableTeams;
     }
 
 }

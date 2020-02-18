@@ -4,6 +4,7 @@ import com.sun.istack.internal.NotNull;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -23,20 +24,26 @@ import ui.widgets.HBoxForStagedTeam;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Observable;
 
 public class mainTimingController {
 
 
     // private vars, for now it contains the MainPageController and the Day being used
     private Day day = new Day(Calendar.getInstance(), 1);
-    private TimingController controller = new TimingController(this);
+    private TimingController controller;
     private Calendar undoHeatTimer;
+
+    public mainTimingController(TimingController controller) {
+        this.controller = controller;
+        controller.setUiController(this);
+    }
 
     // EFFECTS: set running team list to the controller's running team list
     public void updateRunningTeamList() {
         ArrayList<HBoxForRunningTeam> hBoxForRunningTeams = new ArrayList<>();
         for (Team team : controller.getRunningTeams()) {
-            hBoxForRunningTeams.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getSitRep(), team.getCurrentHeatID(), team.getTeamType().name(), controller));
+            hBoxForRunningTeams.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getTeamHeatByHeatID(team.getCurrentHeatID()).getSitrep(), team.getCurrentHeatID(), team.getTeamType().name(), controller));
         }
         runningTeamsList.setItems(FXCollections.observableList(hBoxForRunningTeams));
     }
@@ -44,7 +51,7 @@ public class mainTimingController {
     // EFFECTS: add a team to the running team list, first is private, second and third are the public ones to use
     public void addToRunningTeamList(Team team, boolean top) {
         ArrayList<HBoxForRunningTeam> hBoxForRunningTeams = new ArrayList<>();
-        hBoxForRunningTeams.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getSitRep(), team.getCurrentHeatID(), team.getTeamType().name(), controller));
+        hBoxForRunningTeams.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getTeamHeatByHeatID(team.getCurrentHeatID()).getSitrep(), team.getCurrentHeatID(), team.getTeamType().name(), controller));
         if (top) {
             runningTeamsList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForRunningTeams), runningTeamsList.getItems()));
         } else {
@@ -89,7 +96,7 @@ public class mainTimingController {
     public void updateFinalFinishedTeamList() {
         ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
         for (Team team : controller.getFinalFinishedTeams()) {
-            hBoxForFinishedTeams.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString(),team.getSitRep(), controller));
+            hBoxForFinishedTeams.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString(), team.getTeamHeatByHeatID(team.getCurrentHeatID()).getSitrep(), controller));
         }
 
         finishedTeamsList.setItems(FXCollections.observableList(hBoxForFinishedTeams));
@@ -98,7 +105,7 @@ public class mainTimingController {
     // EFFECTS: add a team to the final finished team list, first is private, second and third are the public ones to use
     private void addToFinalFinishedTeamList(Team team, boolean top) {
         ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
-        hBoxForFinishedTeams.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString(),team.getSitRep(), controller));
+        hBoxForFinishedTeams.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString(), team.getTeamHeatByHeatID(team.getCurrentHeatID()).getSitrep(), controller));
         if (top) {
             finishedTeamsList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForFinishedTeams), finishedTeamsList.getItems()));
         } else {
@@ -116,7 +123,7 @@ public class mainTimingController {
     public void updateStagedHeatTeamList() {
         ArrayList<HBoxForStagedTeam> list = new ArrayList<>();
         for (Team team : controller.getStagedHeat().getTeams()) {
-            list.add(new HBoxForStagedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getSitRep(), controller));
+            list.add(new HBoxForStagedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getTeamHeatByHeatID(controller.getStagedHeat().getHeatNumber()).getSitrep(), controller));
         }
 
         stageHeatTeamList.setItems(FXCollections.observableList(list));
@@ -246,7 +253,7 @@ public class mainTimingController {
         Heat stagedHeat = controller.getStagedHeat();
         if (stagedHeat != null) {
             stagedHeat.markStartTimeStarted(Calendar.getInstance());
-            controller.addRunningTeams(stagedHeat.getTeams());
+            controller.addRunningTeams(stagedHeat.getTeamsThatWillRun());
 
 
             day.atNextHeat();
@@ -288,11 +295,12 @@ public class mainTimingController {
 
     @FXML
     private void editHeatAction() {
-        Parent root;
+        FXMLLoader root;
         try {
-            root = FXMLLoader.load(getClass().getResource("EditHeatPage.fxml"));
+            root = new FXMLLoader(getClass().getResource("EditHeatPage.fxml"));
             Stage stage = new Stage();
-            Scene scene = new Scene(root);
+            root.setControllerFactory(c -> new EditHeatPageController(controller));
+            Scene scene = new Scene(root.load());
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
@@ -302,7 +310,7 @@ public class mainTimingController {
 
     @FXML
     private void undoHeatStartAction() {
-        if (Calendar.getInstance().getTimeInMillis() - undoHeatTimer.getTimeInMillis() > 10000 ) {
+        if (Calendar.getInstance().getTimeInMillis() - undoHeatTimer.getTimeInMillis() < 10000 ) {
             returnTeams(day.getAtHeat() - 1);
             try {
                 day.undoLastHeatStart();
