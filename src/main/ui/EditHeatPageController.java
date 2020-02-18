@@ -13,6 +13,7 @@ import models.Team;
 import models.exceptions.AddTeamException;
 import sun.security.ssl.Debug;
 import ui.widgets.HBoxForEditHeatTeam;
+import ui.widgets.HBoxForWaitListTeam;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -31,14 +32,22 @@ public class EditHeatPageController {
 
     public void setTeamHeatListTeams() {
         ArrayList<HBoxForEditHeatTeam> hBoxForEditHeatTeams = new ArrayList<>();
-        for (Team team : heat.getTeams()) {
+        for (Team team : heat.getTeams().values()) {
             hBoxForEditHeatTeams.add(new HBoxForEditHeatTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getTeamType(), controller));
         }
         teamHeatList.setItems(FXCollections.observableList(hBoxForEditHeatTeams));
     }
 
+    public void setWaitListTeams() {
+        ArrayList<HBoxForWaitListTeam> hBoxForWaitListTeams = new ArrayList<>();
+        for (Team team : controller.getProgram().getWaitList().values()) {
+            hBoxForWaitListTeams.add(new HBoxForWaitListTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getTeamType(), controller));
+        }
+        availableTeamList.setItems(FXCollections.observableList(hBoxForWaitListTeams));
+    }
+
     @FXML
-    private ListView<?> availableTeamList;
+    private ListView<HBoxForWaitListTeam> availableTeamList;
 
     @FXML
     private ListView<HBoxForEditHeatTeam> teamHeatList;
@@ -49,6 +58,7 @@ public class EditHeatPageController {
     @FXML
     protected void initialize() {
         setTeamHeatListTeams();
+        setWaitListTeams();
     }
 
     @FXML

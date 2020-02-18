@@ -25,7 +25,7 @@ public class HBoxForRunningTeam extends CustomHBox {
         super(HBoxSpacingRunning);
 
         heatNumber.setText(Integer.toString(heatNumberInt));
-        heatNumber.setMaxWidth(40);
+        heatNumber.setMaxWidth(45);
         HBox.setHgrow(heatNumber, Priority.ALWAYS);
 
         teamType.setText(teamTypeText);

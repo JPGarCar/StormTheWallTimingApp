@@ -9,6 +9,8 @@ import models.exceptions.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 public class Heat {
@@ -24,14 +26,14 @@ public class Heat {
     private Calendar startTime;
 
     // private connections
-    private ArrayList<Team> teams;
+    private Map<Integer,Team> teams;
 
     @JsonBackReference
     private Day dayToRace;
 
     // DUMMY CONSTRUCTOR used by Jackson JSON
     public Heat() {
-        teams = new ArrayList<>();
+        teams = new HashMap<>();
     }
 
     // CONSTRUCTOR
@@ -42,7 +44,7 @@ public class Heat {
         this.heatNumber = heatNumber;
         this.hasStarted = false;
 
-        teams = new ArrayList<>();
+        teams = new HashMap<>();
         setDayToRace(dayToRace);
     }
 
@@ -67,7 +69,7 @@ public class Heat {
         return startTime;
     }
 
-    public ArrayList<Team> getTeams() {
+    public Map<Integer, Team> getTeams() {
         return teams;
     }
 
@@ -91,7 +93,7 @@ public class Heat {
         this.leagueType = leagueType;
     }
 
-    public void setTeams(@NotNull ArrayList<Team> teams) {
+    public void setTeams(@NotNull Map<Integer, Team> teams) {
         this.teams = teams;
     }
 
@@ -108,8 +110,8 @@ public class Heat {
     public void markStartTimeStarted(@NotNull Calendar startTime) {
         this.startTime = startTime;
         hasStarted = true;
-        for (Team team : teams) {
-            team.setCurrentHeatID(heatNumber);
+        for (Map.Entry<Integer, Team> entry : teams.entrySet()) {
+            entry.getValue().setCurrentHeatID(heatNumber);
         }
     }
 
@@ -134,8 +136,8 @@ public class Heat {
 
     // EFFECTS: add a team to the heat and add this heat to the team
     public void addTeam(Team team) throws AddTeamException {
-        if (!teams.contains(team)) {
-            teams.add(team);
+        if (!teams.containsKey(team.getTeamNumber())) {
+            teams.put(team.getTeamNumber(), team);
             try {
                 team.addHeat(this);
             } catch (AddHeatException e) {
@@ -153,15 +155,16 @@ public class Heat {
         }
     }
 
-    // EFFECTS: remove a team from this heat and this heat from the team
-    public void removeTeam(Team team) throws NoTeamException {
-        if (teams.contains(team)) {
-            teams.remove(team);
+    // EFFECTS: remove a team from this heat and this heat from the team by teamID
+    public Team removeTeam(int teamID) throws NoTeamException {
+        if (teams.containsKey(teamID)) {
+            Team team = teams.remove(teamID);
             try {
                 team.removeHeat(this);
             } catch (NoHeatsException e) {
                 // do nothing as we expect this to happen because of the many to many connection
             }
+            return team;
         } else {
             throw new NoTeamException();
         }
@@ -172,8 +175,8 @@ public class Heat {
         if (hasStarted) {
             hasStarted = false;
             startTime = null;
-            for (Team team : teams) {
-                team.setCurrentHeatID(-1);
+            for (Map.Entry<Integer, Team> entry : teams.entrySet()) {
+                entry.getValue().setCurrentHeatID(-1);
             }
         } else {
             throw new CanNotUndoHeatException();
@@ -182,19 +185,13 @@ public class Heat {
 
     // get a team from this heat from its id
     public Team getTeamFromHeatByID(int teamID) {
-        for (Team team : teams) {
-            if (team.getTeamNumber() == teamID) {
-                return team;
-            }
-        }
-
-        return null; // TODO send exception
+        return teams.get(teamID);
     }
 
     // EFFECTS: return only those heats with teamHeats that don't have DNS
     public ArrayList<Team> getTeamsThatWillRun() {
         ArrayList<Team> runnableTeams = new ArrayList<>();
-        for (Team team : teams) {
+        for (Team team : teams.values()) {
             try {
                 if (team.getTeamHeatByHeatIDFromRemaining(heatNumber).getSitrep() != Sitrep.DNS) {
                     runnableTeams.add(team);

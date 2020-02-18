@@ -69,7 +69,7 @@ public class TestHeatClass {
         heat.addTeam(team);
         assertFalse(heat.getTeams().isEmpty());
 
-        heat.removeTeam(team);
+        heat.removeTeam(team.getTeamNumber());
         assertTrue(heat.getTeams().isEmpty());
         assertTrue(team.getHeats().isEmpty());
     }

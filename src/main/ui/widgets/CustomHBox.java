@@ -10,6 +10,7 @@ import ui.TimingController;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Map;
 
 public abstract class CustomHBox extends HBox {
 
@@ -20,18 +21,15 @@ public abstract class CustomHBox extends HBox {
 
     // EFFECTS: update the status of a specific team, only use for team in stage heat list
     public void updateStatus(int teamID, String sitrep, TimingController timingController, boolean fromRemaining) {
-        for (Team team : timingController.getStagedHeat().getTeams()) {
-            if (team.getTeamNumber() == teamID) {
-                try {
-                    if (fromRemaining) {
-                        team.getTeamHeatByHeatIDFromRemaining(timingController.getStagedHeat().getHeatNumber()).setSitrep(Sitrep.valueOf(sitrep));
-                    } else {
-                        team.getTeamHeatByHeatIDFromDone(timingController.getStagedHeat().getHeatNumber()).setSitrep(Sitrep.valueOf(sitrep));
-                    }
-                } catch (NoTeamHeatException e) {
-                    e.printStackTrace();
-                }
+        Team team = timingController.getStagedHeat().getTeamFromHeatByID(teamID);
+        try {
+            if (fromRemaining) {
+                team.getTeamHeatByHeatIDFromRemaining(timingController.getStagedHeat().getHeatNumber()).setSitrep(Sitrep.valueOf(sitrep));
+            } else {
+                team.getTeamHeatByHeatIDFromDone(timingController.getStagedHeat().getHeatNumber()).setSitrep(Sitrep.valueOf(sitrep));
             }
+        } catch (NoTeamHeatException e) {
+            e.printStackTrace();
         }
     }
 

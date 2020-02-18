@@ -141,7 +141,7 @@ public class mainTimingController {
     // EFFECTS: set the list for teams in the staged list from the controller's staged heat heat
     public void updateStagedHeatTeamList() {
         ArrayList<HBoxForStagedTeam> list = new ArrayList<>();
-        for (Team team : controller.getStagedHeat().getTeams()) {
+        for (Team team : controller.getStagedHeat().getTeams().values()) {
             try {
                 list.add(new HBoxForStagedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getTeamHeatByHeatIDFromRemaining(controller.getStagedHeat().getHeatNumber()).getSitrep(), controller));
             } catch (NoTeamHeatException e) {

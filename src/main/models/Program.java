@@ -4,19 +4,19 @@ import com.sun.istack.internal.NotNull;
 import models.enums.LeagueType;
 import models.enums.TeamType;
 
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
+import java.util.*;
 
 public class Program {
 
     // private vars
     private ArrayList<Day> programDays;
     private Dictionary<Integer, Team> allTeams;
+    private Map<Integer, Team> waitList;
 
     public Program() {
         programDays = new ArrayList<>();
         allTeams = new Hashtable<>();
+        waitList = new HashMap<>();
     }
 
     // GETTERS AND SETTERS
@@ -36,6 +36,14 @@ public class Program {
         this.programDays = programDays;
     }
 
+    public Map<Integer, Team> getWaitList() {
+        return waitList;
+    }
+
+    public void setWaitList(Map<Integer, Team> waitList) {
+        this.waitList = waitList;
+    }
+
     // EFFECTS: add a day to the day list
     public void addDay(Day day) {
         programDays.add(day);
@@ -51,6 +59,21 @@ public class Program {
         Team team = new Team(teamType, teamLeague, teamNumber, teamName);
         addTeam(team);
         return team;
+    }
+
+    // EFFECTS: add a team to the waitList team list
+    public void addListToWaitList(Team team) {
+        waitList.put(team.getTeamNumber(), team);
+    }
+
+    // EFFECTS: returns a team by its ID
+    public Team getTeamByID(int teamID) {
+        return allTeams.get(teamID);
+    }
+
+    // EFFECTS: remove a team from wait list
+    public void removeTeamFromWaitList(int teamID) {
+        waitList.remove(teamID);
     }
 
 //    // EFFECTS: creates a team to use by the program with an automatic number

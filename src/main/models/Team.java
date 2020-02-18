@@ -199,7 +199,7 @@ public class Team {
         if (heats.contains(heat)) {
             heats.remove(heat);
             try {
-                heat.removeTeam(this);
+                heat.removeTeam(teamNumber);
             } catch (NoTeamException e) {
                 // do nothing as we expect this here due to many to many connection
             }

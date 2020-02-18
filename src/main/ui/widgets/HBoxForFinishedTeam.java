@@ -22,7 +22,7 @@ public class HBoxForFinishedTeam extends CustomHBox {
         super(HBoxSpacing);
 
         id.setText(idText);
-        id.setMaxWidth(25);
+        id.setMaxWidth(45);
         HBox.setHgrow(id, Priority.ALWAYS);
         label.setText(teamName);
         label.setMaxWidth(Double.MAX_VALUE);

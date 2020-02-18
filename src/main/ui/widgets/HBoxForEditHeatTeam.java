@@ -27,7 +27,7 @@ public class HBoxForEditHeatTeam extends CustomHBox {
         super(HBoxSpacing);
 
         id.setText(idText);
-        id.setMaxWidth(25);
+        id.setMaxWidth(45);
         HBox.setHgrow(id, Priority.ALWAYS);
         this.teamName.setText(teamName);
         this.teamName.setMaxWidth(Double.MAX_VALUE);
@@ -38,7 +38,7 @@ public class HBoxForEditHeatTeam extends CustomHBox {
         removeButton.setText("Remove");
         removeButton.setOnAction(event -> {
             try {
-                controller.getStagedHeat().removeTeam(controller.getStagedHeat().getTeamFromHeatByID(Integer.parseInt(idText)));
+                controller.getStagedHeat().removeTeam(Integer.parseInt(idText));
                 controller.getEditHeatController().setTeamHeatListTeams();
             } catch (NoTeamException e) {
                 e.printStackTrace();
@@ -48,7 +48,13 @@ public class HBoxForEditHeatTeam extends CustomHBox {
 
         waitListButton.setText("Wait List");
         waitListButton.setOnAction(event -> {
-
+            try {
+                controller.getProgram().addListToWaitList(controller.getStagedHeat().removeTeam(Integer.parseInt(idText)));
+                controller.getEditHeatController().setWaitListTeams();
+                controller.getEditHeatController().setTeamHeatListTeams();
+            } catch (NoTeamException e) {
+                e.printStackTrace();
+            }
         });
 
         moveToButton.setText("Move To");

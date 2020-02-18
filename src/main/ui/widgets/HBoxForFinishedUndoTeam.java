@@ -21,7 +21,7 @@ public class HBoxForFinishedUndoTeam extends CustomHBox {
         super(HBoxSpacing);
 
         id.setText(idText);
-        id.setMaxWidth(25);
+        id.setMaxWidth(45);
         HBox.setHgrow(id, Priority.ALWAYS);
         name.setText(teamName);
         name.setMaxWidth(Double.MAX_VALUE);
