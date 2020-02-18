@@ -33,7 +33,7 @@ public class HBoxForFinishedTeam extends CustomHBox {
         comboBox.setItems(FXCollections.observableList(Arrays.asList(Sitrep.values())));
         comboBox.setValue(sitrep.name());
         comboBox.setOnAction(event -> {
-            super.updateStatus(Integer.parseInt(idText), comboBox.getValue().toString(), controller, false);
+            super.updateStatusForFinished(Integer.parseInt(idText), comboBox.getValue().toString(), controller);
         });
 
         this.getChildren().addAll(id, label, comboBox, thirdLabel);

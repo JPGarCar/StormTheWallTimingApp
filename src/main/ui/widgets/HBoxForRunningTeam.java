@@ -60,7 +60,7 @@ public class HBoxForRunningTeam extends CustomHBox {
         comboBox.setItems(FXCollections.observableList(Arrays.asList(Sitrep.values())));
         comboBox.setValue(sitrep.name());
         comboBox.setOnAction(event -> {
-            updateStatus(Integer.parseInt(idText), comboBox.getValue().toString(), controller, true);
+            updateStatusForRunning(Integer.parseInt(idText), comboBox.getValue().toString(), controller);
         });
 
         this.getChildren().addAll(heatNumber, id, teamName, teamType, comboBox, button);

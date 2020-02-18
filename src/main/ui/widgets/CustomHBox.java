@@ -19,32 +19,35 @@ public abstract class CustomHBox extends HBox {
         super(spacing);
     }
 
-    // EFFECTS: update the status of a specific team, only use for team in stage heat list
-    public void updateStatus(int teamID, String sitrep, TimingController timingController, boolean fromRemaining) {
-        Team team = timingController.getStagedHeat().getTeamFromHeatByID(teamID);
+    // EFFECTS: update the status of a specific team private does all the work, three publics for different situations
+    private void updateStatus(int teamID, String sitrep, TimingController timingController, boolean fromRemaining, boolean staged) {
+        Team team = timingController.getProgram().getTeamByID(teamID);
         try {
-            if (fromRemaining) {
+            if (fromRemaining && staged) {
                 team.getTeamHeatByHeatIDFromRemaining(timingController.getStagedHeat().getHeatNumber()).setSitrep(Sitrep.valueOf(sitrep));
+            } else if (fromRemaining) {
+                team.getTeamHeatByHeatIDFromRemaining(team.getCurrentHeatID()).setSitrep(Sitrep.valueOf(sitrep));
             } else {
-                team.getTeamHeatByHeatIDFromDone(timingController.getStagedHeat().getHeatNumber()).setSitrep(Sitrep.valueOf(sitrep));
+                team.getTeamHeatByHeatIDFromDone(team.getCurrentHeatID()).setSitrep(Sitrep.valueOf(sitrep));
             }
         } catch (NoTeamHeatException e) {
             e.printStackTrace();
         }
     }
+    public void updateStatusForStaged(int teamID, String sitrep, TimingController timingController) {
+        updateStatus(teamID, sitrep, timingController, true, true);
+    }
+    public void updateStatusForRunning(int teamID, String sitrep, TimingController timingController) {
+        updateStatus(teamID, sitrep, timingController, true, false);
+    }
+    public void updateStatusForFinished(int teamID, String sitrep, TimingController timingController) {
+        updateStatus(teamID, sitrep, timingController, false, false);
+    }
 
     // EFFECTS: take team out of the running team list, set its final time and show in finished team list
     // ASSUME: id is part of a current team running
     public void endTeam(int id, TimingController controller) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion, NoCurrentHeatIDException, NoTeamException, NoRemainingHeatsException {
-        for (Team team : controller.getRunningTeams()) {
-            if (team.getTeamNumber() == id) {
-                team.markEndTime(Calendar.getInstance());
-                controller.addFinishedTeam(team);
-                controller.removeRunningTeamWithUpdate(team);
-                break;
-            }
-        }
-
+        controller.endTeam(id);
     }
 
 

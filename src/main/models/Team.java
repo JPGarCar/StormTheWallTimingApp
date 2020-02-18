@@ -9,6 +9,8 @@ import models.exceptions.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 public class Team {
@@ -25,19 +27,19 @@ public class Team {
     private String teamName;
 
     // private connections
-    private ArrayList<Heat> heats;
+    private Map<Integer, Heat> heats;
 
     @JsonManagedReference
-    private ArrayList<TeamHeat> doneHeats;
+    private Map<Integer, TeamHeat> doneHeats;
 
     @JsonManagedReference
-    private ArrayList<TeamHeat> remainingHeats;
+    private Map<Integer, TeamHeat> remainingHeats;
 
     // DUMMY CONSTRUCTOR used by Jackson JSON
     public Team() {
-        doneHeats = new ArrayList<>();
-        remainingHeats = new ArrayList<>();
-        heats = new ArrayList<>();
+        doneHeats = new HashMap<>();
+        remainingHeats = new HashMap<>();
+        heats = new HashMap<>();
     }
 
     // CONSTRUCTOR
@@ -49,9 +51,9 @@ public class Team {
         this.notes = "";
         currentHeatID = -1;
 
-        heats = new ArrayList<>();
-        doneHeats = new ArrayList<>();
-        remainingHeats = new ArrayList<>();
+        doneHeats = new HashMap<>();
+        remainingHeats = new HashMap<>();
+        heats = new HashMap<>();
 
     }
 
@@ -84,15 +86,15 @@ public class Team {
         return teamLeague;
     }
 
-    public ArrayList<Heat> getHeats() {
+    public Map<Integer, Heat> getHeats() {
         return heats;
     }
 
-    public ArrayList<TeamHeat> getRemainingHeats() {
+    public Map<Integer, TeamHeat> getRemainingHeats() {
         return remainingHeats;
     }
 
-    public ArrayList<TeamHeat> getDoneHeats() {
+    public Map<Integer, TeamHeat> getDoneHeats() {
         return doneHeats;
     }
 
@@ -100,7 +102,7 @@ public class Team {
         this.teamType = teamType;
     }
 
-    public void setHeats(@NotNull ArrayList<Heat> heats) {
+    public void setHeats(@NotNull Map<Integer, Heat> heats) {
         this.heats = heats;
     }
 
@@ -108,7 +110,7 @@ public class Team {
         this.currentHeatID = currentHeatID;
     }
 
-    public void setDoneHeats(@NotNull ArrayList<TeamHeat> doneHeats) {
+    public void setDoneHeats(@NotNull Map<Integer, TeamHeat> doneHeats) {
         this.doneHeats = doneHeats;
     }
 
@@ -116,7 +118,7 @@ public class Team {
         this.notes = notes;
     }
 
-    public void setRemainingHeats(@NotNull ArrayList<TeamHeat> remainingHeats) {
+    public void setRemainingHeats(@NotNull Map<Integer, TeamHeat> remainingHeats) {
         this.remainingHeats = remainingHeats;
     }
 
@@ -145,16 +147,10 @@ public class Team {
         } else if (currentHeatID == -1) {
             throw new NoCurrentHeatIDException();
         }
-        for (int i = 0; i < remainingHeats.size(); i++) {
-            TeamHeat remainingHeat = remainingHeats.get(i);
-            if (remainingHeat.getHeatID() == currentHeatID) {
-                remainingHeat.calculateEndTime(endTime);
-                doneHeats.add(remainingHeat);
-                remainingHeats.remove(remainingHeat);
-                setPossibleUndo(true);
-                i--;
-            }
-        }
+        TeamHeat remainingHeat = remainingHeats.remove(currentHeatID);
+        remainingHeat.calculateEndTime(endTime);
+        setPossibleUndo(true);
+        doneHeats.put(remainingHeat.getHeatID(), remainingHeat);
     }
 
     // EFFECTS: add the heats in the input array to the heats array and the remaining heats queue
@@ -171,9 +167,10 @@ public class Team {
 
     // EFFECTS: add one heat to the heat array and remaining heat queue and add this team to the heat
     public void addHeat(Heat heat) throws AddHeatException {
-        if (!heats.contains(heat)) {
-            heats.add(heat);
-            remainingHeats.add(heatToTeamHeat(heat));
+        if (!heats.containsKey(heat.getHeatNumber())) {
+            heats.put(heat.getHeatNumber(), heat);
+            TeamHeat teamHeat = heatToTeamHeat(heat);
+            remainingHeats.put(teamHeat.getHeatID(), teamHeat);
             try {
                 heat.addTeam(this);
             } catch (AddTeamException e) {
@@ -195,28 +192,15 @@ public class Team {
     }
 
     // EFFECTS: remove heat from this team in all three possible array lists and removes this team from heat
-    public void removeHeat(Heat heat) throws NoHeatsException {
-        if (heats.contains(heat)) {
-            heats.remove(heat);
+    public void removeHeat(int heatID) throws NoHeatsException {
+        if (heats.containsKey(heatID)) {
             try {
-                heat.removeTeam(teamNumber);
+                heats.remove(heatID).removeTeam(teamNumber);
             } catch (NoTeamException e) {
                 // do nothing as we expect this here due to many to many connection
             }
-            for (int i = 0; i < remainingHeats.size(); i++) {
-                TeamHeat teamHeat = remainingHeats.get(i);
-                if (teamHeat.getHeatID() == heat.getHeatNumber()) {
-                    remainingHeats.remove(teamHeat);
-                    i--;
-                }
-            }
-            for (int i = 0; i < doneHeats.size(); i++) {
-                TeamHeat teamHeat = doneHeats.get(i);
-                if (teamHeat.getHeatID() == heat.getHeatNumber()) {
-                    remainingHeats.remove(teamHeat);
-                    i--;
-                }
-            }
+            remainingHeats.remove(heatID);
+            doneHeats.remove(heatID);
         } else {
             throw new NoHeatsException();
         }
@@ -224,35 +208,27 @@ public class Team {
 
     // EFFECTS: undo the end time stuff
     public void undoEndTimeMark() {
-        for (int i = 0; i < doneHeats.size(); i++) {
-            TeamHeat teamHeat = doneHeats.get(i);
-            if (teamHeat.getHeatID() == currentHeatID) {
-                remainingHeats.add(teamHeat);
-                doneHeats.remove(teamHeat);
-                setPossibleUndo(false);
-                i--;
-            }
-        }
+        TeamHeat teamHeat = doneHeats.remove(currentHeatID);
+        remainingHeats.put(teamHeat.getHeatID(), teamHeat);
+        setPossibleUndo(false);
     }
 
     // EFFECTS: get teamHeat by heatID from remainingHeats
     public TeamHeat getTeamHeatByHeatIDFromRemaining(int heatID) throws NoTeamHeatException {
-        for (TeamHeat teamHeat : remainingHeats) {
-            if (teamHeat.getHeatID() == heatID) {
-                return teamHeat;
-            }
+        TeamHeat teamHeat = remainingHeats.get(heatID);
+        if (teamHeat == null) {
+            throw new NoTeamHeatException();
         }
-        throw new NoTeamHeatException();
+        return teamHeat;
     }
 
     // EFFECTS: get teamHeat by heatID from doneHeats
     public TeamHeat getTeamHeatByHeatIDFromDone(int heatID) throws NoTeamHeatException {
-        for (TeamHeat teamHeat : doneHeats) {
-            if (teamHeat.getHeatID() == heatID) {
-                return teamHeat;
-            }
+        TeamHeat teamHeat = doneHeats.get(heatID);
+        if (teamHeat == null) {
+            throw new NoTeamHeatException();
         }
-        throw new NoTeamHeatException();
+        return teamHeat;
     }
 
 }

@@ -8,6 +8,8 @@ import models.exceptions.NoHeatWithIDException;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Day {
     //private vars
@@ -17,17 +19,17 @@ public class Day {
 
     // private connections
     @JsonManagedReference
-    private ArrayList<Heat> heats;
+    private Map<Integer, Heat> heats;
 
     // DUMMY CONSTRUCTOR, used by Jackson JSON
     public Day() {
-        heats = new ArrayList<>();
+        heats = new HashMap<>();
     }
 
     // CONSTRUCTOR
     public Day(@NotNull Calendar dayToRun, @NotNull int dayNumber) {
         this.dayToRun = dayToRun;
-        heats = new ArrayList<Heat>();
+        heats = new HashMap<>();
         this.dayNumber = dayNumber;
         atHeat = 1;
     }
@@ -37,7 +39,7 @@ public class Day {
         return dayToRun;
     }
 
-    public void setHeats(ArrayList<Heat> heats) {
+    public void setHeats(Map<Integer, Heat> heats) {
         this.heats = heats;
     }
 
@@ -71,14 +73,14 @@ public class Day {
     }
 
     // EFFECTS: Return the Heat list
-    public ArrayList<Heat> getHeats() {
+    public Map<Integer, Heat> getHeats() {
         return heats;
     }
 
     // EFFECTS: add a heat to the list of heats
     public void addHeat(Heat heat) throws AddHeatException {
-        if (!heats.contains(heat)) {
-            heats.add(heat);
+        if (!heats.containsKey(heat.getHeatNumber())) {
+            heats.put(heat.getHeatNumber(), heat);
             heat.setDayToRace(this);
         } else {
             throw new AddHeatException("because this heat is already in this day. The ID's match.");
@@ -92,9 +94,9 @@ public class Day {
         }
     }
 
-    // EFFECTS: remove the heat from this day
-    public void removeHeat(Heat heat) {
-        heats.remove(heat);
+    // EFFECTS: remove the heat from this day by heatID
+    public void removeHeat(int heatID) {
+        heats.remove(heatID);
         // TODO delete the heat object by setting everything to null
     }
 
@@ -105,12 +107,11 @@ public class Day {
 
     // EFFECTS: returns heat with specific heat id
     public Heat getHeatByID(int id) throws NoHeatWithIDException {
-        for (Heat heat : heats) {
-            if (heat.getHeatNumber() == id) {
-                return heat;
-            }
+        Heat heat = heats.get(id);
+        if (heat == null) {
+            throw new NoHeatWithIDException();
         }
-        throw new NoHeatWithIDException();
+        return heat;
     }
 
     // EFFECTS: will delete start time for teams that heat just started, set heat to not started

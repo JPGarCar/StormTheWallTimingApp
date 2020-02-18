@@ -78,12 +78,7 @@ public class TeamHeat {
 
     // EFFECTS: return the heat´s number associated with the TeamHeat
     private Heat getHeatFromTeam() {
-        for (Heat heat : team.getHeats()) {
-            if (heat.getHeatNumber() == heatID) {
-                return heat;
-            }
-        }
-        return null;
+        return team.getHeats().get(heatID);
     }
 
 }

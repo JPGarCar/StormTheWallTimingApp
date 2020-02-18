@@ -7,19 +7,21 @@ import javafx.application.Platform;
 import models.Heat;
 import models.Program;
 import models.Team;
+import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
+import models.exceptions.NoCurrentHeatIDException;
+import models.exceptions.NoHeatsException;
+import models.exceptions.NoRemainingHeatsException;
 
 
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class TimingController {
 
     // private vars
     private Heat stagedHeat;
-    private ArrayList<Team> runningTeams;
-    private ArrayList<Team> finishedTeams;
-    private ArrayList<Team> finalFinishedTeams;
+    private Map<Integer, Team> runningTeams;
+    private Map<Integer, Team> finishedTeams;
+    private Map<Integer, Team> finalFinishedTeams;
     private Program program;
 
     @JsonIgnore
@@ -28,13 +30,17 @@ public class TimingController {
     @JsonIgnore
     private EditHeatPageController editHeatController;
 
+    @JsonIgnore
+    private Map<Integer, Timer> timerMap;
+
 
     // DUMMY CONSTRUCTOR for Jackson JSON
     public TimingController() {
-        runningTeams = new ArrayList<>();
-        finishedTeams = new ArrayList<>();
-        finalFinishedTeams = new ArrayList<>();
+        runningTeams = new HashMap<>();
+        finishedTeams = new HashMap<>();
+        finalFinishedTeams = new HashMap<>();
         program = new Program();
+        timerMap = new HashMap<>();
     }
 
     // GETTERS AND SETTERS, used by Jackson JSON
@@ -47,11 +53,11 @@ public class TimingController {
         this.program = program;
     }
 
-    public ArrayList<Team> getFinishedTeams() {
+    public Map<Integer, Team> getFinishedTeams() {
         return finishedTeams;
     }
 
-    public ArrayList<Team> getRunningTeams() {
+    public Map<Integer, Team> getRunningTeams() {
         return runningTeams;
     }
 
@@ -59,11 +65,11 @@ public class TimingController {
         return stagedHeat;
     }
 
-    public void setRunningTeams(ArrayList<Team> runningTeams) {
+    public void setRunningTeams(Map<Integer, Team> runningTeams) {
         this.runningTeams = runningTeams;
     }
 
-    public void setFinishedTeams(ArrayList<Team> finishedTeams) {
+    public void setFinishedTeams(Map<Integer, Team> finishedTeams) {
         this.finishedTeams = finishedTeams;
     }
 
@@ -71,7 +77,7 @@ public class TimingController {
         this.stagedHeat = stagedHeat;
     }
 
-    public ArrayList<Team> getFinalFinishedTeams() {
+    public Map<Integer, Team> getFinalFinishedTeams() {
         return finalFinishedTeams;
     }
 
@@ -79,7 +85,7 @@ public class TimingController {
         return uiController;
     }
 
-    public void setFinalFinishedTeams(@NotNull ArrayList<Team> finalFinishedTeams) {
+    public void setFinalFinishedTeams(@NotNull Map<Integer, Team> finalFinishedTeams) {
         this.finalFinishedTeams = finalFinishedTeams;
     }
 
@@ -97,16 +103,18 @@ public class TimingController {
 
     // EFFECTS: add a team to the finished team list, included the task to move to final finished
     public void addFinishedTeam(@NotNull Team team) {
-        finishedTeams.add(team);
+        int teamNumber = team.getTeamNumber();
+        finishedTeams.put(teamNumber, team);
         uiController.updateFinishedTeamList();
         Timer t = new Timer();
+        timerMap.put(teamNumber, t);
         t.schedule( new TimerTask() {
             @Override
             public void run() {
                 if (team.getPossibleUndo()) {
                     team.setPossibleUndo(false);
                     Platform.runLater(() -> addFinalFinishedTeam(team));
-                    Platform.runLater(() -> removeFinishedTeamWithUpdate(team));
+                    Platform.runLater(() -> removeFinishedTeamWithUpdate(teamNumber));
                     t.cancel();
                 }
             }
@@ -115,19 +123,19 @@ public class TimingController {
     }
 
     // EFFECTS: remove a team from the running team list
-    public void removeRunningTeam(Team team) {
-        runningTeams.remove(team);
+    public void removeRunningTeam(int teamID) {
+        runningTeams.remove(teamID);
     }
 
     // EFFECTS: remove a team from the running team list and update the ui running team list
-    public void removeRunningTeamWithUpdate(Team team) {
-        removeRunningTeam(team);
+    public void removeRunningTeamWithUpdate(int teamID) {
+        removeRunningTeam(teamID);
         uiController.updateRunningTeamList();
     }
 
     // EFFECTS: add a team to the running team list
     public void addRunningTeam(Team team) {
-        runningTeams.add(team);
+        runningTeams.put(team.getTeamNumber(), team);
     }
 
     // EFFECTS: add a team to the running team list and update the ui running team list
@@ -145,32 +153,39 @@ public class TimingController {
     }
 
     // EFFECTS: remove a team from the finished team list
-    public void removeFinishedTeam(Team team) {
-        finishedTeams.remove(team);
+    public void removeFinishedTeam(int teamID) {
+        finishedTeams.remove(teamID);
     }
 
     // EFFECTS: remove a team from the finished team list and update ui finished team list
-    public void removeFinishedTeamWithUpdate(Team team) {
-        removeFinishedTeam(team);
+    public void removeFinishedTeamWithUpdate(int teamID) {
+        removeFinishedTeam(teamID);
         uiController.updateFinishedTeamList();
     }
 
     // EFFECTS: send team back to running team list and remove from finished list, undo end time too
     public void undoTeamFinish(int teamID) {
-        for (Team team : finishedTeams) {
-            if (team.getTeamNumber() == teamID) {
-                addRunningTeamWithUpdate(team);
-                removeFinishedTeamWithUpdate(team);
-                team.undoEndTimeMark();
-                break;
-            }
-        }
+        timerMap.get(teamID).cancel();
+        removeFinishedTeamWithUpdate(teamID);
+
+        Team team = finishedTeams.get(teamID);
+        team.undoEndTimeMark();
+        addRunningTeamWithUpdate(team);
     }
 
     // EFFECTS: add a team to the final finished team list and update ui final finished team list
     public void addFinalFinishedTeam(Team team) {
-        finalFinishedTeams.add(team);
+        finalFinishedTeams.put(team.getTeamNumber(), team);
         uiController.addToFinalFinishedTeamListToTop(team);
+    }
+
+    // EFFECTS: ends a team
+    public void endTeam(int teamID) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion, NoCurrentHeatIDException, NoRemainingHeatsException {
+        Team team = runningTeams.get(teamID);
+        team.markEndTime(Calendar.getInstance());
+        addFinishedTeam(team);
+
+        removeRunningTeamWithUpdate(teamID);
     }
 
 

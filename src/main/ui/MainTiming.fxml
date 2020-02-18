@@ -128,7 +128,10 @@
                               <Insets left="5.0" right="5.0" />
                            </padding>
                         </HBox>
-                        <ListView id="heatTeamList" fx:id="stageHeatTeamList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="471.0" prefWidth="317.0" VBox.vgrow="ALWAYS" />
+                        <ListView id="heatTeamList" fx:id="stageHeatTeamList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="471.0" prefWidth="317.0" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </VBox.margin></ListView>
                      </children>
                   </VBox>
                   <HBox alignment="CENTER" prefHeight="61.0" prefWidth="317.0" spacing="15.0" VBox.vgrow="NEVER">
@@ -185,10 +188,13 @@
                         <Insets left="5.0" right="5.0" />
                      </padding>
                   </HBox>
-                  <ListView id="runningTeamsList" fx:id="runningTeamsList" prefHeight="453.0" prefWidth="633.0" VBox.vgrow="ALWAYS" />
+                  <ListView id="runningTeamsList" fx:id="runningTeamsList" prefHeight="453.0" prefWidth="633.0" VBox.vgrow="ALWAYS">
+                     <VBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </VBox.margin></ListView>
                </children>
             </VBox>
-            <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+            <SplitPane dividerPositions="0.42155525238744884" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
               <items>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
@@ -212,7 +218,20 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                   </VBox>
-                  <ListView id="finishedTeamsList" fx:id="finishedTeamsList" prefHeight="263.0" prefWidth="197.0" />
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Label text="Finished Teams">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <ListView id="finishedTeamsList" fx:id="finishedTeamsList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="263.0" prefWidth="197.0" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </ListView>
+                     </children>
+                  </VBox>
               </items>
             </SplitPane>
         </items>

@@ -9,30 +9,30 @@ import java.util.*;
 public class Program {
 
     // private vars
-    private ArrayList<Day> programDays;
-    private Dictionary<Integer, Team> allTeams;
+    private Map<Integer, Day> programDays;
+    private Map<Integer, Team> allTeams;
     private Map<Integer, Team> waitList;
 
     public Program() {
-        programDays = new ArrayList<>();
-        allTeams = new Hashtable<>();
+        programDays = new HashMap<>();
+        allTeams = new HashMap<>();
         waitList = new HashMap<>();
     }
 
     // GETTERS AND SETTERS
-    public ArrayList<Day> getProgramDays() {
+    public Map<Integer, Day> getProgramDays() {
         return programDays;
     }
 
-    public Dictionary<Integer, Team> getAllTeams() {
+    public Map<Integer, Team> getAllTeams() {
         return allTeams;
     }
 
-    public void setAllTeams(Dictionary<Integer, Team> allTeams) {
+    public void setAllTeams(Map<Integer, Team> allTeams) {
         this.allTeams = allTeams;
     }
 
-    public void setProgramDays(ArrayList<Day> programDays) {
+    public void setProgramDays(Map<Integer, Day> programDays) {
         this.programDays = programDays;
     }
 
@@ -46,7 +46,12 @@ public class Program {
 
     // EFFECTS: add a day to the day list
     public void addDay(Day day) {
-        programDays.add(day);
+        programDays.put(day.getDayNumber(), day);
+    }
+
+    // EFFECTS: get a day by its day number
+    public Day getDayFromDayNumber(int dayNum) {
+        return programDays.get(dayNum);
     }
 
     // EFFECTS: add a team to the team list
@@ -62,7 +67,7 @@ public class Program {
     }
 
     // EFFECTS: add a team to the waitList team list
-    public void addListToWaitList(Team team) {
+    public void addTeamToWaitList(Team team) {
         waitList.put(team.getTeamNumber(), team);
     }
 

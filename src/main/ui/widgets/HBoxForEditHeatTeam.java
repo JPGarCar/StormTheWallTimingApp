@@ -1,17 +1,12 @@
 package ui.widgets;
 
-import javafx.collections.FXCollections;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import models.enums.Sitrep;
 import models.enums.TeamType;
 import models.exceptions.NoTeamException;
 import ui.TimingController;
-
-import java.util.Arrays;
 
 public class HBoxForEditHeatTeam extends CustomHBox {
 
@@ -49,7 +44,7 @@ public class HBoxForEditHeatTeam extends CustomHBox {
         waitListButton.setText("Wait List");
         waitListButton.setOnAction(event -> {
             try {
-                controller.getProgram().addListToWaitList(controller.getStagedHeat().removeTeam(Integer.parseInt(idText)));
+                controller.getProgram().addTeamToWaitList(controller.getStagedHeat().removeTeam(Integer.parseInt(idText)));
                 controller.getEditHeatController().setWaitListTeams();
                 controller.getEditHeatController().setTeamHeatListTeams();
             } catch (NoTeamException e) {

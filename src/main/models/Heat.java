@@ -110,8 +110,8 @@ public class Heat {
     public void markStartTimeStarted(@NotNull Calendar startTime) {
         this.startTime = startTime;
         hasStarted = true;
-        for (Map.Entry<Integer, Team> entry : teams.entrySet()) {
-            entry.getValue().setCurrentHeatID(heatNumber);
+        for (Team team : teams.values()) {
+            team.setCurrentHeatID(heatNumber);
         }
     }
 
@@ -160,7 +160,7 @@ public class Heat {
         if (teams.containsKey(teamID)) {
             Team team = teams.remove(teamID);
             try {
-                team.removeHeat(this);
+                team.removeHeat(heatNumber);
             } catch (NoHeatsException e) {
                 // do nothing as we expect this to happen because of the many to many connection
             }
@@ -175,8 +175,8 @@ public class Heat {
         if (hasStarted) {
             hasStarted = false;
             startTime = null;
-            for (Map.Entry<Integer, Team> entry : teams.entrySet()) {
-                entry.getValue().setCurrentHeatID(-1);
+            for (Team team : teams.values()) {
+                team.setCurrentHeatID(-1);
             }
         } else {
             throw new CanNotUndoHeatException();

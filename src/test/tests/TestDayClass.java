@@ -50,7 +50,7 @@ public class TestDayClass {
         day.addHeats(heats);
         assertEquals(3, day.numberOfHeats());
 
-        day.removeHeat(heat);
+        day.removeHeat(heat.getHeatNumber());
         assertEquals(2, day.numberOfHeats());
 
     }
