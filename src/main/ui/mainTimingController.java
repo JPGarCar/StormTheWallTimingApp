@@ -15,6 +15,7 @@ import models.enums.TeamType;
 import models.exceptions.*;
 import persistance.PersistanceWithJackson;
 import ui.widgets.HBoxForFinishedTeam;
+import ui.widgets.HBoxForFinishedUndoTeam;
 import ui.widgets.HBoxForRunningTeam;
 import ui.widgets.HBoxForStagedTeam;
 
@@ -35,17 +36,79 @@ public class mainTimingController {
         for (Team team : controller.getRunningTeams()) {
             hBoxForRunningTeams.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getSitRep(), team.getCurrentHeatID(), team.getTeamType().name(), controller));
         }
-
         runningTeamsList.setItems(FXCollections.observableList(hBoxForRunningTeams));
     }
 
+    public void addToRunningTeamList(Team team, boolean top) {
+        ArrayList<HBoxForRunningTeam> hBoxForRunningTeams = new ArrayList<>();
+        hBoxForRunningTeams.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getSitRep(), team.getCurrentHeatID(), team.getTeamType().name(), controller));
+        if (top) {
+            runningTeamsList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForRunningTeams), runningTeamsList.getItems()));
+        } else {
+            runningTeamsList.setItems(FXCollections.concat(runningTeamsList.getItems(), FXCollections.observableList(hBoxForRunningTeams)));
+        }
+    }
+
+    public void addToRunningTeamListToBottom(Team team) {
+        addToRunningTeamList(team, false);
+    }
+
+    public void addToRunningTeamListToTop(Team team) {
+        addToRunningTeamList(team, true);
+    }
+
     public void updateFinishedTeamList() {
-        ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
+        ArrayList<HBoxForFinishedUndoTeam> hBoxForFinishedUndoTeams = new ArrayList<>();
         for (Team team : controller.getFinishedTeams()) {
+            hBoxForFinishedUndoTeams.add(new HBoxForFinishedUndoTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString(), controller));
+        }
+        undoFinishedTeamList.setItems(FXCollections.observableList(hBoxForFinishedUndoTeams));
+    }
+
+    public void addToFinishedTeamList(Team team, boolean top) {
+        ArrayList<HBoxForFinishedUndoTeam> hBoxForFinishedUndoTeams = new ArrayList<>();
+        hBoxForFinishedUndoTeams.add(new HBoxForFinishedUndoTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString(), controller));
+        if (top) {
+            undoFinishedTeamList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForFinishedUndoTeams), undoFinishedTeamList.getItems()));
+        } else {
+            undoFinishedTeamList.setItems(FXCollections.concat(undoFinishedTeamList.getItems(), FXCollections.observableList(hBoxForFinishedUndoTeams)));
+        }
+    }
+
+    public void addToFinishedTeamListToTop(Team team) {
+        addToFinishedTeamList(team, true);
+    }
+
+    public void addToFinishedTeamListToBottom(Team team) {
+        addToFinishedTeamList(team, false);
+    }
+
+
+    public void updateFinalFinishedTeamList() {
+        ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
+        for (Team team : controller.getFinalFinishedTeams()) {
             hBoxForFinishedTeams.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString(),team.getSitRep(), controller));
         }
 
         finishedTeamsList.setItems(FXCollections.observableList(hBoxForFinishedTeams));
+    }
+
+    public void addToFinalFinishedTeamList(Team team, boolean top) {
+        ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
+        hBoxForFinishedTeams.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString(),team.getSitRep(), controller));
+        if (top) {
+            finishedTeamsList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForFinishedTeams), finishedTeamsList.getItems()));
+        } else {
+            finishedTeamsList.setItems(FXCollections.concat(finishedTeamsList.getItems(), FXCollections.observableList(hBoxForFinishedTeams)));
+        }
+    }
+
+    public void addToFinalFinishedTeamListToTop(Team team) {
+        addToFinalFinishedTeamList(team, true);
+    }
+
+    public void addToFinalFinishedTeamListToBottom(Team team) {
+        addToFinalFinishedTeamList(team, false);
     }
 
     public void updateStagedHeatTeamList() {
@@ -91,6 +154,7 @@ public class mainTimingController {
                 i--;
             }
         }
+        updateRunningTeamList();
     }
 
     @FXML
@@ -121,7 +185,7 @@ public class mainTimingController {
     private Button editHeatButton;
 
     @FXML
-    private ListView<HBoxForFinishedTeam> undoFinishedTeamList;
+    private ListView<HBoxForFinishedUndoTeam> undoFinishedTeamList;
 
 
     @FXML
@@ -182,6 +246,7 @@ public class mainTimingController {
             stagedHeat.markStartTimeStarted(Calendar.getInstance());
             controller.addRunningTeams(stagedHeat.getTeams());
 
+
             day.atNextHeat();
             stageHeatNumber.setText(Integer.toString(day.getAtHeat()));
             stageHeatTeamList.setItems(null);
@@ -200,7 +265,7 @@ public class mainTimingController {
             try {
                 for (Team team : controller.getRunningTeams()) {
                     if (team.getTeamNumber() == Integer.parseInt(stopTeamNumber.getText())){
-                        controller.removeRunningTeam(team);
+                        controller.removeRunningTeamWithUpdate(team);
                         controller.addFinishedTeam(team);
                         team.markEndTime(Calendar.getInstance());
                         break;

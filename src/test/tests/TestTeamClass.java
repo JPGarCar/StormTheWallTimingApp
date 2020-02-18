@@ -89,7 +89,7 @@ public class TestTeamClass {
             e.printStackTrace();
         } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
             couldNotCalculateFinalTimeExcpetion.printStackTrace();
-        } catch (NoTeamException e) {
+        } catch (NoRemainingHeatsException e) {
             e.printStackTrace();
         }
 

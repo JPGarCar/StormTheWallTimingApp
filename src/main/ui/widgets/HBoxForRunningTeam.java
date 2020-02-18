@@ -7,10 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import models.enums.Sitrep;
-import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
-import models.exceptions.NoCurrentHeatIDException;
-import models.exceptions.NoHeatsException;
-import models.exceptions.NoTeamException;
+import models.exceptions.*;
 import ui.TimingController;
 
 import java.util.Arrays;
@@ -54,6 +51,8 @@ public class HBoxForRunningTeam extends CustomHBox {
             } catch (NoCurrentHeatIDException e) {
                 e.printStackTrace();
             } catch (NoTeamException e) {
+                e.printStackTrace();
+            } catch (NoRemainingHeatsException e) {
                 e.printStackTrace();
             }
         });

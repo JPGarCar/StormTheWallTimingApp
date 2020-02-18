@@ -19,6 +19,7 @@ public class Team {
     private LeagueType teamLeague;
     private String notes;
     private int currentHeatID;
+    private boolean possibleUndo;
 
     // private team vars
     private int teamNumber;
@@ -57,6 +58,14 @@ public class Team {
     }
 
     // GETTERS AND SETTERS, used by Jackson JSON
+    public boolean getPossibleUndo() {
+        return possibleUndo;
+    }
+
+    public void setPossibleUndo(@NotNull boolean possibleUndo) {
+        this.possibleUndo = possibleUndo;
+    }
+
     public TeamType getTeamType() {
         return teamType;
     }
@@ -137,6 +146,7 @@ public class Team {
         this.sitRep = sitRep;
     }
 
+
     // EFFECTS: set the end time to the appropriate TeamHeat, depends on the heat number given.
     //          will also move the TeamHeat who got a final time to the done heat list
     public void markEndTime(@NotNull Calendar endTime) throws NoHeatsException, NoCurrentHeatIDException, CouldNotCalculateFinalTimeExcpetion, NoRemainingHeatsException {
@@ -151,6 +161,7 @@ public class Team {
                 remainingHeat.calculateEndTime(endTime);
                 doneHeats.add(remainingHeat);
                 remainingHeats.remove(remainingHeat);
+                setPossibleUndo(true);
                 i--;
             }
         }
@@ -220,4 +231,18 @@ public class Team {
             throw new NoHeatsException();
         }
     }
+
+    // EFFECTS: undo the end time stuff
+    public void undoEndTimeMark() {
+        for (int i = 0; i < doneHeats.size(); i++) {
+            TeamHeat teamHeat = doneHeats.get(i);
+            if (teamHeat.getHeatID() == currentHeatID) {
+                remainingHeats.add(teamHeat);
+                doneHeats.remove(teamHeat);
+                setPossibleUndo(false);
+                i--;
+            }
+        }
+    }
+
 }

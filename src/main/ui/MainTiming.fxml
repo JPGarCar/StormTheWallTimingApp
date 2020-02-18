@@ -104,7 +104,7 @@
                      </children>
                   </VBox>
                   <Separator prefWidth="200.0" VBox.vgrow="NEVER" />
-                  <VBox prefHeight="475.0" prefWidth="317.0">
+                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="475.0" prefWidth="317.0" VBox.vgrow="ALWAYS">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="317.0" spacing="10.0" VBox.vgrow="NEVER">
                            <children>
@@ -128,7 +128,7 @@
                               <Insets left="5.0" right="5.0" />
                            </padding>
                         </HBox>
-                        <ListView id="heatTeamList" fx:id="stageHeatTeamList" maxHeight="10000.0" maxWidth="10000.0" prefHeight="471.0" prefWidth="317.0" VBox.vgrow="ALWAYS" />
+                        <ListView id="heatTeamList" fx:id="stageHeatTeamList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="471.0" prefWidth="317.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
                   <HBox alignment="CENTER" prefHeight="61.0" prefWidth="317.0" spacing="15.0" VBox.vgrow="NEVER">
@@ -160,7 +160,7 @@
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <Label layoutX="59.0" layoutY="14.0" prefHeight="19.0" prefWidth="275.0" text="Team Name" HBox.hgrow="ALWAYS">
+                        <Label layoutX="59.0" layoutY="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="19.0" prefWidth="275.0" text="Team Name" HBox.hgrow="ALWAYS">
                            <font>
                               <Font size="13.0" />
                            </font>
@@ -170,12 +170,12 @@
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <Label layoutX="182.0" layoutY="14.0" prefHeight="19.0" prefWidth="67.0" text="Status">
+                        <Label alignment="CENTER" layoutX="182.0" layoutY="14.0" prefHeight="19.0" prefWidth="89.0" text="Status">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <Label layoutX="250.0" layoutY="14.0" text="Finish">
+                        <Label alignment="CENTER" layoutX="250.0" layoutY="14.0" prefHeight="19.0" prefWidth="63.0" text="Finish">
                            <font>
                               <Font size="13.0" />
                            </font>
