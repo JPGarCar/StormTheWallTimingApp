@@ -235,14 +235,24 @@ public class Team {
         }
     }
 
-    // EFFECTS: get teamHeat by heatID
-    public TeamHeat getTeamHeatByHeatID(int heatID) {
+    // EFFECTS: get teamHeat by heatID from remainingHeats
+    public TeamHeat getTeamHeatByHeatIDFromRemaining(int heatID) throws NoTeamHeatException {
         for (TeamHeat teamHeat : remainingHeats) {
             if (teamHeat.getHeatID() == heatID) {
                 return teamHeat;
             }
         }
-        return null; // TODO send exception
+        throw new NoTeamHeatException();
+    }
+
+    // EFFECTS: get teamHeat by heatID from doneHeats
+    public TeamHeat getTeamHeatByHeatIDFromDone(int heatID) throws NoTeamHeatException {
+        for (TeamHeat teamHeat : doneHeats) {
+            if (teamHeat.getHeatID() == heatID) {
+                return teamHeat;
+            }
+        }
+        throw new NoTeamHeatException();
     }
 
 }

@@ -195,8 +195,12 @@ public class Heat {
     public ArrayList<Team> getTeamsThatWillRun() {
         ArrayList<Team> runnableTeams = new ArrayList<>();
         for (Team team : teams) {
-            if (team.getTeamHeatByHeatID(heatNumber).getSitrep() != Sitrep.DNS) {
-                runnableTeams.add(team);
+            try {
+                if (team.getTeamHeatByHeatIDFromRemaining(heatNumber).getSitrep() != Sitrep.DNS) {
+                    runnableTeams.add(team);
+                }
+            } catch (NoTeamHeatException e) {
+                e.printStackTrace();
             }
         }
         return runnableTeams;

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.internal.NotNull;
 import javafx.application.Platform;
 import models.Heat;
+import models.Program;
 import models.Team;
 
 
@@ -19,6 +20,7 @@ public class TimingController {
     private ArrayList<Team> runningTeams;
     private ArrayList<Team> finishedTeams;
     private ArrayList<Team> finalFinishedTeams;
+    private Program program;
 
     @JsonIgnore
     private mainTimingController uiController;
@@ -32,9 +34,19 @@ public class TimingController {
         runningTeams = new ArrayList<>();
         finishedTeams = new ArrayList<>();
         finalFinishedTeams = new ArrayList<>();
+        program = new Program();
     }
 
     // GETTERS AND SETTERS, used by Jackson JSON
+
+    public Program getProgram() {
+        return program;
+    }
+
+    public void setProgram(Program program) {
+        this.program = program;
+    }
+
     public ArrayList<Team> getFinishedTeams() {
         return finishedTeams;
     }
@@ -84,7 +96,7 @@ public class TimingController {
     }
 
     // EFFECTS: add a team to the finished team list, included the task to move to final finished
-    public void addFinishedTeam(Team team) {
+    public void addFinishedTeam(@NotNull Team team) {
         finishedTeams.add(team);
         uiController.updateFinishedTeamList();
         Timer t = new Timer();

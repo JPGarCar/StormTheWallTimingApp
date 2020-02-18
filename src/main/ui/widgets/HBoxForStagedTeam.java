@@ -31,7 +31,7 @@ public class HBoxForStagedTeam extends CustomHBox {
         comboBox.setItems(FXCollections.observableList(Arrays.asList(Sitrep.values())));
         comboBox.setValue(sitrep.name());
         comboBox.setOnAction(event -> {
-            updateStatus(Integer.parseInt(idText), comboBox.getValue().toString(), controller);
+            updateStatus(Integer.parseInt(idText), comboBox.getValue().toString(), controller, true);
         });
 
         this.getChildren().addAll(id, label, comboBox);

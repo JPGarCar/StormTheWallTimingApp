@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import models.Heat;
 import models.Team;
+import models.exceptions.AddTeamException;
 import sun.security.ssl.Debug;
 import ui.widgets.HBoxForEditHeatTeam;
 
@@ -59,7 +60,12 @@ public class EditHeatPageController {
 
     @FXML
     public void addTeamByID() {
-        //controller.getStagedHeat().addTeam();
+        try {
+            controller.getStagedHeat().addTeam(controller.getProgram().getAllTeams().get(Integer.parseInt(addTeamIDField.getText())));
+            setTeamHeatListTeams();
+        } catch (AddTeamException e) {
+            e.printStackTrace();
+        }
         // TODO get team from database
     }
 }
