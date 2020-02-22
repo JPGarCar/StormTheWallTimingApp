@@ -36,7 +36,7 @@ public class TestRunClass {
         Day day = new Day(Calendar.getInstance(),1);
         Heat heat = null;
         heat = new Heat(null, LeagueType.COMP, TeamType.COREC, 1, day, 1);
-        heat.markStartTimeStarted(Calendar.getInstance());
+        heat.markActualStartTime(Calendar.getInstance());
         Team team = new Team(TeamType.OPEN, LeagueType.JFF, 1232, "The Invinsibles", 1232);
         try {
             team.addHeat(heat);

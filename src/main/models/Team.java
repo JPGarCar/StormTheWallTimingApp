@@ -18,24 +18,22 @@ import java.util.Map;
     Contains:
     - Team Type - TeamType
     - League Type - LeagueType
-    - The id of the heat in which they are currently running, -1 if they are not running at the moment - int
-    - Possibility of undoing the start of the heat - boolean
     - Team id used by db and access - UNIQUE - int
     - Team number used by participants and the program - UNIQUE - int
     - Team´s name - String
     - All the heats this team is running in - Map<Integer, Heat>
-    - All the TeamHeats that the team finished - Map<Integer, TeamHeat>
-    - All the TeamHeats that the team has not finished - Map<Integer, TeamHeat>
+    - All the Runs that the team has - Map<Integer, Run>
+    - Current run if the team is running, null otherwise - Run
 
     Usage:
     -
 
     Persistence:
     - This class is an entity in the table name "team_table"
-    - currentHeatID, heats, doneHeats and remainingHeats will be changing during the program's life they
+    - currentRun, heats and runs will be changing during the program's life they
         must be persist with db, all other vars will not change much or at all
     - Many To Many relation with Heat, it is mapped by Heat
-    - One To Many with TeamHeat x2
+    - One To Many with Run
  */
 
 
@@ -50,12 +48,6 @@ public class Team {
 
     private LeagueType teamLeague;
 
-    // Represents the ID of the heat in which this team is currently running, -1 if they are not running at the moment
-    private int currentHeatID;
-
-    // Represents the possibility of undoing the team's end time // TODO move this to TeamHeat
-    private boolean possibleUndo;
-
     // Represents team id used by db and access - UNIQUE
     @Id
     private int teamID;
@@ -69,22 +61,19 @@ public class Team {
     @ManyToMany(mappedBy = "heat_table")
     private Map<Integer, Heat> heats;
 
-    // Contains the TeamHeats that have finished
-    @JsonManagedReference
-    @OneToMany
-    private Map<Integer, Run> doneHeats;
-
     // Contains the TeamHeats that have not finished
     @JsonManagedReference
     @OneToMany
-    private Map<Integer, Run> remainingHeats;
+    private Map<Integer, Run> runs;
+
+    // Contains the current run the team is running
+    private Run currentRun;
 
 // CONSTRUCTORS //
 
     // DUMMY CONSTRUCTOR used by Jackson JSON
     public Team() {
-        doneHeats = new HashMap<>();
-        remainingHeats = new HashMap<>();
+        runs = new HashMap<>();
         heats = new HashMap<>();
     }
 
@@ -95,22 +84,21 @@ public class Team {
         this.teamNumber = teamNumber;
         this.teamName = teamName;
         this.teamID = teamID;
-        currentHeatID = -1;
 
-        doneHeats = new HashMap<>();
-        remainingHeats = new HashMap<>();
+        runs = new HashMap<>();
         heats = new HashMap<>();
 
     }
 
 // GETTERS AND SETTERS, used by Jackson JSON //
 
-    public int getTeamID() {
-        return teamID;
+
+    public Run getCurrentRun() {
+        return currentRun;
     }
 
-    public boolean getPossibleUndo() {
-        return possibleUndo;
+    public int getTeamID() {
+        return teamID;
     }
 
     public TeamType getTeamType() {
@@ -133,24 +121,16 @@ public class Team {
         return heats;
     }
 
-    public Map<Integer, Run> getRemainingHeats() {
-        return remainingHeats;
+    public Map<Integer, Run> getRuns() {
+        return runs;
     }
 
-    public Map<Integer, Run> getDoneHeats() {
-        return doneHeats;
-    }
-
-    public int getCurrentHeatID() {
-        return currentHeatID;
+    public void setCurrentRun(@NotNull Run currentRun) {
+        this.currentRun = currentRun;
     }
 
     public void setTeamID(@NotNull int teamID) {
         this.teamID = teamID;
-    }
-
-    public void setPossibleUndo(@NotNull boolean possibleUndo) {
-        this.possibleUndo = possibleUndo;
     }
 
     public void setTeamType(@NotNull TeamType teamType) {
@@ -161,16 +141,8 @@ public class Team {
         this.heats = heats;
     }
 
-    public void setCurrentHeatID(@NotNull int currentHeatID) {
-        this.currentHeatID = currentHeatID;
-    }
-
-    public void setDoneHeats(@NotNull Map<Integer, Run> doneHeats) {
-        this.doneHeats = doneHeats;
-    }
-
-    public void setRemainingHeats(@NotNull Map<Integer, Run> remainingHeats) {
-        this.remainingHeats = remainingHeats;
+    public void setRuns(@NotNull Map<Integer, Run> runs) {
+        this.runs = runs;
     }
 
     public void setTeamLeague(@NotNull LeagueType teamLeague) {
@@ -190,21 +162,25 @@ public class Team {
     // EFFECTS: set the end time to the appropriate TeamHeat, depends on the heat number given.
     //          will also move the TeamHeat who got a final time to the done heat list
     public void markEndTime(@NotNull Calendar endTime) throws NoHeatsException, NoCurrentHeatIDException, CouldNotCalculateFinalTimeExcpetion, NoRemainingHeatsException {
-        if (remainingHeats.size() == 0) {
+        if (runs.size() == 0 || currentRun == null) {
             throw new NoRemainingHeatsException();
-        } else if (currentHeatID == -1) {
-            throw new NoCurrentHeatIDException();
         }
-        Run remainingHeat = remainingHeats.remove(currentHeatID);
-        remainingHeat.calculateEndTime(endTime);
-        setPossibleUndo(true);
-        doneHeats.put(remainingHeat.getHeatNumber(), remainingHeat);
+        currentRun.calculateEndTime(endTime);
     }
 
     // EFFECTS: add the heats in the input array to the heats array and the remaining heats queue
     public void addHeats(ArrayList<Heat> heats) throws AddHeatException {
         for (Heat heat : heats) {
             addHeat(heat);
+        }
+    }
+
+    // EFFECTS: set the current run that this team is running
+    public void markCurrentRun(int heatNumber) {
+        if (heatNumber == -1) {
+            currentRun = null;
+        } else {
+            setCurrentRun(runs.get(heatNumber));
         }
     }
 
@@ -218,7 +194,7 @@ public class Team {
         if (!heats.containsKey(heat.getHeatNumber())) {
             heats.put(heat.getHeatNumber(), heat);
             Run run = heatToTeamHeat(heat);
-            remainingHeats.put(run.getHeatNumber(), run);
+            runs.put(run.getHeatNumber(), run);
             try {
                 heat.addTeam(this);
             } catch (AddTeamException e) {
@@ -238,8 +214,7 @@ public class Team {
             } catch (NoTeamException e) {
                 // do nothing as we expect this here due to many to many connection
             }
-            remainingHeats.remove(heatNumber);
-            doneHeats.remove(heatNumber);
+            runs.remove(heatNumber);
         } else {
             throw new NoHeatsException();
         }
@@ -247,23 +222,12 @@ public class Team {
 
     // EFFECTS: undo the end time stuff
     public void undoEndTimeMark() {
-        Run run = doneHeats.remove(currentHeatID);
-        remainingHeats.put(run.getHeatNumber(), run);
-        setPossibleUndo(false);
+        currentRun.setCanUndo(true);
     }
 
     // EFFECTS: get teamHeat by its heat number from remainingHeats
-    public Run getTeamHeatByHeatNumberFromRemaining(int heatNumber) throws NoTeamHeatException {
-        Run run = remainingHeats.get(heatNumber);
-        if (run == null) {
-            throw new NoTeamHeatException();
-        }
-        return run;
-    }
-
-    // EFFECTS: get teamHeat by heat number from doneHeats
-    public Run getTeamHeatByHeatNumberFromDone(int heatNumber) throws NoTeamHeatException {
-        Run run = doneHeats.get(heatNumber);
+    public Run getRunByHeatNumber(int heatNumber) throws NoTeamHeatException {
+        Run run = runs.get(heatNumber);
         if (run == null) {
             throw new NoTeamHeatException();
         }

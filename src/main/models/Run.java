@@ -19,6 +19,8 @@ import java.util.Calendar;
     - The time it takes the team to finish the run - FinalTime
     - The situation of the team, if any, ex. DNS, DQ, etc - Sitrep
     - The team that is running this run - Team
+    - If the run has been completed or not - boolean
+    - Can the run be undo - boolean
 
     Usage:
     -
@@ -58,6 +60,12 @@ public class Run {
     @JsonBackReference
     private Team team;
 
+    // Represents if the run has been completed
+    private boolean isDone;
+
+    // Represents the possibility to undo the run end time
+    private boolean canUndo;
+
 // CONSTRUCTORS //
 
     // DUMMY CONSTRUCTOR for Jackson JSON
@@ -69,9 +77,20 @@ public class Run {
         this.heatNumber = heatNumber;
         this.team = team;
         this.sitrep = Sitrep.NONE;
+        isDone = false;
+        canUndo = false;
     }
 
 // GETTERS AND SETTERS, used for Jackson JSON //
+
+
+    public boolean getCanUndo() {
+        return canUndo;
+    }
+
+    public boolean getIsDone() {
+        return isDone;
+    }
 
     public FinalTime getFinalTime() {
         return finalTime;
@@ -87,6 +106,14 @@ public class Run {
 
     public Sitrep getSitrep() {
         return sitrep;
+    }
+
+    public void setCanUndo(boolean canUndo) {
+        this.canUndo = canUndo;
+    }
+
+    public void setIsDone(@NotNull boolean done) {
+        isDone = done;
     }
 
     public void setFinalTime(@NotNull FinalTime finalTime) {
@@ -107,14 +134,17 @@ public class Run {
 
 // FUNCTIONS //
 
-    // EFFECTS: constructs a FinalTime with the heat's start and input end time
+    // EFFECTS: constructs a FinalTime with the heat's start and input end time and sets canUndo and isDone to true
     public void calculateEndTime(@NotNull Calendar endTime) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion {
+        canUndo = true;
+        isDone = true;
+
         Heat heat = getHeatFromTeam();
         if (heat == null) {
             throw new NoHeatsException();
         }
 
-        finalTime = new FinalTime(heat.getStartTime(), endTime);
+        finalTime = new FinalTime(heat.getActualStartTime(), endTime);
     }
 
 

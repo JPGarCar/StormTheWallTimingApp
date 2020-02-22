@@ -64,7 +64,7 @@ public class Heat {
     private boolean hasStarted;
 
     // Represents the actual time the heat started as a Calendar
-    private Calendar startTime;
+    private Calendar actualStartTime;
 
     // All the teams that are running in this heat
     @ManyToMany
@@ -119,8 +119,8 @@ public class Heat {
         return dayToRace;
     }
 
-    public Calendar getStartTime() {
-        return startTime;
+    public Calendar getActualStartTime() {
+        return actualStartTime;
     }
 
     public Map<Integer, Team> getTeams() {
@@ -135,8 +135,8 @@ public class Heat {
         this.heatID = heatID;
     }
 
-    public void setStartTime(@NotNull Calendar startTime) {
-        this.startTime = startTime;
+    public void setActualStartTime(@NotNull Calendar actualStartTime) {
+        this.actualStartTime = actualStartTime;
     }
 
     public void setHasStarted(@NotNull boolean hasStarted) {
@@ -167,11 +167,11 @@ public class Heat {
 
     // MODIFIES: startTime, hasStarted, teams(children)
     // EFFECTS: sets the heat's startTime, marks hasStarted to true, and sets this heat's team's current heat to this
-    public void markStartTimeStarted(@NotNull Calendar startTime) {
-        this.startTime = startTime;
+    public void markActualStartTime(@NotNull Calendar startTime) {
+        this.actualStartTime = startTime;
         hasStarted = true;
         for (Team team : teams.values()) {
-            team.setCurrentHeatID(heatNumber);
+            team.markCurrentRun(heatNumber);
         }
     }
 
@@ -234,9 +234,9 @@ public class Heat {
     public void undoHeatStart() throws CanNotUndoHeatException {
         if (hasStarted) {
             hasStarted = false;
-            startTime = null;
+            actualStartTime = null;
             for (Team team : teams.values()) {
-                team.setCurrentHeatID(-1);
+                team.markCurrentRun(-1);
             }
         } else {
             throw new CanNotUndoHeatException();
@@ -253,7 +253,7 @@ public class Heat {
         ArrayList<Team> runnableTeams = new ArrayList<>();
         for (Team team : teams.values()) {
             try {
-                if (team.getTeamHeatByHeatNumberFromRemaining(heatNumber).getSitrep() != Sitrep.DNS) {
+                if (team.getRunByHeatNumber(heatNumber).getSitrep() != Sitrep.DNS) {
                     runnableTeams.add(team);
                 }
             } catch (NoTeamHeatException e) {

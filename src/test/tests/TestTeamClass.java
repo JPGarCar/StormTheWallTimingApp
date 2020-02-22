@@ -4,7 +4,6 @@ import models.Day;
 import models.Heat;
 import models.Team;
 import models.enums.LeagueType;
-import models.enums.Sitrep;
 import models.enums.TeamType;
 import models.exceptions.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,8 +30,7 @@ public class TestTeamClass {
         assertEquals(312, team.getTeamNumber());
         assertEquals("The Storm Troopers", team.getTeamName());
         assertTrue(team.getHeats().isEmpty());
-        assertTrue(team.getRemainingHeats().isEmpty());
-        assertTrue(team.getDoneHeats().isEmpty());
+        assertTrue(team.getRuns().isEmpty());
     }
 
     @Test
@@ -41,7 +39,7 @@ public class TestTeamClass {
         Heat heat = new Heat(null, LeagueType.COMP, TeamType.COREC, 1, day, 1);
         team.addHeat(heat);
         assertTrue(team.getHeats().containsKey(heat.getHeatNumber()));
-        assertEquals(1, team.getRemainingHeats().size());
+        assertEquals(1, team.getRuns().size());
 
         Heat heat1 = new Heat(Calendar.getInstance(), LeagueType.COMP, TeamType.COREC, 2, day, 2);
         Heat heat2 = new Heat(Calendar.getInstance(), LeagueType.JFF, TeamType.OPEN, 3, day, 3);
@@ -53,7 +51,7 @@ public class TestTeamClass {
 
         team.addHeats(heats);
         assertEquals(3, team.getHeats().size());
-        assertEquals(3, team.getRemainingHeats().size());
+        assertEquals(3, team.getRuns().size());
 
         assertEquals(1, heat.getTeams().size());
     }
@@ -64,7 +62,7 @@ public class TestTeamClass {
         Calendar startTime = Calendar.getInstance();
         Heat heat = new Heat(null, LeagueType.COMP, TeamType.COREC, 1, day, 1);
         team.addHeat(heat);
-        heat.markStartTimeStarted(startTime);
+        heat.markActualStartTime(startTime);
 
         Calendar endTime = Calendar.getInstance();
         endTime.add(Calendar.MINUTE, 5);
@@ -80,8 +78,7 @@ public class TestTeamClass {
             e.printStackTrace();
         }
 
-        assertTrue(team.getRemainingHeats().isEmpty());
-        assertEquals(1, team.getDoneHeats().size());
+        assertTrue(team.getRuns().isEmpty());
         assertFalse(team.getHeats().isEmpty());
     }
 
@@ -95,8 +92,7 @@ public class TestTeamClass {
 
         team.removeHeat(heat.getHeatNumber());
         assertTrue(team.getHeats().isEmpty());
-        assertTrue(team.getRemainingHeats().isEmpty());
-        assertTrue(team.getDoneHeats().isEmpty());
+        assertTrue(team.getRuns().isEmpty());
         assertTrue(heat.getTeams().isEmpty());
 
     }

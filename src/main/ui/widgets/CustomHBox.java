@@ -18,11 +18,11 @@ public abstract class CustomHBox extends HBox {
         Team team = timingController.getProgram().getTeamByTeamNumber(teamID);
         try {
             if (fromRemaining && staged) {
-                team.getTeamHeatByHeatNumberFromRemaining(timingController.getStagedHeat().getHeatNumber()).setSitrep(Sitrep.valueOf(sitrep));
+                team.getRunByHeatNumber(timingController.getStagedHeat().getHeatNumber()).setSitrep(Sitrep.valueOf(sitrep));
             } else if (fromRemaining) {
-                team.getTeamHeatByHeatNumberFromRemaining(team.getCurrentHeatID()).setSitrep(Sitrep.valueOf(sitrep));
+                team.getCurrentRun().setSitrep(Sitrep.valueOf(sitrep));
             } else {
-                team.getTeamHeatByHeatNumberFromDone(team.getCurrentHeatID()).setSitrep(Sitrep.valueOf(sitrep));
+                team.getCurrentRun().setSitrep(Sitrep.valueOf(sitrep));
             }
         } catch (NoTeamHeatException e) {
             e.printStackTrace();

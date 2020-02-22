@@ -111,9 +111,12 @@ public class TimingController {
         t.schedule( new TimerTask() {
             @Override
             public void run() {
-                if (team.getPossibleUndo()) {
-                    team.setPossibleUndo(false);
-                    Platform.runLater(() -> addFinalFinishedTeam(team));
+                if (team.getCurrentRun().getCanUndo()) {
+                    team.getCurrentRun().setCanUndo(false);
+                    int heatNumber = team.getCurrentRun().getHeatNumber();
+                    team.markCurrentRun(-1);
+
+                    Platform.runLater(() -> addFinalFinishedTeam(team, heatNumber));
                     Platform.runLater(() -> removeFinishedTeamWithUpdate(teamNumber));
                     t.cancel();
                 }
@@ -174,9 +177,9 @@ public class TimingController {
     }
 
     // EFFECTS: add a team to the final finished team list and update ui final finished team list
-    public void addFinalFinishedTeam(Team team) {
+    public void addFinalFinishedTeam(Team team, int heatNumber) {
         finalFinishedTeams.put(team.getTeamNumber(), team);
-        uiController.addToFinalFinishedTeamListToTop(team);
+        uiController.addToFinalFinishedTeamListToTop(team, heatNumber);
     }
 
     // EFFECTS: ends a team
