@@ -34,7 +34,7 @@
             <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="35.0">
                <children>
-                  <Button fx:id="inputDataButton" mnemonicParsing="false" text="Input Data">
+                  <Button fx:id="ioDataButton" mnemonicParsing="false" text="I/O Data">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>

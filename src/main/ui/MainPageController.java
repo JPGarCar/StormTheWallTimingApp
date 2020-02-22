@@ -25,7 +25,7 @@ public class MainPageController {
     private Button infoButton;
 
     @FXML
-    private Button inputDataButton;
+    private Button ioDataButton;
 
     @FXML
     private void startRaceButtonAction() {
@@ -35,6 +35,18 @@ public class MainPageController {
             startRaceButton.getScene().setRoot(root.load());
         } catch (IOException e) {
             System.out.println("Error on startRaceActionButton");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void ioDataButtonAction() {
+        try {
+            FXMLLoader root = new FXMLLoader(getClass().getResource("dataIOPage.fxml"));
+            root.setControllerFactory(c -> new DataIOPageController(controller));
+            ioDataButton.getScene().setRoot(root.load());
+        } catch (IOException e) {
+            System.out.println("Error on ioDataActionButton");
             e.printStackTrace();
         }
     }
