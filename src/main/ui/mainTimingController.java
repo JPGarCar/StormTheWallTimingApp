@@ -4,8 +4,6 @@ import com.sun.istack.internal.NotNull;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -44,7 +42,7 @@ public class mainTimingController {
         ArrayList<HBoxForRunningTeam> hBoxForRunningTeams = new ArrayList<>();
         for (Team team : controller.getRunningTeams().values()) {
             try {
-                hBoxForRunningTeams.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getTeamHeatByHeatIDFromRemaining(team.getCurrentHeatID()).getSitrep(), team.getCurrentHeatID(), team.getTeamType().name(), controller));
+                hBoxForRunningTeams.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getTeamHeatByHeatNumberFromRemaining(team.getCurrentHeatID()).getSitrep(), team.getCurrentHeatID(), team.getTeamType().name(), controller));
             } catch (NoTeamHeatException e) {
                 e.printStackTrace();
             }
@@ -56,7 +54,7 @@ public class mainTimingController {
     public void addToRunningTeamList(Team team, boolean top) {
         ArrayList<HBoxForRunningTeam> hBoxForRunningTeams = new ArrayList<>();
         try {
-            hBoxForRunningTeams.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getTeamHeatByHeatIDFromRemaining(team.getCurrentHeatID()).getSitrep(), team.getCurrentHeatID(), team.getTeamType().name(), controller));
+            hBoxForRunningTeams.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getTeamHeatByHeatNumberFromRemaining(team.getCurrentHeatID()).getSitrep(), team.getCurrentHeatID(), team.getTeamType().name(), controller));
         } catch (NoTeamHeatException e) {
             e.printStackTrace();
         }
@@ -105,7 +103,7 @@ public class mainTimingController {
         ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
         for (Team team : controller.getFinalFinishedTeams().values()) {
             try {
-                hBoxForFinishedTeams.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString(), team.getTeamHeatByHeatIDFromDone(team.getCurrentHeatID()).getSitrep(), controller));
+                hBoxForFinishedTeams.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getDoneHeats().size() - 1).getFinalTime().toString(), team.getTeamHeatByHeatNumberFromDone(team.getCurrentHeatID()).getSitrep(), controller));
             } catch (NoTeamHeatException e) {
                 e.printStackTrace();
             }
@@ -118,7 +116,7 @@ public class mainTimingController {
     private void addToFinalFinishedTeamList(@NotNull Team team, boolean top) {
         ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
         try {
-            hBoxForFinishedTeams.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getCurrentHeatID()).getFinalTime().toString(), team.getTeamHeatByHeatIDFromDone(team.getCurrentHeatID()).getSitrep(), controller));
+            hBoxForFinishedTeams.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getDoneHeats().get(team.getCurrentHeatID()).getFinalTime().toString(), team.getTeamHeatByHeatNumberFromDone(team.getCurrentHeatID()).getSitrep(), controller));
         } catch (NoTeamHeatException e) {
             e.printStackTrace();
         }
@@ -140,7 +138,7 @@ public class mainTimingController {
         ArrayList<HBoxForStagedTeam> list = new ArrayList<>();
         for (Team team : controller.getStagedHeat().getTeams().values()) {
             try {
-                list.add(new HBoxForStagedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getTeamHeatByHeatIDFromRemaining(controller.getStagedHeat().getHeatNumber()).getSitrep(), controller));
+                list.add(new HBoxForStagedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getTeamHeatByHeatNumberFromRemaining(controller.getStagedHeat().getHeatNumber()).getSitrep(), controller));
             } catch (NoTeamHeatException e) {
                 e.printStackTrace();
             }
@@ -234,14 +232,12 @@ public class mainTimingController {
         Random random = new Random();
         for (int i = 1; i <= 200; i++) {
             Heat heat = null;
-            try {
-                heat = new Heat(Calendar.getInstance(), LeagueType.JFF, TeamType.OPEN, i, day);
-            } catch (AddHeatException e) {
-                e.printStackTrace();
-            }
+            int number = random.nextInt(100);
+            heat = new Heat(Calendar.getInstance(), LeagueType.JFF, TeamType.OPEN, i, day, number);
             for (int j = 1; j <= 5; j++) {
                 try {
-                    heat.addTeam(program.createTeam(TeamType.OPEN, LeagueType.JFF, random.nextInt(2000), "Cool Name" + (j+i)));
+                    number = random.nextInt(2000);
+                    heat.addTeam(program.createTeam(TeamType.OPEN, LeagueType.JFF, number, "Cool Name" + (number), number));
                 } catch (AddTeamException e) {
                     e.printStackTrace();
                 }
@@ -255,7 +251,7 @@ public class mainTimingController {
     @FXML
     private void stageHeat() {
         try {
-            controller.setStagedHeat(program.getProgramDays().get(1).getHeatByID(Integer.parseInt(stageHeatNumber.getText())));
+            controller.setStagedHeat(program.getProgramDays().get(1).getHeatByHeatNumber(Integer.parseInt(stageHeatNumber.getText())));
         } catch (NoHeatWithIDException e) {
             e.printStackTrace();
         }

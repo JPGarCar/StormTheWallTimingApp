@@ -1,16 +1,10 @@
 package ui.widgets;
 
-import javafx.collections.FXCollections;
 import javafx.scene.layout.HBox;
 import models.Team;
-import models.TeamHeat;
 import models.enums.Sitrep;
 import models.exceptions.*;
 import ui.TimingController;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Map;
 
 public abstract class CustomHBox extends HBox {
 
@@ -21,14 +15,14 @@ public abstract class CustomHBox extends HBox {
 
     // EFFECTS: update the status of a specific team private does all the work, three publics for different situations
     private void updateStatus(int teamID, String sitrep, TimingController timingController, boolean fromRemaining, boolean staged) {
-        Team team = timingController.getProgram().getTeamByID(teamID);
+        Team team = timingController.getProgram().getTeamByTeamNumber(teamID);
         try {
             if (fromRemaining && staged) {
-                team.getTeamHeatByHeatIDFromRemaining(timingController.getStagedHeat().getHeatNumber()).setSitrep(Sitrep.valueOf(sitrep));
+                team.getTeamHeatByHeatNumberFromRemaining(timingController.getStagedHeat().getHeatNumber()).setSitrep(Sitrep.valueOf(sitrep));
             } else if (fromRemaining) {
-                team.getTeamHeatByHeatIDFromRemaining(team.getCurrentHeatID()).setSitrep(Sitrep.valueOf(sitrep));
+                team.getTeamHeatByHeatNumberFromRemaining(team.getCurrentHeatID()).setSitrep(Sitrep.valueOf(sitrep));
             } else {
-                team.getTeamHeatByHeatIDFromDone(team.getCurrentHeatID()).setSitrep(Sitrep.valueOf(sitrep));
+                team.getTeamHeatByHeatNumberFromDone(team.getCurrentHeatID()).setSitrep(Sitrep.valueOf(sitrep));
             }
         } catch (NoTeamHeatException e) {
             e.printStackTrace();

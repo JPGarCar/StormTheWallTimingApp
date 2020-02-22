@@ -5,17 +5,38 @@ import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
 
 import java.util.Calendar;
 
+/*
+    This class is used to calculate the total time it took a team to finish
+    Purpose: Calculate the total time it took a team to finish using start and end time Calendars
+    Contains:
+    - The difference between start and stop times in milliseconds - long
+    - The actual minutes, seconds and milliseconds it took the team to finish - int x3
+    - The start and stop time of the team - Calendar x2
+
+    Usage:
+    -
+
+    Persistence:
+    - No persistence of this class, the data is embedded in the Run class
+ */
+
 public class FinalTime {
 
-    // private vars
+// VARIABLES //
+
+    // Represents the millisecond difference between the start and stop time
     private long millisecondOfSet;
+
+    // Represents the minutes, seconds and milliseconds it took the team to finish
     private int minutes;
     private int seconds;
     private int milliseconds;
 
-    // private time vars
+    // Represents the start and stop times as calendars
     private Calendar startTime;
     private Calendar stopTime;
+
+// CONSTRUCTORS //
 
     // DUMMY CONSTRUCTOR for Jackson JSON
     public FinalTime() {}
@@ -27,7 +48,8 @@ public class FinalTime {
         calculate();
     }
 
-    // SETTERS AND GETTERS, used for Jackson JSON
+// SETTERS AND GETTERS, used for Jackson JSON //
+
     public void setStartTime(@NotNull Calendar startTime) {
         this.startTime = startTime;
     }
@@ -75,6 +97,8 @@ public class FinalTime {
     public Calendar getStopTime() {
         return stopTime;
     }
+
+// FUNCTIONS //
 
     // MODIFIES: startTime, stopTime
     // EFFECTS: add a new start and stop time

@@ -4,26 +4,39 @@ import com.sun.istack.internal.NotNull;
 import models.enums.LeagueType;
 import models.enums.TeamType;
 
-import javax.persistence.*;
 import java.util.*;
 
-@Entity
-@Table(name = "program_table")
+/*
+    General class for the program.
+    Purpose: control list of all teams, builds teams and has list of all days to be run.
+    Contains:
+    - Team list of all teams
+    - Wait list of teams
+    - Day list of all days to be run
+
+    Usage:
+    - Used by edit heat page to control the teams that are in the wait list
+    - Used by HBox to get team by team Number
+    - Used by main timing controller to create heats
+    - Used by main timing controller to get the days available
+
+    Persistence:
+    - This class is not in the database, it will get built every time the program starts using db data
+    - Must keep all three map lists persistent with db
+ */
+
+
 public class Program {
 
-    // private vars
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+// VARIABLES //
 
-    @OneToMany
     private Map<Integer, Day> programDays;
 
-    @OneToMany
     private Map<Integer, Team> allTeams;
 
-    @OneToMany
     private Map<Integer, Team> waitList;
+
+// CONSTRUCTORS //
 
     public Program() {
         programDays = new HashMap<>();
@@ -31,13 +44,19 @@ public class Program {
         waitList = new HashMap<>();
     }
 
-    // GETTERS AND SETTERS
+// GETTERS AND SETTERS //
+
     public Map<Integer, Day> getProgramDays() {
         return programDays;
     }
 
     public Map<Integer, Team> getAllTeams() {
         return allTeams;
+    }
+
+
+    public Map<Integer, Team> getWaitList() {
+        return waitList;
     }
 
     public void setAllTeams(Map<Integer, Team> allTeams) {
@@ -48,49 +67,47 @@ public class Program {
         this.programDays = programDays;
     }
 
-    public Map<Integer, Team> getWaitList() {
-        return waitList;
-    }
-
     public void setWaitList(Map<Integer, Team> waitList) {
         this.waitList = waitList;
     }
 
+// FUNCTIONS //
+
     // EFFECTS: add a day to the day list
-    public void addDay(Day day) {
+    public void addDay(@NotNull Day day) {
         programDays.put(day.getDayNumber(), day);
     }
 
     // EFFECTS: get a day by its day number
-    public Day getDayFromDayNumber(int dayNum) {
+    public Day getDayFromDayNumber(@NotNull int dayNum) {
         return programDays.get(dayNum);
     }
 
     // EFFECTS: add a team to the team list
-    public void addTeam(Team team) {
+    public void addTeam(@NotNull Team team) {
         allTeams.put(team.getTeamNumber(), team);
     }
 
     // EFFECTS: creates a team to use by the program
-    public Team createTeam(@NotNull TeamType teamType, @NotNull LeagueType teamLeague, @NotNull int teamNumber, @NotNull String teamName) {
-        Team team = new Team(teamType, teamLeague, teamNumber, teamName);
+    public Team createTeam(@NotNull TeamType teamType, @NotNull LeagueType teamLeague, @NotNull int teamNumber, @NotNull String teamName, @NotNull int teamID) {
+        Team team = new Team(teamType, teamLeague, teamNumber, teamName, teamID);
         addTeam(team);
         return team;
     }
 
     // EFFECTS: add a team to the waitList team list
-    public void addTeamToWaitList(Team team) {
+    public void addTeamToWaitList(@NotNull Team team) {
         waitList.put(team.getTeamNumber(), team);
     }
 
-    // EFFECTS: returns a team by its ID
-    public Team getTeamByID(int teamID) {
-        return allTeams.get(teamID);
+    // EFFECTS: returns a team by its team number
+    public Team getTeamByTeamNumber(@NotNull int teamNumber) {
+        return allTeams.get(teamNumber);
     }
 
-    // EFFECTS: remove a team from wait list
-    public void removeTeamFromWaitList(int teamID) {
-        waitList.remove(teamID);
+    // EFFECTS: remove a team from wait list by its team number
+    public void removeTeamFromWaitList(@NotNull int teamNumber) {
+        waitList.remove(teamNumber);
     }
 
 //    // EFFECTS: creates a team to use by the program with an automatic number

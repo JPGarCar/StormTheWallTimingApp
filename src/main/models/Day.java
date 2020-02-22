@@ -12,22 +12,50 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+    Represents a day of the event and everything that it entails
+    Purpose: Control the heats to be run during that day.
+    Contains:
+    - Calendar representation of the day - Calendar
+    - Integer representation of the day, starts at 1 in chronological order - int
+    - Next heat number to be staged - int
+    - All the heats that will run during this day - Map<Integer, Heat>
+
+    Usage:
+    - main timing controller to advance current heat (atHeat)
+    - main timing controller to get heat by its number
+    - main timing controller to undo the last heat start
+    - Heat to add/remove a heat to this day
+
+    Persistence:
+    - Class is an entity in the db in table name "day_table"
+    - atHeat and heats will be changing throughout the program life, dayToRun and dayNumber not much
+        will have to keep persistent with db
+    - One to Many relation with Heat
+ */
+
+
 @Entity
 @Table(name = "day_table")
 public class Day {
-    //private vars
+
+// VARIABLES //
 
     private Calendar dayToRun;
 
+    // Represents the day in an int for easier access starting at 1
     @Id
     private int dayNumber;
 
+    // Represents the next heat to be staged in this day by its heat number
     private int atHeat;
 
-    // private connections
+    // All the heats to be run during this day
     @OneToMany
     @JsonManagedReference
     private Map<Integer, Heat> heats;
+
+// CONSTRUCTORS //
 
     // DUMMY CONSTRUCTOR, used by Jackson JSON
     public Day() {
@@ -42,12 +70,17 @@ public class Day {
         atHeat = 1;
     }
 
-    // SETTERS AND GETTERS, used by Jackson JSON
-    public Calendar getDayToRun() {
-        return dayToRun;
+// SETTERS AND GETTERS, used by Jackson JSON
+
+    public void setDayToRun(@NotNull Calendar dayToRun) {
+        this.dayToRun = dayToRun;
     }
 
-    public void setHeats(Map<Integer, Heat> heats) {
+    public void setDayNumber(@NotNull int dayNumber) {
+        this.dayNumber = dayNumber;
+    }
+
+    public void setHeats(@NotNull Map<Integer, Heat> heats) {
         this.heats = heats;
     }
 
@@ -59,63 +92,62 @@ public class Day {
         return atHeat;
     }
 
-    public void atNextHeat() {
-        atHeat++;
-    }
-
-    public void setDayToRun(@NotNull Calendar dayToRun) {
-        this.dayToRun = dayToRun;
-    }
-
-    public void setDayNumber(@NotNull int dayNumber) {
-        this.dayNumber = dayNumber;
+    public Map<Integer, Heat> getHeats() {
+        return heats;
     }
 
     public int getDayNumber(){
         return dayNumber;
     }
 
+    public Calendar getDayToRun() {
+        return dayToRun;
+    }
+
+// FUNCTIONS //
+
     // EFFECTS: returns the month/day/year of the Day
+    @Override
     public String toString() {
         return dayToRun.get(Calendar.MONTH) + "/" + dayToRun.get(Calendar.DAY_OF_MONTH) + "/" + dayToRun.get(Calendar.YEAR);
     }
 
-    // EFFECTS: Return the Heat list
-    public Map<Integer, Heat> getHeats() {
-        return heats;
+    // EFFECTS: increase atHeat by one, to move to next heat
+    public void atNextHeat() {
+        atHeat++;
     }
 
     // EFFECTS: add a heat to the list of heats
-    public void addHeat(Heat heat) throws AddHeatException {
+    public void addHeat(@NotNull Heat heat) throws AddHeatException {
         if (!heats.containsKey(heat.getHeatNumber())) {
             heats.put(heat.getHeatNumber(), heat);
             heat.setDayToRace(this);
         } else {
-            throw new AddHeatException("because this heat is already in this day. The ID's match.");
+            throw new AddHeatException("because this heat is already in this day. The heat numbers match.");
         }
     }
 
     // EFFECTS: adds all the heats to this day
-    public void addHeats(ArrayList<Heat> heats) throws AddHeatException {
+    public void addHeats(@NotNull ArrayList<Heat> heats) throws AddHeatException {
         for (Heat heat : heats) {
             addHeat(heat);
         }
     }
 
-    // EFFECTS: remove the heat from this day by heatID
-    public void removeHeat(int heatID) {
-        heats.remove(heatID);
+    // EFFECTS: remove the heat from this day by the heats number
+    public void removeHeat(@NotNull int heatNumber) {
+        heats.remove(heatNumber);
         // TODO delete the heat object by setting everything to null
     }
 
     // EFFECTS: Return the number of heats in the day
     public int numberOfHeats(){
-        return heats.size();
+        return heats.size(); // TODO, if not used delete
     }
 
-    // EFFECTS: returns heat with specific heat id
-    public Heat getHeatByID(int id) throws NoHeatWithIDException {
-        Heat heat = heats.get(id);
+    // EFFECTS: returns heat with specific heat number
+    public Heat getHeatByHeatNumber(@NotNull int heatNumber) throws NoHeatWithIDException {
+        Heat heat = heats.get(heatNumber);
         if (heat == null) {
             throw new NoHeatWithIDException();
         }
@@ -124,7 +156,7 @@ public class Day {
 
     // EFFECTS: will delete start time for teams that heat just started, set heat to not started
     public void undoLastHeatStart() throws NoHeatWithIDException, CanNotUndoHeatException {
-        getHeatByID(atHeat - 1).undoHeatStart();
+        getHeatByHeatNumber(atHeat - 1).undoHeatStart();
         atHeat --;
     }
 

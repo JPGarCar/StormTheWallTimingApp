@@ -13,33 +13,69 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+    Represents a regular heat that will run during the event
+    Purpose: Control the teams that are running in this heat, when it starts and what kind of teams are running
+    Contains:
+    - Expected time to start
+    - League type
+    - Team type
+    - Heat ID (used by db and access) - UNIQUE
+    - Heat Number (used by participants and this program) - UNIQUE
+    - If heat has started
+    - Actual start time
+    - Teams to run this heat
+    - Day this heat is running in
+
+    Usage:
+    -
+
+    Persistence:
+    - Class is an entity in the table name "heat_table"
+    - Actual start time, the teams that will run and weather or not heat started will change during the life of program,
+        all other should not change much or at all
+    - Back reference, Many To One relationship with Day
+    - Many to Many relationship with Team
+ */
+
+
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 @Entity
 @Table(name = "heat_table")
 public class Heat {
 
-    // private vars
+// VARIABLES //
+
+    // Represents the time this heat should start as a Calendar
     private Calendar timeToStart;
 
     private LeagueType leagueType;
 
     private TeamType teamType;
 
+    // Represents the heat id, used by db and access - UNIQUE
     @Id
+    private int heatID;
+
+    // Represents the heat number, usually starts at 1 and goes up as needed - UNIQUE
     private int heatNumber;
 
+    // Boolean used to know if the heat has started to run
     private boolean hasStarted;
 
-    // private time vars
+    // Represents the actual time the heat started as a Calendar
     private Calendar startTime;
 
-    // private connections
+    // All the teams that are running in this heat
     @ManyToMany
     private Map<Integer,Team> teams;
 
+    // A back reference to the day this heat is running in
     @ManyToOne
     @JsonBackReference
     private Day dayToRace;
+
+// CONSTRUCTORS //
 
     // DUMMY CONSTRUCTOR used by Jackson JSON
     public Heat() {
@@ -47,18 +83,26 @@ public class Heat {
     }
 
     // CONSTRUCTOR
-    public Heat(@NotNull Calendar timeToStart, @NotNull LeagueType leagueType, @NotNull TeamType teamType, @NotNull int heatNumber,@NotNull Day dayToRace) throws AddHeatException {
+    public Heat(@NotNull Calendar timeToStart, @NotNull LeagueType leagueType, @NotNull TeamType teamType,
+                @NotNull int heatNumber,@NotNull Day dayToRace, @NotNull int heatID) {
         this.timeToStart = timeToStart;
         this.leagueType = leagueType;
         this.teamType = teamType;
         this.heatNumber = heatNumber;
+        this.heatID = heatID;
         this.hasStarted = false;
 
         teams = new HashMap<>();
         setDayToRace(dayToRace);
     }
 
-    // GETTERS AND SETTERS, used by Jackson JSON
+// GETTERS AND SETTERS, used by Jackson JSON //
+
+
+    public int getHeatID() {
+        return heatID;
+    }
+
     public int getHeatNumber() {
         return heatNumber;
     }
@@ -87,11 +131,15 @@ public class Heat {
         return timeToStart;
     }
 
+    public void setHeatID(@NotNull int heatID) {
+        this.heatID = heatID;
+    }
+
     public void setStartTime(@NotNull Calendar startTime) {
         this.startTime = startTime;
     }
 
-    public void setHasStarted(boolean hasStarted) {
+    public void setHasStarted(@NotNull boolean hasStarted) {
         this.hasStarted = hasStarted;
     }
 
@@ -114,6 +162,8 @@ public class Heat {
     public void setTimeToStart(@NotNull Calendar timeToStart) {
         this.timeToStart = timeToStart;
     }
+
+// FUNCTIONS //
 
     // MODIFIES: startTime, hasStarted, teams(children)
     // EFFECTS: sets the heat's startTime, marks hasStarted to true, and sets this heat's team's current heat to this
@@ -145,7 +195,7 @@ public class Heat {
     }
 
     // EFFECTS: add a team to the heat and add this heat to the team
-    public void addTeam(Team team) throws AddTeamException {
+    public void addTeam(@NotNull Team team) throws AddTeamException {
         if (!teams.containsKey(team.getTeamNumber())) {
             teams.put(team.getTeamNumber(), team);
             try {
@@ -159,16 +209,16 @@ public class Heat {
     }
 
     // EFFECTS: add all the teams from a list of teams
-    public void addTeams(ArrayList<Team> teams) throws AddTeamException {
+    public void addTeams(@NotNull ArrayList<Team> teams) throws AddTeamException {
         for (Team team : teams) {
             addTeam(team);
         }
     }
 
-    // EFFECTS: remove a team from this heat and this heat from the team by teamID
-    public Team removeTeam(int teamID) throws NoTeamException {
-        if (teams.containsKey(teamID)) {
-            Team team = teams.remove(teamID);
+    // EFFECTS: remove a team from this heat and this heat from the team by team number
+    public Team removeTeam(@NotNull int teamNumber) throws NoTeamException {
+        if (teams.containsKey(teamNumber)) {
+            Team team = teams.remove(teamNumber);
             try {
                 team.removeHeat(heatNumber);
             } catch (NoHeatsException e) {
@@ -193,9 +243,9 @@ public class Heat {
         }
     }
 
-    // get a team from this heat from its id
-    public Team getTeamFromHeatByID(int teamID) {
-        return teams.get(teamID);
+    // EFFECTS: return a team from this heat by its team number
+    public Team getTeamFromHeatByTeamNumber(@NotNull int teamNumber) {
+        return teams.get(teamNumber);
     }
 
     // EFFECTS: return only those heats with teamHeats that don't have DNS
@@ -203,7 +253,7 @@ public class Heat {
         ArrayList<Team> runnableTeams = new ArrayList<>();
         for (Team team : teams.values()) {
             try {
-                if (team.getTeamHeatByHeatIDFromRemaining(heatNumber).getSitrep() != Sitrep.DNS) {
+                if (team.getTeamHeatByHeatNumberFromRemaining(heatNumber).getSitrep() != Sitrep.DNS) {
                     runnableTeams.add(team);
                 }
             } catch (NoTeamHeatException e) {

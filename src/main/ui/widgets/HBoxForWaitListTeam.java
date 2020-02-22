@@ -6,7 +6,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import models.enums.TeamType;
 import models.exceptions.AddTeamException;
-import models.exceptions.NoTeamException;
 import ui.TimingController;
 
 public class HBoxForWaitListTeam extends CustomHBox {
@@ -32,7 +31,7 @@ public class HBoxForWaitListTeam extends CustomHBox {
         addTeamButton.setText("Add Team");
         addTeamButton.setOnAction(event -> {
             try {
-                controller.getStagedHeat().addTeam(controller.getProgram().getTeamByID(Integer.parseInt(idText)));
+                controller.getStagedHeat().addTeam(controller.getProgram().getTeamByTeamNumber(Integer.parseInt(idText)));
                 controller.getProgram().removeTeamFromWaitList(Integer.parseInt(idText));
                 controller.getEditHeatController().setTeamHeatListTeams();
                 controller.getEditHeatController().setWaitListTeams();
