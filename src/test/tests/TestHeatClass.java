@@ -23,7 +23,7 @@ public class TestHeatClass {
     public void TestConstructor() throws AddHeatException {
         Calendar timeToStart = Calendar.getInstance();
         Day day = new Day(Calendar.getInstance(), 1);
-        heat = new Heat(timeToStart, LeagueType.JFF, TeamType.OPEN, 123, day);
+        heat = new Heat(timeToStart, LeagueType.JFF, TeamType.OPEN, 123, day, 123);
 
         assertEquals(timeToStart.get(Calendar.HOUR_OF_DAY) + ":" + timeToStart.get(Calendar.MINUTE), heat.timeToStartString());
         assertEquals(LeagueType.JFF, heat.getLeagueType());
@@ -37,12 +37,12 @@ public class TestHeatClass {
     public void TestAddTeams() throws AddHeatException, AddTeamException {
         Calendar timeToStart = Calendar.getInstance();
         Day day = new Day(Calendar.getInstance(), 1);
-        heat = new Heat(timeToStart, LeagueType.JFF, TeamType.OPEN, 123, day);
+        heat = new Heat(timeToStart, LeagueType.JFF, TeamType.OPEN, 123, day, 123);
 
 
-        Team team = new Team(TeamType.COREC, LeagueType.COMP, 312, "The Storm Troopers");
-        Team team1 = new Team(TeamType.COREC, LeagueType.COMP, 423, "The Storm Troopers");
-        Team team2 = new Team(TeamType.COREC, LeagueType.COMP, 32, "The Storm Troopers");
+        Team team = new Team(TeamType.COREC, LeagueType.COMP, 312, "The Storm Troopers", 312);
+        Team team1 = new Team(TeamType.COREC, LeagueType.COMP, 423, "The Storm Troopers", 423);
+        Team team2 = new Team(TeamType.COREC, LeagueType.COMP, 32, "The Storm Troopers", 32);
 
         heat.addTeam(team);
         assertEquals(1, heat.getTeams().size());
@@ -63,9 +63,9 @@ public class TestHeatClass {
     public void TestRemoveTeam() throws AddHeatException, AddTeamException, NoTeamException {
         Calendar timeToStart = Calendar.getInstance();
         Day day = new Day(Calendar.getInstance(), 1);
-        heat = new Heat(timeToStart, LeagueType.JFF, TeamType.OPEN, 123, day);
+        heat = new Heat(timeToStart, LeagueType.JFF, TeamType.OPEN, 123, day, 123);
 
-        Team team = new Team(TeamType.COREC, LeagueType.COMP, 312, "The Storm Troopers");
+        Team team = new Team(TeamType.COREC, LeagueType.COMP, 312, "The Storm Troopers", 312);
         heat.addTeam(team);
         assertFalse(heat.getTeams().isEmpty());
 

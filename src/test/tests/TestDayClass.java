@@ -34,13 +34,13 @@ public class TestDayClass {
 
         Calendar timeToStart = Calendar.getInstance();
         Day day = new Day(Calendar.getInstance(), 1);
-        Heat heat = new Heat(timeToStart, LeagueType.JFF, TeamType.OPEN, 123, day);
+        Heat heat = new Heat(timeToStart, LeagueType.JFF, TeamType.OPEN, 123, day, 123);
 
         day.addHeat(heat);
         assertFalse(day.getHeats().isEmpty());
 
-        Heat heat1 = new Heat(timeToStart, LeagueType.JFF, TeamType.OPEN, 32, day);
-        Heat heat2 = new Heat(timeToStart, LeagueType.JFF, TeamType.OPEN, 234, day);
+        Heat heat1 = new Heat(timeToStart, LeagueType.JFF, TeamType.OPEN, 32, day, 23);
+        Heat heat2 = new Heat(timeToStart, LeagueType.JFF, TeamType.OPEN, 234, day, 234);
 
         ArrayList<Heat> heats = new ArrayList<>();
         heats.add(heat);

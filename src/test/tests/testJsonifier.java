@@ -15,7 +15,7 @@ public class testJsonifier {
     @Test
     public void testJsonifierFirst() throws AddHeatException {
         Day day = new Day(Calendar.getInstance(), 1);
-        Heat heat = new Heat(Calendar.getInstance(), LeagueType.JFF, TeamType.OPEN, 2314, day);
+        Heat heat = new Heat(Calendar.getInstance(), LeagueType.JFF, TeamType.OPEN, 2314, day, 2314);
         day.addHeat(heat);
 
         PersistanceWithJackson.toJsonDay(day);
