@@ -7,27 +7,37 @@ import models.enums.Sitrep;
 import models.enums.TeamType;
 import models.exceptions.*;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
+@Entity
+@Table(name = "heat_table")
 public class Heat {
 
     // private vars
     private Calendar timeToStart;
+
     private LeagueType leagueType;
+
     private TeamType teamType;
+
+    @Id
     private int heatNumber;
+
     private boolean hasStarted;
 
     // private time vars
     private Calendar startTime;
 
     // private connections
+    @ManyToMany
     private Map<Integer,Team> teams;
 
+    @ManyToOne
     @JsonBackReference
     private Day dayToRace;
 

@@ -4,13 +4,25 @@ import com.sun.istack.internal.NotNull;
 import models.enums.LeagueType;
 import models.enums.TeamType;
 
+import javax.persistence.*;
 import java.util.*;
 
+@Entity
+@Table(name = "program_table")
 public class Program {
 
     // private vars
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
+    @OneToMany
     private Map<Integer, Day> programDays;
+
+    @OneToMany
     private Map<Integer, Team> allTeams;
+
+    @OneToMany
     private Map<Integer, Team> waitList;
 
     public Program() {

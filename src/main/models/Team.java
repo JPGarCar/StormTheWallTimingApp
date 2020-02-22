@@ -7,12 +7,15 @@ import models.enums.Sitrep;
 import models.enums.TeamType;
 import models.exceptions.*;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
+@Entity
+@Table(name = "team_table")
 public class Team {
 
     // private variables
@@ -23,16 +26,20 @@ public class Team {
     private boolean possibleUndo;
 
     // private team vars
+    @Id
     private int teamNumber;
     private String teamName;
 
     // private connections
+    @ManyToMany(mappedBy = "heat_table")
     private Map<Integer, Heat> heats;
 
     @JsonManagedReference
+    @OneToMany
     private Map<Integer, TeamHeat> doneHeats;
 
     @JsonManagedReference
+    @OneToMany
     private Map<Integer, TeamHeat> remainingHeats;
 
     // DUMMY CONSTRUCTOR used by Jackson JSON

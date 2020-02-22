@@ -6,18 +6,26 @@ import models.exceptions.AddHeatException;
 import models.exceptions.CanNotUndoHeatException;
 import models.exceptions.NoHeatWithIDException;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+@Entity
+@Table(name = "day_table")
 public class Day {
     //private vars
+
     private Calendar dayToRun;
+
+    @Id
     private int dayNumber;
+
     private int atHeat;
 
     // private connections
+    @OneToMany
     @JsonManagedReference
     private Map<Integer, Heat> heats;
 

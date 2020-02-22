@@ -6,18 +6,26 @@ import com.sun.istack.internal.NotNull;
 import models.enums.Sitrep;
 import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
 import models.exceptions.NoHeatsException;
-import models.exceptions.NoTeamException;
 
+import javax.persistence.*;
 import java.util.Calendar;
 
+@Entity
+@Table(name = "teamheat_table")
 public class TeamHeat {
 
     // private fields
     private int heatID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
+    @Embedded
     private FinalTime finalTime;
     private Sitrep sitrep;
 
     // private connections
+    @ManyToOne
     @JsonBackReference
     private Team team;
 
