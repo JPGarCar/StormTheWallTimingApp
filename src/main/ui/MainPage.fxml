@@ -34,7 +34,7 @@
             <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="35.0">
                <children>
-                  <Button fx:id="ioDataButton" mnemonicParsing="false" text="I/O Data">
+                  <Button fx:id="ioDataButton" mnemonicParsing="false" onAction="#ioDataButtonAction" text="I/O Data">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
@@ -44,7 +44,7 @@
                         <Font name="System Bold" size="24.0" />
                      </font>
                   </Button>
-                  <Button fx:id="dataWindowButton" layoutX="653.0" layoutY="35.0" mnemonicParsing="false" text="Data Window">
+                  <Button fx:id="dataWindowButton" layoutX="653.0" layoutY="35.0" mnemonicParsing="false" onAction="#dataViewButtonAction" text="Data Window">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>

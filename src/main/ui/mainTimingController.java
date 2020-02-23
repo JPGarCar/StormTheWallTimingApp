@@ -159,7 +159,9 @@ public class mainTimingController {
 
     // EFFECTS: move the teams from heat number back to staging from running list
     private void returnTeams(int heatNumber) {
-        for (Run run : controller.getCurrentRuns().values()) {
+        List<Object> runList = Arrays.asList(controller.getCurrentRuns().values().toArray());
+        for (int i = 0; i < runList.size(); i++) {
+            Run run = (Run) runList.get(i);
             if (run.getHeatNumber() == heatNumber) {
                 controller.removeRunningTeam(run.getRunNumber());
             }
@@ -323,6 +325,18 @@ public class mainTimingController {
             stageHeatNumber.setText(Integer.toString(program.getProgramDays().get(1).getAtHeat()));
         }
         // TODO exception to taken to much time to undo
+    }
+
+    @FXML
+    private void backToMainMenuButtonAction() {
+        try {
+            FXMLLoader root = new FXMLLoader(getClass().getResource("MainPage.fxml"));
+            root.setControllerFactory(c -> new MainPageController(controller));
+            runningTeamsList.getScene().setRoot(root.load());
+            // TODO add save functionality
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

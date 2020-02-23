@@ -8,6 +8,7 @@ import models.enums.TeamType;
 import models.exceptions.*;
 
 import javax.persistence.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -261,6 +262,24 @@ public class Heat {
             }
         }
         return runnableTeams;
+    }
+
+    // EFFECTS: return the actual start time as a string
+    public String getActualStartTimeString() {
+        if (actualStartTime == null) {
+            return "";
+        }
+        DecimalFormat formatter = new DecimalFormat("00");
+        return formatter.format(actualStartTime.get(Calendar.HOUR_OF_DAY)) + ":" + formatter.format(actualStartTime.get(Calendar.MINUTE));
+    }
+
+    // EFFECTS: return the intended start time as a string
+    public String getStartTimeString() {
+        if (timeToStart == null) {
+            return "";
+        }
+        DecimalFormat formatter = new DecimalFormat("00");
+        return formatter.format(timeToStart.get(Calendar.HOUR_OF_DAY)) + ":" + formatter.format(timeToStart.get(Calendar.MINUTE));
     }
 
 }

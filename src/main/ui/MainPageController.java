@@ -51,5 +51,16 @@ public class MainPageController {
         }
     }
 
+    @FXML
+    public void dataViewButtonAction() {
+        try {
+            FXMLLoader root = new FXMLLoader(getClass().getResource("DataPage.fxml"));
+            root.setControllerFactory(c -> new DataPageController(controller));
+            dataWindowButton.getScene().setRoot(root.load());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
