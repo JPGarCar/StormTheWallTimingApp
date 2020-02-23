@@ -26,7 +26,7 @@ public class HBoxForFinishedUndoTeam extends CustomHBox {
 
         undoButton.setText("Undo");
         undoButton.setOnAction(event -> {
-            controller.undoRunFinish(Integer.parseInt(idText), heatNumber);
+            controller.undoRunStop(Integer.parseInt(idText), heatNumber);
         });
 
         finalTimeLabel.setText(finalTime);

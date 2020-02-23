@@ -41,7 +41,7 @@ public class TimingController {
 
     // DUMMY CONSTRUCTOR for Jackson JSON
     public TimingController() {
-        currentRuns = new HashMap<>();
+        currentRuns = new TreeMap<>();
         stoppedRuns = new HashMap<>();
         finishedRuns = new HashMap<>();
         program = new Program();
@@ -109,7 +109,7 @@ public class TimingController {
 // FUNCTIONS //
 
     // EFFECTS: add a run to the stopped run list, included the task to move to finished
-    public void markFinishedRun(@NotNull Run run) {
+    public void stopRun(@NotNull Run run) {
         stoppedRuns.put(run.getRunNumber(), run);
         uiController.updateFinishedRunList();
         Timer t = new Timer();
@@ -123,7 +123,7 @@ public class TimingController {
                     run.getTeam().markCurrentRun(-1);
 
                     Platform.runLater(() -> addFinishedRun(run));
-                    Platform.runLater(() -> removeFinishedRunWithUpdate(run.getRunNumber()));
+                    Platform.runLater(() -> removeStoppedRunWithUpdate(run.getRunNumber()));
                     t.cancel();
                 }
             }
@@ -173,29 +173,29 @@ public class TimingController {
         uiController.updateRunningRunList();
     }
 
-    // EFFECTS: remove a run from the finished run list
-    public void removeFinishedRun(RunNumber runNumber) {
+    // EFFECTS: remove a run from the stopped run list
+    public void removeStoppedRun(RunNumber runNumber) {
         stoppedRuns.remove(runNumber);
     }
 
-    // EFFECTS: remove a run from the finished run list and update ui finished run list
-    public void removeFinishedRunWithUpdate(RunNumber runNumber) {
-        removeFinishedRun(runNumber);
+    // EFFECTS: remove a run from the stopped run list and update ui stopped run list
+    public void removeStoppedRunWithUpdate(RunNumber runNumber) {
+        removeStoppedRun(runNumber);
         uiController.updateFinishedRunList();
     }
 
-    // EFFECTS: send run back to running run list and remove from finished list, undo end time too
-    public void undoRunFinish(int teamNumber, int heatNumber) {
+    // EFFECTS: send run back to running run list and remove from stopped list, undo end time too
+    public void undoRunStop(int teamNumber, int heatNumber) {
         RunNumber runNumber = new RunNumber(teamNumber, heatNumber);
         timerMap.get(runNumber).cancel();
-        removeFinishedRunWithUpdate(runNumber);
-
         Run run = stoppedRuns.get(runNumber);
         run.setCanUndo(false);
+
+        removeStoppedRunWithUpdate(runNumber);
         addRunningRunWithUpdate(run);
     }
 
-    // EFFECTS: add a run to the final finished run list and update ui final finished run list
+    // EFFECTS: add a run to the finished run list and update ui finished run list
     public void addFinishedRun(Run run) {
         finishedRuns.put(run.getRunNumber(), run);
         uiController.addToFinalFinishedRunListToTop(run);
@@ -206,7 +206,7 @@ public class TimingController {
         RunNumber runNumber = new RunNumber(teamNumber, heatNumber);
         Run run = currentRuns.get(runNumber);
         run.calculateEndTime(Calendar.getInstance());
-        markFinishedRun(run);
+        stopRun(run);
 
         removeRunningRunWithUpdate(runNumber);
     }
@@ -214,7 +214,7 @@ public class TimingController {
 
         Run run = currentRuns.get(runNumber);
         run.calculateEndTime(Calendar.getInstance());
-        markFinishedRun(run);
+        stopRun(run);
 
         removeRunningRunWithUpdate(runNumber);
     }
