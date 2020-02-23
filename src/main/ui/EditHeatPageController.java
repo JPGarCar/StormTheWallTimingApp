@@ -3,21 +3,17 @@ package ui;
 import com.sun.istack.internal.NotNull;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import models.Heat;
 import models.Team;
 import models.exceptions.AddTeamException;
-import sun.security.ssl.Debug;
 import ui.widgets.HBoxForEditHeatTeam;
 import ui.widgets.HBoxForWaitListTeam;
 
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 public class EditHeatPageController {
 
@@ -56,9 +52,21 @@ public class EditHeatPageController {
     private TextField addTeamIDField;
 
     @FXML
+    private Label heatNumberLabel;
+
+    @FXML
+    private Label heatTypeLabel;
+
+    @FXML
+    private Label teamTypeLabel;
+
+    @FXML
     protected void initialize() {
         setTeamHeatListTeams();
         setWaitListTeams();
+        heatNumberLabel.setText(Integer.toString(heat.getHeatNumber()));
+        heatTypeLabel.setText(heat.getLeagueType().name());
+        teamTypeLabel.setText(heat.getTeamType().name());
     }
 
     @FXML

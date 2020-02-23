@@ -14,12 +14,12 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
                <children>
-                  <Label text="Heat #">
+                  <Label text="Heat # :">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Label prefHeight="25.0" prefWidth="47.0" text="Label">
+                  <Label fx:id="heatNumberLabel" prefHeight="25.0" prefWidth="47.0" text="Label">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -31,12 +31,12 @@
             </HBox>
             <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
                <children>
-                  <Label text="Heat #">
+                  <Label text="Heat Type :">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Label text="Label">
+                  <Label fx:id="heatTypeLabel" text="Label">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -48,12 +48,12 @@
             </HBox>
             <HBox alignment="CENTER" layoutX="210.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
                <children>
-                  <Label text="Heat #">
+                  <Label text="Team Type :">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Label text="Label">
+                  <Label fx:id="teamTypeLabel" text="Label">
                      <font>
                         <Font size="16.0" />
                      </font>
