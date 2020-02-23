@@ -7,10 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import models.Day;
-import models.Heat;
-import models.Program;
-import models.Team;
+import models.*;
 import models.enums.LeagueType;
 import models.enums.TeamType;
 import models.exceptions.*;
@@ -37,88 +34,90 @@ public class mainTimingController {
         controller.setUiController(this);
     }
 
-    // EFFECTS: set running team list to the controller's running team list
-    public void updateRunningTeamList() {
+    // EFFECTS: set running run list to the controller's running run list
+    public void updateRunningRunList() {
         ArrayList<HBoxForRunningTeam> hBoxForRunningTeams = new ArrayList<>();
-        for (Team team : controller.getRunningTeams().values()) {
-            hBoxForRunningTeams.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getCurrentRun().getSitrep(), team.getCurrentRun().getHeatNumber(), team.getTeamType().name(), controller));
+        for (Run run : controller.getCurrentRuns().values()) {
+            Team team = run.getTeam();
+            hBoxForRunningTeams.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), run.getSitrep(), run.getHeatNumber(), team.getTeamType().name(), controller));
         }
         runningTeamsList.setItems(FXCollections.observableList(hBoxForRunningTeams));
     }
 
-    // EFFECTS: add a team to the running team list, first is private, second and third are the public ones to use
-    public void addToRunningTeamList(Team team, boolean top) {
+    // EFFECTS: add a run to the running run list, first is private, second and third are the public ones to use
+    public void addToRunningRunList(Run run, boolean top) {
+        Team team = run.getTeam();
         ArrayList<HBoxForRunningTeam> hBoxForRunningTeams = new ArrayList<>();
-        hBoxForRunningTeams.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getCurrentRun().getSitrep(), team.getCurrentRun().getHeatNumber(), team.getTeamType().name(), controller));
+        hBoxForRunningTeams.add(new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), run.getSitrep(), run.getHeatNumber(), team.getTeamType().name(), controller));
         if (top) {
             runningTeamsList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForRunningTeams), runningTeamsList.getItems()));
         } else {
             runningTeamsList.setItems(FXCollections.concat(runningTeamsList.getItems(), FXCollections.observableList(hBoxForRunningTeams)));
         }
     }
-    public void addToRunningTeamListToBottom(@NotNull Team team) {
-        addToRunningTeamList(team, false);
+    public void addToRunningRunListToBottom(@NotNull Run run) {
+        addToRunningRunList(run, false);
     }
-    public void addToRunningTeamListToTop(@NotNull Team team) {
-        addToRunningTeamList(team, true);
+    public void addToRunningRunListToTop(@NotNull Run run) {
+        addToRunningRunList(run, true);
     }
 
     // EFFECTS: set finished but possible undo team list to the controller's finished team list
-    public void updateFinishedTeamList() {
+    public void updateFinishedRunList() {
         ArrayList<HBoxForFinishedUndoTeam> hBoxForFinishedUndoTeams = new ArrayList<>();
-        for (Team team : controller.getFinishedTeams().values()) {
-            hBoxForFinishedUndoTeams.add(new HBoxForFinishedUndoTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getCurrentRun().getFinalTime().toString(), controller));
+        for (Run run : controller.getStoppedRuns().values()) {
+            Team team = run.getTeam();
+            hBoxForFinishedUndoTeams.add(new HBoxForFinishedUndoTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), run.getFinalTime().toString(), controller, run.getHeatNumber()));
         }
         undoFinishedTeamList.setItems(FXCollections.observableList(hBoxForFinishedUndoTeams));
     }
 
     // EFFECTS: add a team to the finished team list, first is private, second and third are the public ones to use
-    private void addToFinishedTeamList(Team team, boolean top) {
+    private void addToFinishedRunList(Run run, boolean top) {
+        Team team = run.getTeam();
         ArrayList<HBoxForFinishedUndoTeam> hBoxForFinishedUndoTeams = new ArrayList<>();
-        hBoxForFinishedUndoTeams.add(new HBoxForFinishedUndoTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getCurrentRun().getFinalTime().toString(), controller));
+        hBoxForFinishedUndoTeams.add(new HBoxForFinishedUndoTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), run.getFinalTime().toString(), controller, run.getHeatNumber()));
         if (top) {
             undoFinishedTeamList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForFinishedUndoTeams), undoFinishedTeamList.getItems()));
         } else {
             undoFinishedTeamList.setItems(FXCollections.concat(undoFinishedTeamList.getItems(), FXCollections.observableList(hBoxForFinishedUndoTeams)));
         }
     }
-    public void addToFinishedTeamListToTop(@NotNull Team team) {
-        addToFinishedTeamList(team, true);
+    public void addToFinishedRunListToTop(@NotNull Run run) {
+        addToFinishedRunList(run, true);
     }
-    public void addToFinishedTeamListToBottom(@NotNull Team team) {
-        addToFinishedTeamList(team, false);
+    public void addToFinishedRunListToBottom(@NotNull Run run) {
+        addToFinishedRunList(run, false);
     }
 
 
-    // EFFECTS: set the list of final finished teams to all those in the controller´s final finished teams list // TODO currently does not work due to team not having current run
-//    public void updateFinalFinishedTeamList() {
-//        ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
-//        for (Team team : controller.getFinalFinishedTeams().values()) {
-//            hBoxForFinishedTeams.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getCurrentRun().getFinalTime().toString(), team.getCurrentRun().getSitrep(), controller));
-//        }
-//
-//        finishedTeamsList.setItems(FXCollections.observableList(hBoxForFinishedTeams));
-//    }
+    // EFFECTS: set the list of final finished teams to all those in the controller´s final finished teams list
+    public void updateFinalFinishedRunList() {
+        ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
+        for (Run run : controller.getFinishedRuns().values()) {
+            Team team = run.getTeam();
+            hBoxForFinishedTeams.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), run.getFinalTime().toString(), run.getSitrep(), controller, run.getHeatNumber()));
+        }
+
+        finishedTeamsList.setItems(FXCollections.observableList(hBoxForFinishedTeams));
+    }
 
     // EFFECTS: add a team to the final finished team list, first is private, second and third are the public ones to use
-    private void addToFinalFinishedTeamList(@NotNull Team team, boolean top, int heatNumber) {
+    private void addToFinalFinishedRunList(@NotNull Run run, boolean top) {
+        Team team = run.getTeam();
         ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
-        try {
-            hBoxForFinishedTeams.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getRunByHeatNumber(heatNumber).getFinalTime().toString(), team.getRunByHeatNumber(heatNumber).getSitrep(), controller));
-        } catch (NoTeamHeatException e) {
-            e.printStackTrace();
-        }
+        hBoxForFinishedTeams.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), run.getFinalTime().toString(), run.getSitrep(), controller, run.getHeatNumber()));
         if (top) {
             finishedTeamsList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForFinishedTeams), finishedTeamsList.getItems()));
         } else {
             finishedTeamsList.setItems(FXCollections.concat(finishedTeamsList.getItems(), FXCollections.observableList(hBoxForFinishedTeams)));
         }
     }
-    public void addToFinalFinishedTeamListToTop(@NotNull Team team, int heatNumber) {
-        addToFinalFinishedTeamList(team, true, heatNumber);
+    public void addToFinalFinishedRunListToTop(@NotNull Run run) {
+        addToFinalFinishedRunList(run, true);
     }
-    public void addToFinalFinishedTeamListToBottom(@NotNull Team team, int heatNumber) {
-        addToFinalFinishedTeamList(team, false, heatNumber);
+    public void addToFinalFinishedRunListToBottom(@NotNull Run run) {
+        addToFinalFinishedRunList(run, false);
     }
 
     // EFFECTS: set the list for teams in the staged list from the controller's staged heat heat
@@ -160,12 +159,12 @@ public class mainTimingController {
 
     // EFFECTS: move the teams from heat number back to staging from running list
     private void returnTeams(int heatNumber) {
-        for (Team team : controller.getRunningTeams().values()) {
-            if (team.getCurrentRun().getHeatNumber() == heatNumber) {
-                controller.removeRunningTeam(team.getTeamNumber());
+        for (Run run : controller.getCurrentRuns().values()) {
+            if (run.getHeatNumber() == heatNumber) {
+                controller.removeRunningTeam(run.getRunNumber());
             }
         }
-        updateRunningTeamList();
+        updateRunningRunList();
     }
 
     @FXML
@@ -206,8 +205,8 @@ public class mainTimingController {
         program.getProgramDays().put(day.getDayNumber(), day);
         controller = PersistanceWithJackson.toJavaController();
 
-        updateFinishedTeamList();
-        updateRunningTeamList();
+        updateFinishedRunList();
+        updateRunningRunList();
 
         initStuff();
     }
@@ -218,11 +217,11 @@ public class mainTimingController {
         Day day = new Day(Calendar.getInstance(), 1);
         program.addDay(day);
         Random random = new Random();
-        for (int i = 1; i <= 200; i++) {
+        for (int i = 1; i <= 4; i++) {
             Heat heat = null;
             int number = random.nextInt(100);
             heat = new Heat(Calendar.getInstance(), LeagueType.JFF, TeamType.OPEN, i, day, number);
-            for (int j = 1; j <= 5; j++) {
+            for (int j = 1; j <= 3; j++) {
                 try {
                     number = random.nextInt(2000);
                     heat.addTeam(program.createTeam(TeamType.OPEN, LeagueType.JFF, number, "Cool Name" + (number), number));
@@ -259,7 +258,7 @@ public class mainTimingController {
         Heat stagedHeat = controller.getStagedHeat();
         if (stagedHeat != null) {
             stagedHeat.markActualStartTime(Calendar.getInstance());
-            controller.addRunningTeams(stagedHeat.getTeamsThatWillRun());
+            controller.addRunningRunsFromTeams(stagedHeat.getTeamsThatWillRun(), stagedHeat.getHeatNumber());
 
 
             program.getProgramDays().get(1).atNextHeat();
@@ -279,15 +278,16 @@ public class mainTimingController {
     private void endTeamForButton() {
         if (!stopTeamNumber.getText().equals("")) {
             try {
-                controller.endTeam(Integer.parseInt(stopTeamNumber.getText()));
+                for (Run run : controller.getCurrentRuns().values()) {
+                    if (run.getTeam().getTeamNumber() == Integer.parseInt(stopTeamNumber.getText())) {
+                        controller.endRun(run.getRunNumber());
+                    }
+                }
+
             } catch (NoHeatsException e) {
                 e.printStackTrace();
             } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
                 couldNotCalculateFinalTimeExcpetion.printStackTrace();
-            } catch (NoCurrentHeatIDException e) {
-                e.printStackTrace();
-            } catch (NoRemainingHeatsException e) {
-                e.printStackTrace();
             }
         }
         stopTeamNumber.setText("");

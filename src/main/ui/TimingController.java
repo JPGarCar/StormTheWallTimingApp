@@ -4,24 +4,28 @@ package ui;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.internal.NotNull;
 import javafx.application.Platform;
-import models.Heat;
-import models.Program;
-import models.Team;
-import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
-import models.exceptions.NoCurrentHeatIDException;
-import models.exceptions.NoHeatsException;
-import models.exceptions.NoRemainingHeatsException;
+import models.*;
+import models.exceptions.*;
 
 
 import java.util.*;
 
 public class TimingController {
 
-    // private vars
+// VARIABLES //
+
+    // Contains the current staged heat
     private Heat stagedHeat;
-    private Map<Integer, Team> runningTeams;
-    private Map<Integer, Team> finishedTeams;
-    private Map<Integer, Team> finalFinishedTeams;
+
+    // Contains all the runs currently running
+    private Map<RunNumber, Run> currentRuns;
+
+    // Contains all the runs that have stopped and can be undo
+    private Map<RunNumber, Run> stoppedRuns;
+
+    // Contains all the runs that have finished
+    private Map<RunNumber, Run> finishedRuns;
+
     private Program program;
 
     @JsonIgnore
@@ -31,62 +35,67 @@ public class TimingController {
     private EditHeatPageController editHeatController;
 
     @JsonIgnore
-    private Map<Integer, Timer> timerMap;
+    private Map<RunNumber, Timer> timerMap;
 
+// CONSTRUCTORS //
 
     // DUMMY CONSTRUCTOR for Jackson JSON
     public TimingController() {
-        runningTeams = new HashMap<>();
-        finishedTeams = new HashMap<>();
-        finalFinishedTeams = new HashMap<>();
+        currentRuns = new HashMap<>();
+        stoppedRuns = new HashMap<>();
+        finishedRuns = new HashMap<>();
         program = new Program();
         timerMap = new HashMap<>();
     }
 
-    // GETTERS AND SETTERS, used by Jackson JSON
+// GETTERS AND SETTERS, used by Jackson JSON //
 
     public Program getProgram() {
         return program;
     }
 
-    public void setProgram(Program program) {
-        this.program = program;
+    public Map<RunNumber, Run> getStoppedRuns() {
+        return stoppedRuns;
     }
 
-    public Map<Integer, Team> getFinishedTeams() {
-        return finishedTeams;
-    }
-
-    public Map<Integer, Team> getRunningTeams() {
-        return runningTeams;
+    public Map<RunNumber, Run> getCurrentRuns() {
+        return currentRuns;
     }
 
     public Heat getStagedHeat() {
         return stagedHeat;
     }
 
-    public void setRunningTeams(Map<Integer, Team> runningTeams) {
-        this.runningTeams = runningTeams;
-    }
-
-    public void setFinishedTeams(Map<Integer, Team> finishedTeams) {
-        this.finishedTeams = finishedTeams;
-    }
-
-    public void setStagedHeat(Heat stagedHeat) {
-        this.stagedHeat = stagedHeat;
-    }
-
-    public Map<Integer, Team> getFinalFinishedTeams() {
-        return finalFinishedTeams;
+    public Map<RunNumber, Run> getFinishedRuns() {
+        return finishedRuns;
     }
 
     public mainTimingController getUiController() {
         return uiController;
     }
 
-    public void setFinalFinishedTeams(@NotNull Map<Integer, Team> finalFinishedTeams) {
-        this.finalFinishedTeams = finalFinishedTeams;
+    public EditHeatPageController getEditHeatController() {
+        return editHeatController;
+    }
+
+    public void setProgram(Program program) {
+        this.program = program;
+    }
+
+    public void setCurrentRuns(Map<RunNumber, Run> currentRuns) {
+        this.currentRuns = currentRuns;
+    }
+
+    public void setStoppedRuns(Map<RunNumber, Run> stoppedRuns) {
+        this.stoppedRuns = stoppedRuns;
+    }
+
+    public void setStagedHeat(Heat stagedHeat) {
+        this.stagedHeat = stagedHeat;
+    }
+
+    public void setFinishedRuns(@NotNull Map<RunNumber, Run> finishedRuns) {
+        this.finishedRuns = finishedRuns;
     }
 
     public void setUiController(@NotNull mainTimingController uiController) {
@@ -97,27 +106,24 @@ public class TimingController {
         this.editHeatController = editHeatController;
     }
 
-    public EditHeatPageController getEditHeatController() {
-        return editHeatController;
-    }
+// FUNCTIONS //
 
-    // EFFECTS: add a team to the finished team list, included the task to move to final finished
-    public void addFinishedTeam(@NotNull Team team) {
-        int teamNumber = team.getTeamNumber();
-        finishedTeams.put(teamNumber, team);
-        uiController.updateFinishedTeamList();
+    // EFFECTS: add a run to the stopped run list, included the task to move to finished
+    public void markFinishedRun(@NotNull Run run) {
+        stoppedRuns.put(run.getRunNumber(), run);
+        uiController.updateFinishedRunList();
         Timer t = new Timer();
-        timerMap.put(teamNumber, t);
+        timerMap.put(run.getRunNumber(), t);
         t.schedule( new TimerTask() {
             @Override
             public void run() {
-                if (team.getCurrentRun().getCanUndo()) {
-                    team.getCurrentRun().setCanUndo(false);
-                    int heatNumber = team.getCurrentRun().getHeatNumber();
-                    team.markCurrentRun(-1);
+                if (run.getCanUndo()) {
+                    run.setCanUndo(false);
+                    int heatNumber = run.getHeatNumber();
+                    run.getTeam().markCurrentRun(-1);
 
-                    Platform.runLater(() -> addFinalFinishedTeam(team, heatNumber));
-                    Platform.runLater(() -> removeFinishedTeamWithUpdate(teamNumber));
+                    Platform.runLater(() -> addFinishedRun(run));
+                    Platform.runLater(() -> removeFinishedRunWithUpdate(run.getRunNumber()));
                     t.cancel();
                 }
             }
@@ -125,70 +131,92 @@ public class TimingController {
         10000);
     }
 
-    // EFFECTS: remove a team from the running team list
-    public void removeRunningTeam(int teamID) {
-        runningTeams.remove(teamID);
+    // EFFECTS: remove a run from the running run list
+    public void removeRunningTeam(RunNumber runNumber) {
+        currentRuns.remove(runNumber);
     }
 
-    // EFFECTS: remove a team from the running team list and update the ui running team list
-    public void removeRunningTeamWithUpdate(int teamID) {
-        removeRunningTeam(teamID);
-        uiController.updateRunningTeamList();
+    // EFFECTS: remove a run from the running run list and update the ui running run list
+    public void removeRunningRunWithUpdate(RunNumber runNumber) {
+        removeRunningTeam(runNumber);
+        uiController.updateRunningRunList();
     }
 
-    // EFFECTS: add a team to the running team list
-    public void addRunningTeam(Team team) {
-        runningTeams.put(team.getTeamNumber(), team);
+    // EFFECTS: add a run to the running run list
+    public void addRunningRun(Run run) {
+        currentRuns.put(run.getRunNumber(), run);
     }
 
-    // EFFECTS: add a team to the running team list and update the ui running team list
-    public void addRunningTeamWithUpdate(Team team) {
-        addRunningTeam(team);
-        uiController.addToRunningTeamListToTop(team);
+    // EFFECTS: add a run to the running run list and update the ui running run list
+    public void addRunningRunWithUpdate(Run run) {
+        addRunningRun(run);
+        uiController.addToRunningRunListToTop(run);
     }
 
-    // EFFECTS: add multiple teams to the running team list, input as an array
-    public void addRunningTeams(ArrayList<Team> teamArrayList) {
-        for (Team team : teamArrayList) {
-            addRunningTeam(team);
+    // EFFECTS: add multiple runs to the running team list, input as an array
+    public void addRunningRuns(ArrayList<Run> runs) {
+        for (Run run : runs) {
+            addRunningRun(run);
         }
-        uiController.updateRunningTeamList();
+        uiController.updateRunningRunList();
     }
 
-    // EFFECTS: remove a team from the finished team list
-    public void removeFinishedTeam(int teamID) {
-        finishedTeams.remove(teamID);
+    // EFFECTS: add multiple runs to the running team list, input as an array of teams
+    public void addRunningRunsFromTeams(ArrayList<Team> teams, int heatNumber) {
+        for (Team team : teams) {
+            try {
+                addRunningRun(team.getRunByHeatNumber(heatNumber));
+            } catch (NoTeamHeatException e) {
+                e.printStackTrace();
+            }
+        }
+        uiController.updateRunningRunList();
     }
 
-    // EFFECTS: remove a team from the finished team list and update ui finished team list
-    public void removeFinishedTeamWithUpdate(int teamID) {
-        removeFinishedTeam(teamID);
-        uiController.updateFinishedTeamList();
+    // EFFECTS: remove a run from the finished run list
+    public void removeFinishedRun(RunNumber runNumber) {
+        stoppedRuns.remove(runNumber);
     }
 
-    // EFFECTS: send team back to running team list and remove from finished list, undo end time too
-    public void undoTeamFinish(int teamID) {
-        timerMap.get(teamID).cancel();
-        removeFinishedTeamWithUpdate(teamID);
-
-        Team team = finishedTeams.get(teamID);
-        team.undoEndTimeMark();
-        addRunningTeamWithUpdate(team);
+    // EFFECTS: remove a run from the finished run list and update ui finished run list
+    public void removeFinishedRunWithUpdate(RunNumber runNumber) {
+        removeFinishedRun(runNumber);
+        uiController.updateFinishedRunList();
     }
 
-    // EFFECTS: add a team to the final finished team list and update ui final finished team list
-    public void addFinalFinishedTeam(Team team, int heatNumber) {
-        finalFinishedTeams.put(team.getTeamNumber(), team);
-        uiController.addToFinalFinishedTeamListToTop(team, heatNumber);
+    // EFFECTS: send run back to running run list and remove from finished list, undo end time too
+    public void undoRunFinish(int teamNumber, int heatNumber) {
+        RunNumber runNumber = new RunNumber(teamNumber, heatNumber);
+        timerMap.get(runNumber).cancel();
+        removeFinishedRunWithUpdate(runNumber);
+
+        Run run = stoppedRuns.get(runNumber);
+        run.setCanUndo(false);
+        addRunningRunWithUpdate(run);
     }
 
-    // EFFECTS: ends a team
-    public void endTeam(int teamID) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion, NoCurrentHeatIDException, NoRemainingHeatsException {
-        Team team = runningTeams.get(teamID);
-        team.markEndTime(Calendar.getInstance());
-        addFinishedTeam(team);
+    // EFFECTS: add a run to the final finished run list and update ui final finished run list
+    public void addFinishedRun(Run run) {
+        finishedRuns.put(run.getRunNumber(), run);
+        uiController.addToFinalFinishedRunListToTop(run);
+    }
 
-        removeRunningTeamWithUpdate(teamID);
+    // EFFECTS: ends a run
+    public void endRun(int teamNumber, int heatNumber) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion {
+        RunNumber runNumber = new RunNumber(teamNumber, heatNumber);
+        Run run = currentRuns.get(runNumber);
+        run.calculateEndTime(Calendar.getInstance());
+        markFinishedRun(run);
+
+        removeRunningRunWithUpdate(runNumber);
+    }
+    public void endRun(RunNumber runNumber) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion {
+
+        Run run = currentRuns.get(runNumber);
+        run.calculateEndTime(Calendar.getInstance());
+        markFinishedRun(run);
+
+        removeRunningRunWithUpdate(runNumber);
     }
 
 

@@ -43,7 +43,7 @@ public class HBoxForRunningTeam extends CustomHBox {
         button.setText("Finish");
         button.setOnAction(event -> {
             try {
-                endTeam(Integer.parseInt(idText), controller);
+                endTeam(Integer.parseInt(idText), heatNumberInt, controller);
             } catch (NoHeatsException e) {
                 e.printStackTrace();
             } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {

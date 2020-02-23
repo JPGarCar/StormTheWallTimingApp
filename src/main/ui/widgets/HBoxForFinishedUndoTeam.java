@@ -6,9 +6,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import ui.TimingController;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class HBoxForFinishedUndoTeam extends CustomHBox {
 
     private static final double HBoxSpacing = 10;
@@ -17,7 +14,7 @@ public class HBoxForFinishedUndoTeam extends CustomHBox {
     Label finalTimeLabel = new Label();
     Button undoButton = new Button();
 
-    public HBoxForFinishedUndoTeam(String idText, String teamName, String finalTime, TimingController controller){
+    public HBoxForFinishedUndoTeam(String idText, String teamName, String finalTime, TimingController controller, int heatNumber){
         super(HBoxSpacing);
 
         id.setText(idText);
@@ -29,7 +26,7 @@ public class HBoxForFinishedUndoTeam extends CustomHBox {
 
         undoButton.setText("Undo");
         undoButton.setOnAction(event -> {
-            controller.undoTeamFinish(Integer.parseInt(idText));
+            controller.undoRunFinish(Integer.parseInt(idText), heatNumber);
         });
 
         finalTimeLabel.setText(finalTime);

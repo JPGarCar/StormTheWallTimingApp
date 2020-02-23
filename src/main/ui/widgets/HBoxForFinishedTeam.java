@@ -18,7 +18,7 @@ public class HBoxForFinishedTeam extends CustomHBox {
     Label thirdLabel = new Label();
     ComboBox comboBox = new ComboBox();
 
-    public HBoxForFinishedTeam(String idText, String teamName, String finalTime, Sitrep sitrep, TimingController controller){
+    public HBoxForFinishedTeam(String idText, String teamName, String finalTime, Sitrep sitrep, TimingController controller, int heatNumber){
         super(HBoxSpacing);
 
         id.setText(idText);
@@ -33,7 +33,7 @@ public class HBoxForFinishedTeam extends CustomHBox {
         comboBox.setItems(FXCollections.observableList(Arrays.asList(Sitrep.values())));
         comboBox.setValue(sitrep.name());
         comboBox.setOnAction(event -> {
-            super.updateStatusForFinished(Integer.parseInt(idText), comboBox.getValue().toString(), controller);
+            super.updateStatusForFinished(Integer.parseInt(idText), comboBox.getValue().toString(), controller, heatNumber);
         });
 
         this.getChildren().addAll(id, label, comboBox, thirdLabel);

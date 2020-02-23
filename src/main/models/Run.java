@@ -21,6 +21,7 @@ import java.util.Calendar;
     - The team that is running this run - Team
     - If the run has been completed or not - boolean
     - Can the run be undo - boolean
+    - A unique number to differentiate each run - RunNumber
 
     Usage:
     -
@@ -66,6 +67,10 @@ public class Run {
     // Represents the possibility to undo the run end time
     private boolean canUndo;
 
+    // Represents the run number, a unique number for each run to be used by the program
+    @Embedded
+    private RunNumber runNumber;
+
 // CONSTRUCTORS //
 
     // DUMMY CONSTRUCTOR for Jackson JSON
@@ -79,10 +84,15 @@ public class Run {
         this.sitrep = Sitrep.NONE;
         isDone = false;
         canUndo = false;
+        runNumber = new RunNumber(team.getTeamNumber(), heatNumber);
     }
 
 // GETTERS AND SETTERS, used for Jackson JSON //
 
+
+    public RunNumber getRunNumber() {
+        return runNumber;
+    }
 
     public boolean getCanUndo() {
         return canUndo;
@@ -132,7 +142,11 @@ public class Run {
         this.sitrep = sitrep;
     }
 
-// FUNCTIONS //
+    public void setRunNumber(RunNumber runNumber) {
+        this.runNumber = runNumber;
+    }
+
+    // FUNCTIONS //
 
     // EFFECTS: constructs a FinalTime with the heat's start and input end time and sets canUndo and isDone to true
     public void calculateEndTime(@NotNull Calendar endTime) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion {
