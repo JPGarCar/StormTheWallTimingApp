@@ -31,7 +31,7 @@
       </MenuBar>
       <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="1280.0" VBox.vgrow="NEVER">
          <children>
-            <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="147.0" text="Back To Main Menu" HBox.hgrow="NEVER" />
+            <Button mnemonicParsing="false" onAction="#backToMainMenuButtonAction" prefHeight="34.0" prefWidth="147.0" text="Back To Main Menu" HBox.hgrow="NEVER" />
          </children>
          <padding>
             <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />

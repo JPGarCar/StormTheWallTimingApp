@@ -63,4 +63,9 @@ public class RunNumber implements Comparable {
             return -1;
         }
     }
+
+    @Override
+    public String toString() {
+        return teamNumber + "-" + heatNumber;
+    }
 }

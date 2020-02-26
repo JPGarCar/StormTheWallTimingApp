@@ -36,7 +36,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Button mnemonicParsing="false" text="Back To Main Menu">
+            <Button mnemonicParsing="false" onAction="#backToMainMenuButtonAction" text="Back To Main Menu">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
@@ -75,7 +75,19 @@
                   </TreeTableView>
                </content>
           </Tab>
-            <Tab text="Runs" />
+            <Tab text="Runs">
+               <content>
+                  <TreeTableView fx:id="runTreeTable" prefHeight="200.0" prefWidth="200.0">
+                    <columns>
+                      <TreeTableColumn fx:id="runIDRunCol" prefWidth="75.0" text="Run ID" />
+                      <TreeTableColumn fx:id="teamNumberRunCol" prefWidth="116.0" text="Team Number" />
+                        <TreeTableColumn fx:id="teamNameRunCol" prefWidth="284.0" text="Team Name" />
+                        <TreeTableColumn fx:id="heatNumberRunCol" prefWidth="100.0" text="Heat Number" />
+                        <TreeTableColumn fx:id="finalTimeRunCol" prefWidth="122.0" text="Final Time" />
+                        <TreeTableColumn fx:id="situationRunCol" prefWidth="121.0" text="Situation" />
+                    </columns>
+                  </TreeTableView>
+               </content></Tab>
         </tabs>
       </TabPane>
    </children>

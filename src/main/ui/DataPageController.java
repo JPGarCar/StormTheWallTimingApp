@@ -6,17 +6,18 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableStringValue;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.util.Callback;
-import models.Day;
-import models.Heat;
-import models.Program;
-import models.Team;
+import models.*;
 import models.enums.LeagueType;
 import models.enums.TeamType;
 import models.exceptions.AddTeamException;
+import models.exceptions.NoTeamHeatException;
+import sun.reflect.generics.tree.Tree;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -48,6 +49,9 @@ public class DataPageController {
     private TreeTableView<Object> teamTreeTable;
 
     @FXML
+    private TreeTableView<Object> runTreeTable;
+
+    @FXML
     private TreeTableColumn<Object, String> heatNumCol;
 
     @FXML
@@ -71,6 +75,24 @@ public class DataPageController {
     @FXML
     private TreeTableColumn<Object, String> leagueTypeTeamCol;
 
+    @FXML
+    private TreeTableColumn<Object, String> situationRunCol;
+
+    @FXML
+    private TreeTableColumn<Object, String> finalTimeRunCol;
+
+    @FXML
+    private TreeTableColumn<Object, String> teamNameRunCol;
+
+    @FXML
+    private TreeTableColumn<Object, String> teamNumberRunCol;
+
+    @FXML
+    private TreeTableColumn<Object, String> runIDRunCol;
+
+    @FXML
+    private TreeTableColumn<Object, String> heatNumberRunCol;
+
 
 // CONSTRUCTORS //
 
@@ -80,6 +102,88 @@ public class DataPageController {
 
     @FXML
     protected void initialize() {
+        heatTreeConstructor();
+        teamTreeConstructor();
+        runTreeConstructor();
+
+        TreeItem<Object> heatRoot = new TreeItem<>();
+        TreeItem<Object> teamRoot = new TreeItem<>();
+        TreeItem<Object> runRoot = new TreeItem<>();
+
+        addAllHeats(heatRoot);
+        addAllTeams(teamRoot);
+        addAllRuns(runRoot);
+
+        runTreeTable.setRoot(runRoot);
+        runTreeTable.setShowRoot(false);
+
+        teamTreeTable.setRoot(teamRoot);
+        teamTreeTable.setShowRoot(false);
+
+        heatTreeTable.setRoot(heatRoot);
+        heatTreeTable.setShowRoot(false);
+    }
+
+    // EFFECTS: adds all the runs from the program
+    private void addAllRuns(TreeItem<Object> root) {
+        for (Team team : controller.getProgram().getAllTeams().values()) {
+            for (Run run : team.getRuns().values()) {
+                root.getChildren().add(new TreeItem<>(run));
+            }
+        }
+    }
+
+    // EFFECTS: adds all the teams from the program to the list
+    private void addAllTeams(TreeItem<Object> root) {
+        for (Team team : controller.getProgram().getAllTeams().values()) {
+            TreeItem<Object> teamTreeItem = new TreeItem<>(team);
+            TreeItem<Object> tableNamesItem = new TreeItem<>();
+            teamTreeItem.getChildren().add(tableNamesItem);
+            for (Heat heat : team.getHeats().values()) {
+                TreeItem<Object> heatTreeItem = new TreeItem<>(heat);
+                teamTreeItem.getChildren().add(heatTreeItem);
+            }
+            root.getChildren().add(teamTreeItem);
+        }
+    }
+
+    // EFFECTS: add all heats to the root
+    private void addAllHeats(TreeItem<Object> root) {
+        for (Day day : controller.getProgram().getProgramDays().values()) {
+            for (Heat heat : day.getHeats().values()) {
+                TreeItem<Object> heatTreeItem = new TreeItem<>(heat);
+                TreeItem<Object> tableNamesItem = new TreeItem<>();
+                heatTreeItem.getChildren().add(tableNamesItem);
+                for (Team team : heat.getTeams().values()) {
+                    TreeItem<Object> teamTreeItem = new TreeItem<>(team);
+                    heatTreeItem.getChildren().add(teamTreeItem);
+                }
+                root.getChildren().add(heatTreeItem);
+            }
+        }
+
+    }
+
+    // EFFECTS: set all the runTree columns their respective CellValueFactory
+    private void runTreeConstructor() {
+        runIDRunCol.setCellValueFactory(param -> new SimpleStringProperty(((Run) param.getValue().getValue()).getRunNumber().toString()));
+        teamNumberRunCol.setCellValueFactory(param -> new SimpleStringProperty(Integer.toString(((Run) param.getValue().getValue()).getTeam().getTeamNumber())));
+        teamNameRunCol.setCellValueFactory(param -> new SimpleStringProperty(((Run) param.getValue().getValue()).getTeam().getTeamName()));
+        finalTimeRunCol.setCellValueFactory(param -> {
+            Run run = ((Run) param.getValue().getValue());
+            if (run.getFinalTime() != null) {
+                return new SimpleStringProperty(run.getFinalTime().toString());
+            } else {
+                return new SimpleStringProperty("N/A");
+            }
+
+        });
+        situationRunCol.setCellValueFactory(param -> new SimpleStringProperty(((Run) param.getValue().getValue()).getSitrep().name()));
+        heatNumberRunCol.setCellValueFactory(param -> new SimpleStringProperty(Integer.toString(((Run) param.getValue().getValue()).getHeatNumber())));
+    }
+
+    // EFFECTS: set all the heatTree columns their respective CellValueFactory
+    private void heatTreeConstructor() {
         heatIDCol.setCellValueFactory(param -> {
             if (param.getValue().getValue() instanceof Heat) {
                 return new SimpleStringProperty(Integer.toString(((Heat) param.getValue().getValue()).getHeatID()));
@@ -103,16 +207,28 @@ public class DataPageController {
             if (param.getValue().getValue() instanceof Heat) {
                 return new SimpleStringProperty(((Heat) param.getValue().getValue()).getActualStartTimeString());
             } else if (param.getValue().getValue() instanceof Team) {
-                return new SimpleStringProperty(""); // TODO
+                try {
+                    Heat heat = ((Heat) param.getValue().getParent().getValue());
+                    Team team = ((Team) param.getValue().getValue());
+                    if (team.getRunByHeatNumber(heat.getHeatNumber()).getFinalTime() != null) {
+                        return new SimpleStringProperty(team.getRunByHeatNumber(heat.getHeatNumber()).getFinalTime().toString());
+                    } else {
+                        return new SimpleStringProperty("Has not run yet.");
+                    }
+
+                } catch (NoTeamHeatException e) {
+                    e.printStackTrace();
+                    return new SimpleStringProperty("");
+                }
             } else {
-                return new SimpleStringProperty("");
+                return new SimpleStringProperty("Final Time");
             }
         });
         timeToStartHeatCol.setCellValueFactory(param -> {
             if (param.getValue().getValue() instanceof Heat) {
                 return new SimpleStringProperty(((Heat) param.getValue().getValue()).getStartTimeString());
             } else if (param.getValue().getValue() instanceof Team) {
-                return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamName()); // TODO
+                return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamName());
             } else {
                 return new SimpleStringProperty("Team Name");
             }
@@ -121,7 +237,7 @@ public class DataPageController {
             if (param.getValue().getValue() instanceof Heat) {
                 return new SimpleStringProperty(((Heat) param.getValue().getValue()).getLeagueType().name());
             } else if (param.getValue().getValue() instanceof Team) {
-                return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamLeague().name()); // TODO
+                return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamLeague().name());
             } else {
                 return new SimpleStringProperty("Team League");
             }
@@ -130,52 +246,84 @@ public class DataPageController {
             if (param.getValue().getValue() instanceof Heat) {
                 return new SimpleStringProperty(((Heat) param.getValue().getValue()).getTeamType().name());
             } else if (param.getValue().getValue() instanceof Team) {
-                return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamType().name()); // TODO
+                return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamType().name());
             } else {
                 return new SimpleStringProperty("Team Type");
             }
         });
-
-        TreeItem<Object> root = new TreeItem<>();
-        populateHeatList();
-        addAllHeats(root);
-        heatTreeTable.setRoot(root);
-        heatTreeTable.setShowRoot(false);
     }
 
-    private void populateHeatList() {
-        Program program = controller.getProgram();
+    // EFFECTS: set all the teamTree columns their respective CellValueFactory
+    private void teamTreeConstructor() {
+        teamIDTeamCol.setCellValueFactory(param -> {
+            if (param.getValue().getValue() instanceof Team) {
+                return new SimpleStringProperty(Integer.toString(((Team) param.getValue().getValue()).getTeamID()));
+            } else if (param.getValue().getValue() instanceof Heat) {
+                return new SimpleStringProperty(Integer.toString(((Heat) param.getValue().getValue()).getHeatID()));
+            } else {
+                return new SimpleStringProperty("Heat ID");
+            }
 
-        program = controller.getProgram();
-        Day day = new Day(Calendar.getInstance(), 1);
-        program.addDay(day);
-        Random random = new Random();
-        for (int i = 1; i <= 4; i++) {
-            Heat heat = null;
-            int number = random.nextInt(100);
-            heat = new Heat(Calendar.getInstance(), LeagueType.JFF, TeamType.OPEN, i, day, number);
-            for (int j = 1; j <= 3; j++) {
+        });
+        teamNumberTeamCol.setCellValueFactory(param -> {
+            if (param.getValue().getValue() instanceof Team) {
+                return new SimpleStringProperty(Integer.toString(((Team) param.getValue().getValue()).getTeamNumber()));
+            } else if (param.getValue().getValue() instanceof Heat) {
+                return new SimpleStringProperty(Integer.toString(((Heat) param.getValue().getValue()).getHeatNumber()));
+            } else {
+                return new SimpleStringProperty("Heat Number");
+            }
+        });
+        teamNameTeamCol.setCellValueFactory(param -> {
+            if (param.getValue().getValue() instanceof Team) {
+                return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamName());
+            } else if (param.getValue().getValue() instanceof Heat) {
                 try {
-                    number = random.nextInt(2000);
-                    heat.addTeam(program.createTeam(TeamType.OPEN, LeagueType.JFF, number, "Cool Name" + (number), number));
-                } catch (AddTeamException e) {
+                    Heat heat = ((Heat) param.getValue().getValue());
+                    Team team = ((Team) param.getValue().getParent().getValue());
+                    if (team.getRunByHeatNumber(heat.getHeatNumber()).getIsDone())
+                    {
+                        return new SimpleStringProperty(heat.getTeams().get(team.getTeamNumber()).getRunByHeatNumber(heat.getHeatNumber()).getFinalTime().toString()); // TODO
+                    } else {
+                        return new SimpleStringProperty("Has not run yet.");
+                    }
+                } catch (NoTeamHeatException e) {
                     e.printStackTrace();
+                    return new SimpleStringProperty("");
                 }
+            } else {
+                return new SimpleStringProperty("Final Time on Heat");
             }
-        }
+        });
+        leagueTypeTeamCol.setCellValueFactory(param -> {
+            if (param.getValue().getValue() instanceof Team) {
+                return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamLeague().name());
+            } else if (param.getValue().getValue() instanceof Heat) {
+                return new SimpleStringProperty(((Heat) param.getValue().getValue()).getLeagueType().name());
+            } else {
+                return new SimpleStringProperty("Heat League");
+            }
+        });
+        teamTypeTeamCol.setCellValueFactory(param -> {
+            if (param.getValue().getValue() instanceof Team) {
+                return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamType().name());
+            } else if (param.getValue().getValue() instanceof Heat) {
+                return new SimpleStringProperty(((Heat) param.getValue().getValue()).getTeamType().name());
+            } else {
+                return new SimpleStringProperty("Heat Type");
+            }
+        });
     }
 
-    // EFFECTS: add all heats to the root
-    private void addAllHeats(TreeItem<Object> root) {
-        for (Heat heat : controller.getProgram().getDayFromDayNumber(1).getHeats().values()) {
-            TreeItem<Object> heatTreeItem = new TreeItem<>(heat);
-            TreeItem<Object> tableNamesItem = new TreeItem<>();
-            heatTreeItem.getChildren().add(tableNamesItem);
-            for (Team team : heat.getTeams().values()) {
-                TreeItem<Object> teamTreeItem = new TreeItem<>(team);
-                heatTreeItem.getChildren().add(teamTreeItem);
-            }
-            root.getChildren().add(heatTreeItem);
+    @FXML
+    private void backToMainMenuButtonAction() {
+        try {
+            FXMLLoader root = new FXMLLoader(getClass().getResource("MainPage.fxml"));
+            root.setControllerFactory(c -> new MainPageController(controller));
+            runTreeTable.getScene().setRoot(root.load());
+            // TODO add save functionality
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

@@ -2,6 +2,7 @@ package ui;
 
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
@@ -85,6 +86,18 @@ public class DataIOPageController {
     @FXML
     public void exportFileButtonAction() {
         // TODO get info on how they want the data, heat per sheet? team per sheet?
+    }
+
+    @FXML
+    private void backToMainMenuButtonAction() {
+        try {
+            FXMLLoader root = new FXMLLoader(getClass().getResource("MainPage.fxml"));
+            root.setControllerFactory(c -> new MainPageController(controller));
+            selectFileButton.getScene().setRoot(root.load());
+            // TODO add save functionality
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

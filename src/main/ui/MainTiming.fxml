@@ -31,7 +31,6 @@
       </MenuBar>
       <HBox alignment="CENTER_LEFT" prefHeight="40.0" spacing="15.0" VBox.vgrow="NEVER">
          <children>
-            <Button fx:id="populateButton" mnemonicParsing="false" onAction="#populateHeatList" text="Populate" />
             <Button fx:id="backToMainMenueButton" layoutX="20.0" layoutY="18.0" mnemonicParsing="false" onAction="#backToMainMenuButtonAction" text="Back To Main Menue" />
             <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Storm The Wall Timing System" HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" onAction="#populateFromSaveData" text="Populate From Save Data" />

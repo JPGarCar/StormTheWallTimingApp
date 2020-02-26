@@ -32,6 +32,12 @@ public class mainTimingController {
     public mainTimingController(TimingController controller) {
         this.controller = controller;
         controller.setUiController(this);
+        program = controller.getProgram();
+    }
+
+    @FXML
+    protected void initialize() {
+        initStuff();
     }
 
     // EFFECTS: set running run list to the controller's running run list
@@ -211,30 +217,6 @@ public class mainTimingController {
         updateRunningRunList();
 
         initStuff();
-    }
-
-    @FXML
-    private void populateHeatList() {
-        program = controller.getProgram();
-        Day day = new Day(Calendar.getInstance(), 1);
-        program.addDay(day);
-        Random random = new Random();
-        for (int i = 1; i <= 4; i++) {
-            Heat heat = null;
-            int number = random.nextInt(100);
-            heat = new Heat(Calendar.getInstance(), LeagueType.JFF, TeamType.OPEN, i, day, number);
-            for (int j = 1; j <= 3; j++) {
-                try {
-                    number = random.nextInt(2000);
-                    heat.addTeam(program.createTeam(TeamType.OPEN, LeagueType.JFF, number, "Cool Name" + (number), number));
-                } catch (AddTeamException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        day.setAtHeat(1);
-        initStuff();
-
     }
 
     @FXML
