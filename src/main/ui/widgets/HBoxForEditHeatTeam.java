@@ -18,7 +18,7 @@ public class HBoxForEditHeatTeam extends CustomHBox {
     Button waitListButton = new Button();
     Button moveToButton = new Button();
 
-    public HBoxForEditHeatTeam(String idText, String teamName, TeamType teamType, TimingController controller){
+    public HBoxForEditHeatTeam(String idText, String teamName, String category, TimingController controller){
         super(HBoxSpacing);
 
         id.setText(idText);
@@ -28,7 +28,7 @@ public class HBoxForEditHeatTeam extends CustomHBox {
         this.teamName.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(this.teamName, Priority.ALWAYS);
 
-        this.teamType.setText(teamType.name());
+        this.teamType.setText(category);
 
         removeButton.setText("Remove");
         removeButton.setOnAction(event -> {

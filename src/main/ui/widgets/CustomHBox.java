@@ -14,8 +14,8 @@ public abstract class CustomHBox extends HBox {
     }
 
     // EFFECTS: update the status of a specific team private does all the work, three publics for different situations
-    private void updateStatus(int teamID, String sitrep, TimingController timingController, int heatNumber, boolean fromRemaining, boolean staged) {
-        Team team = timingController.getProgram().getTeamByTeamNumber(teamID);
+    private void updateStatus(int teamNumber, String sitrep, TimingController timingController, int heatNumber, boolean fromRemaining, boolean staged) {
+        Team team = timingController.getProgram().getTeamByTeamNumber(teamNumber);
         try {
             if (fromRemaining && staged) {
                 team.getRunByHeatNumber(timingController.getStagedHeat().getHeatNumber()).setSitrep(Sitrep.valueOf(sitrep));

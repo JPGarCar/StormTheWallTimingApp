@@ -5,7 +5,6 @@ import models.Heat;
 import models.Team;
 import models.Run;
 import models.enums.LeagueType;
-import models.enums.TeamType;
 import models.exceptions.AddHeatException;
 import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
 import models.exceptions.NoHeatsException;
@@ -22,10 +21,10 @@ public class TestRunClass {
 
     @Test
     public void TestConstructor() {
-        Day day = new Day(Calendar.getInstance(),1);
+        Day day = new Day("Tuesday",1);
         Heat heat = null;
-        heat = new Heat(Calendar.getInstance(), LeagueType.COMP, TeamType.COREC, 1, day, 1);
-        Team team = new Team(TeamType.OPEN, LeagueType.JFF, 1232, "The Invinsibles", 1232);
+        heat = new Heat(Calendar.getInstance(), "Competitive", 1, day, 1);
+        Team team = new Team("Just for fun", 1232, "The Invinsibles", 1232, "CWD");
         run = new Run(heat.getHeatNumber(), team);
 
         assertEquals(heat.getHeatNumber(), run.getHeatNumber());
@@ -33,11 +32,10 @@ public class TestRunClass {
 
     @Test
     public void TestSetEndTime() {
-        Day day = new Day(Calendar.getInstance(),1);
+        Day day = new Day("Tuesday",1);
         Heat heat = null;
-        heat = new Heat(null, LeagueType.COMP, TeamType.COREC, 1, day, 1);
-        heat.markActualStartTime(Calendar.getInstance());
-        Team team = new Team(TeamType.OPEN, LeagueType.JFF, 1232, "The Invinsibles", 1232);
+        heat = new Heat(Calendar.getInstance(), "Competitive", 1, day, 1);
+        Team team = new Team("Just for fun", 1232, "The Invinsibles", 1232, "CWD");
         try {
             team.addHeat(heat);
         } catch (AddHeatException e) {

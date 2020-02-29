@@ -55,7 +55,7 @@
                         <Insets top="25.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="Import Data">
+                  <Button mnemonicParsing="false" onAction="#importDataButtonAction" text="Import Data">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>

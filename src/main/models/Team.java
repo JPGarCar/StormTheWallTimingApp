@@ -3,8 +3,8 @@ package models;
 import com.fasterxml.jackson.annotation.*;
 import com.sun.istack.internal.NotNull;
 import models.enums.LeagueType;
-import models.enums.TeamType;
 import models.exceptions.*;
+import org.apache.poi.hssf.record.SSTRecord;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,8 +16,7 @@ import java.util.Map;
     Represents a team that will run one or more heats during the event
     Purpose: Control the heats the team is running in, their times and their team information
     Contains:
-    - Team Type - TeamType
-    - League Type - LeagueType
+    - Pool Name - String
     - Team id used by db and access - UNIQUE - int
     - Team number used by participants and the program - UNIQUE - int
     - Team´s name - String
@@ -44,9 +43,7 @@ public class Team {
 
 // VARIABLES //
 
-    private TeamType teamType;
-
-    private LeagueType teamLeague;
+    private String poolName;
 
     // Represents team id used by db and access - UNIQUE
     @Id
@@ -69,6 +66,8 @@ public class Team {
     // Contains the current run the team is running
     private Run currentRun;
 
+    private String teamUnit;
+
 // CONSTRUCTORS //
 
     // DUMMY CONSTRUCTOR used by Jackson JSON
@@ -78,12 +77,12 @@ public class Team {
     }
 
     // CONSTRUCTOR
-    public Team(@NotNull TeamType teamType, @NotNull LeagueType teamLeague, @NotNull int teamNumber, @NotNull String teamName, @NotNull int teamID) {
-        this.teamType = teamType;
-        this.teamLeague = teamLeague;
+    public Team(@NotNull String poolName, @NotNull int teamNumber, @NotNull String teamName, @NotNull int teamID, @NotNull String teamUnit) {
+        this.poolName = poolName;
         this.teamNumber = teamNumber;
         this.teamName = teamName;
         this.teamID = teamID;
+        this.teamUnit = teamUnit;
 
         runs = new HashMap<>();
         heats = new HashMap<>();
@@ -93,16 +92,16 @@ public class Team {
 // GETTERS AND SETTERS, used by Jackson JSON //
 
 
+    public String getTeamUnit() {
+        return teamUnit;
+    }
+
     public Run getCurrentRun() {
         return currentRun;
     }
 
     public int getTeamID() {
         return teamID;
-    }
-
-    public TeamType getTeamType() {
-        return teamType;
     }
 
     public int getTeamNumber() {
@@ -113,8 +112,8 @@ public class Team {
         return teamName;
     }
 
-    public LeagueType getTeamLeague() {
-        return teamLeague;
+    public String getPoolName() {
+        return poolName;
     }
 
     public Map<Integer, Heat> getHeats() {
@@ -133,10 +132,6 @@ public class Team {
         this.teamID = teamID;
     }
 
-    public void setTeamType(@NotNull TeamType teamType) {
-        this.teamType = teamType;
-    }
-
     public void setHeats(@NotNull Map<Integer, Heat> heats) {
         this.heats = heats;
     }
@@ -145,8 +140,8 @@ public class Team {
         this.runs = runs;
     }
 
-    public void setTeamLeague(@NotNull LeagueType teamLeague) {
-        this.teamLeague = teamLeague;
+    public void setPoolName(@NotNull String poolName) {
+        this.poolName = poolName;
     }
 
     public void setTeamName(@NotNull String teamName) {
@@ -157,7 +152,11 @@ public class Team {
         this.teamNumber = teamNumber;
     }
 
-// FUNCTIONS //
+    public void setTeamUnit(String teamUnit) {
+        this.teamUnit = teamUnit;
+    }
+
+    // FUNCTIONS //
 
     // EFFECTS: set the end time to the appropriate TeamHeat, depends on the heat number given.
     //          will also move the TeamHeat who got a final time to the done heat list

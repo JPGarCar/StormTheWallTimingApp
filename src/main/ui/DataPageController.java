@@ -1,25 +1,13 @@
 package ui;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableStringValue;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TreeItemPropertyValueFactory;
-import javafx.util.Callback;
 import models.*;
-import models.enums.LeagueType;
-import models.enums.TeamType;
-import models.exceptions.AddTeamException;
 import models.exceptions.NoTeamHeatException;
-import sun.reflect.generics.tree.Tree;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Random;
 
 public class DataPageController {
 
@@ -235,20 +223,11 @@ public class DataPageController {
         });
         leagueTypeHeatCol.setCellValueFactory(param -> {
             if (param.getValue().getValue() instanceof Heat) {
-                return new SimpleStringProperty(((Heat) param.getValue().getValue()).getLeagueType().name());
+                return new SimpleStringProperty(((Heat) param.getValue().getValue()).getCategory());
             } else if (param.getValue().getValue() instanceof Team) {
-                return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamLeague().name());
+                return new SimpleStringProperty(((Team) param.getValue().getValue()).getPoolName());
             } else {
                 return new SimpleStringProperty("Team League");
-            }
-        });
-        teamTypeHeatCol.setCellValueFactory(param -> {
-            if (param.getValue().getValue() instanceof Heat) {
-                return new SimpleStringProperty(((Heat) param.getValue().getValue()).getTeamType().name());
-            } else if (param.getValue().getValue() instanceof Team) {
-                return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamType().name());
-            } else {
-                return new SimpleStringProperty("Team Type");
             }
         });
     }
@@ -297,20 +276,11 @@ public class DataPageController {
         });
         leagueTypeTeamCol.setCellValueFactory(param -> {
             if (param.getValue().getValue() instanceof Team) {
-                return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamLeague().name());
+                return new SimpleStringProperty(((Team) param.getValue().getValue()).getPoolName());
             } else if (param.getValue().getValue() instanceof Heat) {
-                return new SimpleStringProperty(((Heat) param.getValue().getValue()).getLeagueType().name());
+                return new SimpleStringProperty(((Heat) param.getValue().getValue()).getCategory());
             } else {
-                return new SimpleStringProperty("Heat League");
-            }
-        });
-        teamTypeTeamCol.setCellValueFactory(param -> {
-            if (param.getValue().getValue() instanceof Team) {
-                return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamType().name());
-            } else if (param.getValue().getValue() instanceof Heat) {
-                return new SimpleStringProperty(((Heat) param.getValue().getValue()).getTeamType().name());
-            } else {
-                return new SimpleStringProperty("Heat Type");
+                return new SimpleStringProperty("Heat Category");
             }
         });
     }

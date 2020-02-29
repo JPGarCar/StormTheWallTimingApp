@@ -16,7 +16,7 @@ public class HBoxForWaitListTeam extends CustomHBox {
     Label teamType = new Label();
     Button addTeamButton = new Button();
 
-    public HBoxForWaitListTeam(String idText, String teamName, TeamType teamType, TimingController controller){
+    public HBoxForWaitListTeam(String idText, String teamName, String category, TimingController controller){
         super(HBoxSpacing);
 
         id.setText(idText);
@@ -26,7 +26,7 @@ public class HBoxForWaitListTeam extends CustomHBox {
         this.teamName.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(this.teamName, Priority.ALWAYS);
 
-        this.teamType.setText(teamType.name());
+        this.teamType.setText(category);
 
         addTeamButton.setText("Add Team");
         addTeamButton.setOnAction(event -> {

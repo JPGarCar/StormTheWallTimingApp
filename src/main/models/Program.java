@@ -30,7 +30,7 @@ public class Program {
 
 // VARIABLES //
 
-    private Map<Integer, Day> programDays;
+    private Map<String, Day> programDays;
 
     private Map<Integer, Team> allTeams;
 
@@ -46,7 +46,7 @@ public class Program {
 
 // GETTERS AND SETTERS //
 
-    public Map<Integer, Day> getProgramDays() {
+    public Map<String, Day> getProgramDays() {
         return programDays;
     }
 
@@ -63,7 +63,7 @@ public class Program {
         this.allTeams = allTeams;
     }
 
-    public void setProgramDays(Map<Integer, Day> programDays) {
+    public void setProgramDays(Map<String, Day> programDays) {
         this.programDays = programDays;
     }
 
@@ -75,12 +75,7 @@ public class Program {
 
     // EFFECTS: add a day to the day list
     public void addDay(@NotNull Day day) {
-        programDays.put(day.getDayNumber(), day);
-    }
-
-    // EFFECTS: get a day by its day number
-    public Day getDayFromDayNumber(@NotNull int dayNum) {
-        return programDays.get(dayNum);
+        programDays.put(day.getDayToRun(), day);
     }
 
     // EFFECTS: add a team to the team list
@@ -89,8 +84,8 @@ public class Program {
     }
 
     // EFFECTS: creates a team to use by the program
-    public Team createTeam(@NotNull TeamType teamType, @NotNull LeagueType teamLeague, @NotNull int teamNumber, @NotNull String teamName, @NotNull int teamID) {
-        Team team = new Team(teamType, teamLeague, teamNumber, teamName, teamID);
+    public Team createTeam(@NotNull TeamType teamType, @NotNull String poolName, @NotNull int teamNumber, @NotNull String teamName, @NotNull int teamID, String teamUnit) {
+        Team team = new Team(poolName, teamNumber, teamName, teamID, teamUnit);
         addTeam(team);
         return team;
     }
@@ -120,6 +115,17 @@ public class Program {
 //        }
 //        return team;
 //    }
+
+    // EFFECTS: returns a day or builds a new one and returns that day
+    public Day getProgramDayOrBuild(String programDay) {
+        if (programDays.get(programDay) != null) {
+            return programDays.get(programDay);
+        } else {
+            Day day = new Day(programDay, programDays.size());
+            addDay(day);
+            return day;
+        }
+    }
 
 
 }

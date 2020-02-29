@@ -2,7 +2,6 @@ package persistance;
 
 import models.*;
 import models.enums.LeagueType;
-import models.enums.TeamType;
 import models.exceptions.AddHeatException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,7 +20,7 @@ public class dataBaseConnection {
     public dataBaseConnection() throws AddHeatException {
         Day day = new Day();
 
-        Heat heat = new Heat(Calendar.getInstance(), LeagueType.JFF, TeamType.OPEN, 4562, day, 1);
+        Heat heat = new Heat(Calendar.getInstance(), "Just For Fun", 4562, day, 1);
 
         Configuration configuration = new Configuration().configure().addAnnotatedClass(Day.class);
         configuration.addAnnotatedClass(Heat.class);

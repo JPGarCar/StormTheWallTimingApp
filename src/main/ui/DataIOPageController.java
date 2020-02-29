@@ -1,5 +1,6 @@
 package ui;
 
+import IO.ExcelInput;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,6 +8,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import models.Heat;
+import models.enums.LeagueType;
+import models.enums.TeamType;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -17,6 +20,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DataIOPageController {
 
@@ -55,30 +60,7 @@ public class DataIOPageController {
             e.printStackTrace();
         }
 
-        // Workbook instance that refers to .xls file
-        HSSFWorkbook workbook = null;
-        try {
-             workbook = new HSSFWorkbook(fileInputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        HSSFSheet heatsSheet = workbook.getSheet("Heats"); // NOTICE file sheet must be named Heats
-
-        // to evaluate cell types
-        FormulaEvaluator formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
-
-        if (heatsSheet != null) {
-            for (Row row : heatsSheet) {
-                Heat heat = new Heat();
-
-                for (Cell cell : row) {
-                    // TODO
-                }
-
-                // controller.getProgram().getDayFromDayNumber(1).addHeat(); // TODO add different day system
-            }
-        }
+        ExcelInput excelInput = new ExcelInput(fileInputStream, controller);
 
 
     }

@@ -41,7 +41,7 @@ public class Day {
 
 // VARIABLES //
 
-    private Calendar dayToRun;
+    private String dayToRun;
 
     // Represents the day in an int for easier access starting at 1
     @Id
@@ -63,16 +63,16 @@ public class Day {
     }
 
     // CONSTRUCTOR
-    public Day(@NotNull Calendar dayToRun, @NotNull int dayNumber) {
+    public Day(@NotNull String dayToRun, @NotNull int dayNumber) {
         this.dayToRun = dayToRun;
         heats = new HashMap<>();
         this.dayNumber = dayNumber;
-        atHeat = 1;
+        atHeat = -1;
     }
 
 // SETTERS AND GETTERS, used by Jackson JSON
 
-    public void setDayToRun(@NotNull Calendar dayToRun) {
+    public void setDayToRun(@NotNull String dayToRun) {
         this.dayToRun = dayToRun;
     }
 
@@ -100,7 +100,7 @@ public class Day {
         return dayNumber;
     }
 
-    public Calendar getDayToRun() {
+    public String getDayToRun() {
         return dayToRun;
     }
 
@@ -109,7 +109,7 @@ public class Day {
     // EFFECTS: returns the month/day/year of the Day
     @Override
     public String toString() {
-        return dayToRun.get(Calendar.MONTH) + "/" + dayToRun.get(Calendar.DAY_OF_MONTH) + "/" + dayToRun.get(Calendar.YEAR);
+        return dayToRun;
     }
 
     // EFFECTS: increase atHeat by one, to move to next heat
@@ -122,8 +122,11 @@ public class Day {
         if (!heats.containsKey(heat.getHeatNumber())) {
             heats.put(heat.getHeatNumber(), heat);
             heat.setDayToRace(this);
+            if (atHeat == -1) {
+                atHeat = heat.getHeatNumber();
+            }
         } else {
-            throw new AddHeatException("because this heat is already in this day. The heat numbers match.");
+            // nothing because we expect this due to one to one connection
         }
     }
 
@@ -160,4 +163,14 @@ public class Day {
         atHeat --;
     }
 
+    // EFFECTS: return a heat by its start time
+    public Heat getHeatByStartTime(Calendar calendar) {
+        for (Heat heat : heats.values()) {
+            if (heat.getTimeToStart().get(Calendar.HOUR_OF_DAY) == calendar.get(Calendar.HOUR_OF_DAY) &&
+            heat.getTimeToStart().get(Calendar.MINUTE) == calendar.get(Calendar.MINUTE)) {
+                return heat;
+            }
+        }
+        return null; // TODO return exception
+    }
 }

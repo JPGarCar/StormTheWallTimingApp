@@ -17,7 +17,7 @@ public class HBoxForRunningTeam extends CustomHBox {
     Label teamName = new Label();
     Label id = new Label();
     Label heatNumber = new Label();
-    Label teamType = new Label();
+    Label category = new Label();
     Button button = new Button();
     ComboBox comboBox = new ComboBox();
 
@@ -28,12 +28,12 @@ public class HBoxForRunningTeam extends CustomHBox {
         heatNumber.setMaxWidth(45);
         HBox.setHgrow(heatNumber, Priority.ALWAYS);
 
-        teamType.setText(teamTypeText);
-        teamType.setMaxWidth(45);
-        HBox.setHgrow(teamType, Priority.ALWAYS);
+        category.setText(teamTypeText);
+        category.setMaxWidth(80);
+        HBox.setHgrow(category, Priority.ALWAYS);
 
         id.setText(idText);
-        id.setMaxWidth(40);
+        id.setMaxWidth(50);
         HBox.setHgrow(id, Priority.ALWAYS);
 
         teamName.setText(teamNameText);
@@ -63,6 +63,6 @@ public class HBoxForRunningTeam extends CustomHBox {
             updateStatusForRunning(Integer.parseInt(idText), comboBox.getValue().toString(), controller);
         });
 
-        this.getChildren().addAll(heatNumber, id, teamName, teamType, comboBox, button);
+        this.getChildren().addAll(heatNumber, id, teamName, category, comboBox, button);
     }
 }

@@ -3,7 +3,6 @@ package persistance;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import jdk.nashorn.internal.runtime.Timing;
 import models.Day;
 import ui.TimingController;
 

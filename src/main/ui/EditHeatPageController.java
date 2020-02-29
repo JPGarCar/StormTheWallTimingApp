@@ -29,7 +29,7 @@ public class EditHeatPageController {
     public void setTeamHeatListTeams() {
         ArrayList<HBoxForEditHeatTeam> hBoxForEditHeatTeams = new ArrayList<>();
         for (Team team : heat.getTeams().values()) {
-            hBoxForEditHeatTeams.add(new HBoxForEditHeatTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getTeamType(), controller));
+            hBoxForEditHeatTeams.add(new HBoxForEditHeatTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getPoolName(), controller));
         }
         teamHeatList.setItems(FXCollections.observableList(hBoxForEditHeatTeams));
     }
@@ -37,7 +37,7 @@ public class EditHeatPageController {
     public void setWaitListTeams() {
         ArrayList<HBoxForWaitListTeam> hBoxForWaitListTeams = new ArrayList<>();
         for (Team team : controller.getProgram().getWaitList().values()) {
-            hBoxForWaitListTeams.add(new HBoxForWaitListTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getTeamType(), controller));
+            hBoxForWaitListTeams.add(new HBoxForWaitListTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getPoolName(), controller));
         }
         availableTeamList.setItems(FXCollections.observableList(hBoxForWaitListTeams));
     }
@@ -55,18 +55,14 @@ public class EditHeatPageController {
     private Label heatNumberLabel;
 
     @FXML
-    private Label heatTypeLabel;
-
-    @FXML
-    private Label teamTypeLabel;
+    private Label categoryLabel;
 
     @FXML
     protected void initialize() {
         setTeamHeatListTeams();
         setWaitListTeams();
         heatNumberLabel.setText(Integer.toString(heat.getHeatNumber()));
-        heatTypeLabel.setText(heat.getLeagueType().name());
-        teamTypeLabel.setText(heat.getTeamType().name());
+        categoryLabel.setText(heat.getCategory());
     }
 
     @FXML

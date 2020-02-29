@@ -4,7 +4,6 @@ import models.Day;
 import models.Heat;
 import models.Team;
 import models.enums.LeagueType;
-import models.enums.TeamType;
 import models.exceptions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,13 +19,12 @@ public class TestTeamClass {
 
     @BeforeEach
     public void BeforeEach() {
-        team = new Team(TeamType.COREC, LeagueType.COMP, 312, "The Storm Troopers", 312);
+        team = new Team("Competitive", 312, "The Storm Troopers", 312, "CWD");
     }
 
     @Test
     public void testConstructor() {
-        assertEquals(TeamType.COREC, team.getTeamType());
-        assertEquals(LeagueType.COMP, team.getTeamLeague());
+        assertEquals(LeagueType.COMP, team.getPoolName());
         assertEquals(312, team.getTeamNumber());
         assertEquals("The Storm Troopers", team.getTeamName());
         assertTrue(team.getHeats().isEmpty());
@@ -35,14 +33,14 @@ public class TestTeamClass {
 
     @Test
     public void testAddingHeats() throws AddHeatException {
-        Day day = new Day(Calendar.getInstance(),1);
-        Heat heat = new Heat(null, LeagueType.COMP, TeamType.COREC, 1, day, 1);
+        Day day = new Day("Sunday",1);
+        Heat heat = new Heat(null, "LeagueType.COMP", 1, day, 1);
         team.addHeat(heat);
         assertTrue(team.getHeats().containsKey(heat.getHeatNumber()));
         assertEquals(1, team.getRuns().size());
 
-        Heat heat1 = new Heat(Calendar.getInstance(), LeagueType.COMP, TeamType.COREC, 2, day, 2);
-        Heat heat2 = new Heat(Calendar.getInstance(), LeagueType.JFF, TeamType.OPEN, 3, day, 3);
+        Heat heat1 = new Heat(Calendar.getInstance(), "LeagueType", 2, day, 2);
+        Heat heat2 = new Heat(Calendar.getInstance(), "LeagueType", 3, day, 3);
 
         ArrayList<Heat> heats = new ArrayList<>();
         heats.add(heat1);
@@ -58,9 +56,9 @@ public class TestTeamClass {
 
     @Test
     public void testSetEndTime() throws AddHeatException {
-        Day day = new Day(Calendar.getInstance(),1);
+        Day day = new Day("Sunday",1);
         Calendar startTime = Calendar.getInstance();
-        Heat heat = new Heat(null, LeagueType.COMP, TeamType.COREC, 1, day, 1);
+        Heat heat = new Heat(null, "LeagueType", 1, day, 1);
         team.addHeat(heat);
         heat.markActualStartTime(startTime);
 
@@ -84,8 +82,8 @@ public class TestTeamClass {
 
     @Test
     public void TestRemoveHeat() throws AddHeatException, NoHeatsException {
-        Day day = new Day(Calendar.getInstance(),1);
-        Heat heat = new Heat(null, LeagueType.COMP, TeamType.COREC, 1, day, 1);
+        Day day = new Day("Sunday",1);
+        Heat heat = new Heat(null, "LeagueType", 1, day, 1);
         team.addHeat(heat);
         assertEquals(1, team.getHeats().size());
         assertFalse(heat.getTeams().isEmpty());

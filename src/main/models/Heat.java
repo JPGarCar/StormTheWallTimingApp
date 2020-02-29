@@ -2,9 +2,7 @@ package models;
 
 import com.fasterxml.jackson.annotation.*;
 import com.sun.istack.internal.NotNull;
-import models.enums.LeagueType;
 import models.enums.Sitrep;
-import models.enums.TeamType;
 import models.exceptions.*;
 
 import javax.persistence.*;
@@ -19,7 +17,7 @@ import java.util.Map;
     Purpose: Control the teams that are running in this heat, when it starts and what kind of teams are running
     Contains:
     - Expected time to start
-    - League type
+    - Category - String
     - Team type
     - Heat ID (used by db and access) - UNIQUE
     - Heat Number (used by participants and this program) - UNIQUE
@@ -50,9 +48,7 @@ public class Heat {
     // Represents the time this heat should start as a Calendar
     private Calendar timeToStart;
 
-    private LeagueType leagueType;
-
-    private TeamType teamType;
+    private String category;
 
     // Represents the heat id, used by db and access - UNIQUE
     @Id
@@ -84,11 +80,10 @@ public class Heat {
     }
 
     // CONSTRUCTOR
-    public Heat(@NotNull Calendar timeToStart, @NotNull LeagueType leagueType, @NotNull TeamType teamType,
-                @NotNull int heatNumber,@NotNull Day dayToRace, @NotNull int heatID) {
+    public Heat(@NotNull Calendar timeToStart, @NotNull String category,
+                @NotNull int heatNumber, @NotNull Day dayToRace, @NotNull int heatID) {
         this.timeToStart = timeToStart;
-        this.leagueType = leagueType;
-        this.teamType = teamType;
+        this.category = category;
         this.heatNumber = heatNumber;
         this.heatID = heatID;
         this.hasStarted = false;
@@ -108,12 +103,8 @@ public class Heat {
         return heatNumber;
     }
 
-    public LeagueType getLeagueType() {
-        return leagueType;
-    }
-
-    public TeamType getTeamType() {
-        return teamType;
+    public String getCategory() {
+        return category;
     }
 
     public Day getDayToRace() {
@@ -148,16 +139,12 @@ public class Heat {
         this.heatNumber = heatNumber;
     }
 
-    public void setLeagueType(@NotNull LeagueType leagueType) {
-        this.leagueType = leagueType;
+    public void setCategory(@NotNull String category) {
+        this.category = category;
     }
 
     public void setTeams(@NotNull Map<Integer, Team> teams) {
         this.teams = teams;
-    }
-
-    public void setTeamType(@NotNull TeamType teamType) {
-        this.teamType = teamType;
     }
 
     public void setTimeToStart(@NotNull Calendar timeToStart) {
@@ -192,7 +179,8 @@ public class Heat {
 
     // EFFECTS: return the time to start as a string
     public String timeToStartString() {
-        return timeToStart.get(Calendar.HOUR_OF_DAY) + ":" + timeToStart.get(Calendar.MINUTE);
+        DecimalFormat decimalFormat = new DecimalFormat("00");
+        return decimalFormat.format(timeToStart.get(Calendar.HOUR_OF_DAY)) + ":" + decimalFormat.format(timeToStart.get(Calendar.MINUTE));
     }
 
     // EFFECTS: add a team to the heat and add this heat to the team
