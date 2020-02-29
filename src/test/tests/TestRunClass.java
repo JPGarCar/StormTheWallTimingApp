@@ -4,7 +4,6 @@ import models.Day;
 import models.Heat;
 import models.Team;
 import models.Run;
-import models.enums.LeagueType;
 import models.exceptions.AddHeatException;
 import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
 import models.exceptions.NoHeatsException;

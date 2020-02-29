@@ -2,6 +2,8 @@ package models;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sun.istack.internal.NotNull;
 import models.enums.Sitrep;
 import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
@@ -34,7 +36,7 @@ import java.util.Calendar;
     - Many To One relationship with Team
  */
 
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 @Entity
 @Table(name = "run_table")
 public class Run {
@@ -58,7 +60,6 @@ public class Run {
 
     // Contains the team that is running this run
     @ManyToOne
-    @JsonBackReference
     private Team team;
 
     // Represents if the run has been completed

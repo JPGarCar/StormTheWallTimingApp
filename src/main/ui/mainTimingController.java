@@ -9,7 +9,6 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import models.*;
 import models.exceptions.*;
-import persistance.PersistanceWithJackson;
 import ui.widgets.HBoxForFinishedTeam;
 import ui.widgets.HBoxForFinishedUndoTeam;
 import ui.widgets.HBoxForRunningTeam;
@@ -35,6 +34,10 @@ public class mainTimingController {
 
     @FXML
     protected void initialize() {
+        updateFinishedRunList();
+        updateStoppedRunList();
+        updateRunningRunList();
+
         initStuff();
     }
 
@@ -67,7 +70,7 @@ public class mainTimingController {
     }
 
     // EFFECTS: set finished but possible undo team list to the controller's finished team list
-    public void updateFinishedRunList() {
+    public void updateStoppedRunList() {
         ArrayList<HBoxForFinishedUndoTeam> hBoxForFinishedUndoTeams = new ArrayList<>();
         for (Run run : controller.getStoppedRuns().values()) {
             Team team = run.getTeam();
@@ -77,7 +80,7 @@ public class mainTimingController {
     }
 
     // EFFECTS: add a team to the finished team list, first is private, second and third are the public ones to use
-    private void addToFinishedRunList(Run run, boolean top) {
+    private void addToStoppedRunList(Run run, boolean top) {
         Team team = run.getTeam();
         ArrayList<HBoxForFinishedUndoTeam> hBoxForFinishedUndoTeams = new ArrayList<>();
         hBoxForFinishedUndoTeams.add(new HBoxForFinishedUndoTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), run.getFinalTime().toString(), controller, run.getHeatNumber()));
@@ -87,16 +90,16 @@ public class mainTimingController {
             undoFinishedTeamList.setItems(FXCollections.concat(undoFinishedTeamList.getItems(), FXCollections.observableList(hBoxForFinishedUndoTeams)));
         }
     }
-    public void addToFinishedRunListToTop(@NotNull Run run) {
-        addToFinishedRunList(run, true);
+    public void addToStoppedRunListToTop(@NotNull Run run) {
+        addToStoppedRunList(run, true);
     }
-    public void addToFinishedRunListToBottom(@NotNull Run run) {
-        addToFinishedRunList(run, false);
+    public void addToStoppedRunListToBottom(@NotNull Run run) {
+        addToStoppedRunList(run, false);
     }
 
 
     // EFFECTS: set the list of final finished teams to all those in the controller´s final finished teams list
-    public void updateFinalFinishedRunList() {
+    public void updateFinishedRunList() {
         ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
         for (Run run : controller.getFinishedRuns().values()) {
             Team team = run.getTeam();
@@ -107,7 +110,7 @@ public class mainTimingController {
     }
 
     // EFFECTS: add a team to the final finished team list, first is private, second and third are the public ones to use
-    private void addToFinalFinishedRunList(@NotNull Run run, boolean top) {
+    private void addToFinishedRunList(@NotNull Run run, boolean top) {
         Team team = run.getTeam();
         ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
         hBoxForFinishedTeams.add(new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), run.getFinalTime().toString(), run.getSitrep(), controller, run.getHeatNumber()));
@@ -117,11 +120,11 @@ public class mainTimingController {
             finishedTeamsList.setItems(FXCollections.concat(finishedTeamsList.getItems(), FXCollections.observableList(hBoxForFinishedTeams)));
         }
     }
-    public void addToFinalFinishedRunListToTop(@NotNull Run run) {
-        addToFinalFinishedRunList(run, true);
+    public void addToFinishedRunListToTop(@NotNull Run run) {
+        addToFinishedRunList(run, true);
     }
-    public void addToFinalFinishedRunListToBottom(@NotNull Run run) {
-        addToFinalFinishedRunList(run, false);
+    public void addToFinishedRunListToBottom(@NotNull Run run) {
+        addToFinishedRunList(run, false);
     }
 
     // EFFECTS: set the list for teams in the staged list from the controller's staged heat heat
@@ -153,12 +156,6 @@ public class mainTimingController {
             }
         });
         stageHeatNumber.setText(Integer.toString(program.getProgramDays().get("Saturday").getAtHeat()));
-    }
-
-    // EFFECTS: save the data to json
-    private void saveData() {
-        PersistanceWithJackson.toJsonDay(program.getProgramDays().get("Saturday"));
-        PersistanceWithJackson.toJsonController(controller);
     }
 
     // EFFECTS: move the teams from heat number back to staging from running list
@@ -202,19 +199,6 @@ public class mainTimingController {
 
 
     @FXML
-    private void populateFromSaveData() {
-        program = controller.getProgram();
-        Day day = PersistanceWithJackson.toJavaDate();
-        program.getProgramDays().put(day.getDayToRun(), day);
-        controller = PersistanceWithJackson.toJavaController();
-
-        updateFinishedRunList();
-        updateRunningRunList();
-
-        initStuff();
-    }
-
-    @FXML
     private void stageHeat() {
         try {
             controller.setStagedHeat(program.getProgramDays().get("Saturday").getHeatByHeatNumber(Integer.parseInt(stageHeatNumber.getText())));
@@ -236,7 +220,7 @@ public class mainTimingController {
         Heat stagedHeat = controller.getStagedHeat();
         if (stagedHeat != null) {
             stagedHeat.markActualStartTime(Calendar.getInstance());
-            controller.addRunningRunsFromTeams(stagedHeat.getTeamsThatWillRun(), stagedHeat.getHeatNumber());
+            controller.addRunningRunsFromTeams(stagedHeat.teamsThatWillRun(), stagedHeat.getHeatNumber());
 
             program.getProgramDays().get("Saturday").atNextHeat();
             stageHeatNumber.setText(Integer.toString(program.getProgramDays().get("Saturday").getAtHeat()));
@@ -245,7 +229,7 @@ public class mainTimingController {
             timeToStartLabel.setText("Stage Heat to Get Info");
             categoryLabel.setText("Stage Heat to Get Info");
         }
-        //saveData();
+        controller.saveData();
         undoHeatTimer = Calendar.getInstance();
         controller.setStagedHeat(null);
     }
@@ -267,6 +251,7 @@ public class mainTimingController {
             }
         }
         stopTeamNumber.setText("");
+        controller.saveData();
     }
 
     @FXML
@@ -298,6 +283,7 @@ public class mainTimingController {
             }
             stageHeatNumber.setText(Integer.toString(program.getProgramDays().get("Saturday").getAtHeat()));
         }
+        controller.saveData();
         // TODO exception to taken to much time to undo
     }
 
@@ -311,6 +297,7 @@ public class mainTimingController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        controller.saveData();
     }
 
 }

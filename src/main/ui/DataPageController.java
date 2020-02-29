@@ -193,7 +193,7 @@ public class DataPageController {
         });
         actualStartTimeHeatCol.setCellValueFactory( param -> {
             if (param.getValue().getValue() instanceof Heat) {
-                return new SimpleStringProperty(((Heat) param.getValue().getValue()).getActualStartTimeString());
+                return new SimpleStringProperty(((Heat) param.getValue().getValue()).actualStartTimeString());
             } else if (param.getValue().getValue() instanceof Team) {
                 try {
                     Heat heat = ((Heat) param.getValue().getParent().getValue());
@@ -214,7 +214,7 @@ public class DataPageController {
         });
         timeToStartHeatCol.setCellValueFactory(param -> {
             if (param.getValue().getValue() instanceof Heat) {
-                return new SimpleStringProperty(((Heat) param.getValue().getValue()).getStartTimeString());
+                return new SimpleStringProperty(((Heat) param.getValue().getValue()).startTimeString());
             } else if (param.getValue().getValue() instanceof Team) {
                 return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamName());
             } else {

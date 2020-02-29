@@ -55,13 +55,23 @@
                         <Insets top="25.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#importDataButtonAction" text="Import Data">
+                  <Button mnemonicParsing="false" onAction="#importDataButtonAction" text="Import File Data">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#populateFromSaveData" text="Import Local Data">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" text="Connect Data Base">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
                   </Button>
                </children>
             </VBox>

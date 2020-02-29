@@ -3,7 +3,6 @@ package tests;
 import models.Day;
 import models.Heat;
 import models.Team;
-import models.enums.LeagueType;
 import models.exceptions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,6 @@ public class TestTeamClass {
 
     @Test
     public void testConstructor() {
-        assertEquals(LeagueType.COMP, team.getPoolName());
         assertEquals(312, team.getTeamNumber());
         assertEquals("The Storm Troopers", team.getTeamName());
         assertTrue(team.getHeats().isEmpty());

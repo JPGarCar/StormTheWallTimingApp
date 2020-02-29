@@ -6,6 +6,7 @@ import com.sun.istack.internal.NotNull;
 import javafx.application.Platform;
 import models.*;
 import models.exceptions.*;
+import persistance.PersistanceWithJackson;
 
 
 import java.util.*;
@@ -26,6 +27,7 @@ public class TimingController {
     // Contains all the runs that have finished
     private Map<RunNumber, Run> finishedRuns;
 
+    @JsonIgnore
     private Program program;
 
     @JsonIgnore
@@ -34,7 +36,6 @@ public class TimingController {
     @JsonIgnore
     private EditHeatPageController editHeatController;
 
-    @JsonIgnore
     private Map<RunNumber, Timer> timerMap;
 
 // CONSTRUCTORS //
@@ -111,7 +112,7 @@ public class TimingController {
     // EFFECTS: add a run to the stopped run list, included the task to move to finished
     public void stopRun(@NotNull Run run) {
         stoppedRuns.put(run.getRunNumber(), run);
-        uiController.updateFinishedRunList();
+        uiController.updateStoppedRunList();
         Timer t = new Timer();
         timerMap.put(run.getRunNumber(), t);
         t.schedule( new TimerTask() {
@@ -181,7 +182,7 @@ public class TimingController {
     // EFFECTS: remove a run from the stopped run list and update ui stopped run list
     public void removeStoppedRunWithUpdate(RunNumber runNumber) {
         removeStoppedRun(runNumber);
-        uiController.updateFinishedRunList();
+        uiController.updateStoppedRunList();
     }
 
     // EFFECTS: send run back to running run list and remove from stopped list, undo end time too
@@ -198,7 +199,7 @@ public class TimingController {
     // EFFECTS: add a run to the finished run list and update ui finished run list
     public void addFinishedRun(Run run) {
         finishedRuns.put(run.getRunNumber(), run);
-        uiController.addToFinalFinishedRunListToTop(run);
+        uiController.addToFinishedRunListToTop(run);
     }
 
     // EFFECTS: ends a run
@@ -217,6 +218,12 @@ public class TimingController {
         stopRun(run);
 
         removeRunningRunWithUpdate(runNumber);
+    }
+
+    // EFFECTS: save the data to json
+    public void saveData() {
+        PersistanceWithJackson.toJsonController(this);
+        PersistanceWithJackson.toJsonProgram(program);
     }
 
 

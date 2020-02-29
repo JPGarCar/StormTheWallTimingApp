@@ -3,7 +3,6 @@ package tests;
 import models.Day;
 import models.Heat;
 import models.Team;
-import models.enums.LeagueType;
 import models.exceptions.AddHeatException;
 import models.exceptions.AddTeamException;
 import models.exceptions.NoTeamException;
@@ -25,7 +24,6 @@ public class TestHeatClass {
         heat = new Heat(timeToStart, "Competitive", 123, day, 123);
 
         assertEquals(timeToStart.get(Calendar.HOUR_OF_DAY) + ":" + timeToStart.get(Calendar.MINUTE), heat.timeToStartString());
-        assertEquals(LeagueType.JFF, heat.getCategory());
         assertEquals(123, heat.getHeatNumber());
         assertEquals(day, heat.getDayToRace());
         assertEquals(0, heat.getTeams().size());

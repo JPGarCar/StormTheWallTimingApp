@@ -2,7 +2,6 @@ package tests;
 
 import models.Day;
 import models.Heat;
-import models.enums.LeagueType;
 import models.exceptions.AddHeatException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

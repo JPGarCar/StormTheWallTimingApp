@@ -2,9 +2,7 @@ package models;
 
 import com.fasterxml.jackson.annotation.*;
 import com.sun.istack.internal.NotNull;
-import models.enums.LeagueType;
 import models.exceptions.*;
-import org.apache.poi.hssf.record.SSTRecord;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -59,7 +57,6 @@ public class Team {
     private Map<Integer, Heat> heats;
 
     // Contains the TeamHeats that have not finished
-    @JsonManagedReference
     @OneToMany
     private Map<Integer, Run> runs;
 

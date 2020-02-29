@@ -233,12 +233,12 @@ public class Heat {
     }
 
     // EFFECTS: return a team from this heat by its team number
-    public Team getTeamFromHeatByTeamNumber(@NotNull int teamNumber) {
+    public Team teamFromHeatByTeamNumber(@NotNull int teamNumber) {
         return teams.get(teamNumber);
     }
 
     // EFFECTS: return only those heats with teamHeats that don't have DNS
-    public ArrayList<Team> getTeamsThatWillRun() {
+    public ArrayList<Team> teamsThatWillRun() {
         ArrayList<Team> runnableTeams = new ArrayList<>();
         for (Team team : teams.values()) {
             try {
@@ -253,7 +253,7 @@ public class Heat {
     }
 
     // EFFECTS: return the actual start time as a string
-    public String getActualStartTimeString() {
+    public String actualStartTimeString() {
         if (actualStartTime == null) {
             return "";
         }
@@ -262,7 +262,7 @@ public class Heat {
     }
 
     // EFFECTS: return the intended start time as a string
-    public String getStartTimeString() {
+    public String startTimeString() {
         if (timeToStart == null) {
             return "";
         }

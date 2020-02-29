@@ -1,7 +1,6 @@
 package persistance;
 
 import models.*;
-import models.enums.LeagueType;
 import models.exceptions.AddHeatException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

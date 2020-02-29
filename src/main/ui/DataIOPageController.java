@@ -7,21 +7,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
-import models.Heat;
-import models.enums.LeagueType;
-import models.enums.TeamType;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.usermodel.Row;
+import models.Day;
+import persistance.PersistanceWithJackson;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class DataIOPageController {
 
@@ -80,6 +72,12 @@ public class DataIOPageController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void populateFromSaveData() {
+        controller = PersistanceWithJackson.toJavaController();
+        controller.setProgram(PersistanceWithJackson.toJavaProgram());
     }
 
 

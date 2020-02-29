@@ -10,6 +10,10 @@ public class RunNumber implements Comparable {
 
 // CONSTRUCTORS //
 
+    // USED BY JACKSON
+    public RunNumber(){
+    };
+
     public RunNumber(int teamNumber, int heatNumber) {
         this.heatNumber = heatNumber;
         this.teamNumber = teamNumber;

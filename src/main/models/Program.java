@@ -1,8 +1,6 @@
 package models;
 
 import com.sun.istack.internal.NotNull;
-import models.enums.LeagueType;
-import models.enums.TeamType;
 
 import java.util.*;
 
@@ -84,7 +82,7 @@ public class Program {
     }
 
     // EFFECTS: creates a team to use by the program
-    public Team createTeam(@NotNull TeamType teamType, @NotNull String poolName, @NotNull int teamNumber, @NotNull String teamName, @NotNull int teamID, String teamUnit) {
+    public Team createTeam( @NotNull String poolName, @NotNull int teamNumber, @NotNull String teamName, @NotNull int teamID, String teamUnit) {
         Team team = new Team(poolName, teamNumber, teamName, teamID, teamUnit);
         addTeam(team);
         return team;

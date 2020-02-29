@@ -4,16 +4,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import models.Day;
-import models.Heat;
-import models.Program;
-import models.enums.LeagueType;
-import models.enums.TeamType;
-import models.exceptions.AddTeamException;
-
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Random;
+
 
 public class main extends Application {
 
