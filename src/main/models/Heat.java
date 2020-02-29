@@ -171,7 +171,7 @@ public class Heat {
     public void setDayToRace(@NotNull Day day) {
         try {
             day.addHeat(this);
-        } catch (AddHeatException e) {
+        } catch (AddHeatRuntimeException e) {
             // nothing because we expect this due to one to one connection
         }
         this.dayToRace = day;
@@ -189,7 +189,7 @@ public class Heat {
             teams.put(team.getTeamNumber(), team);
             try {
                 team.addHeat(this);
-            } catch (AddHeatException e) {
+            } catch (AddHeatRuntimeException e) {
                 // do nothing as we expect this to happen because of the many to many connection
             }
         } else {
@@ -237,16 +237,22 @@ public class Heat {
         return teams.get(teamNumber);
     }
 
-    // EFFECTS: return only those heats with teamHeats that don't have DNS
+    // EFFECTS: return only those heats with teamHeats that don't have DNS, those that do get a 0 time
     public ArrayList<Team> teamsThatWillRun() {
         ArrayList<Team> runnableTeams = new ArrayList<>();
         for (Team team : teams.values()) {
             try {
                 if (team.getRunByHeatNumber(heatNumber).getSitrep() != Sitrep.DNS) {
                     runnableTeams.add(team);
+                } else {
+                    team.getRunByHeatNumber(heatNumber).calculateEndTime(actualStartTime);
                 }
             } catch (NoTeamHeatException e) {
                 e.printStackTrace();
+            } catch (NoHeatsException e) {
+                e.printStackTrace();
+            } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
+                couldNotCalculateFinalTimeExcpetion.printStackTrace();
             }
         }
         return runnableTeams;

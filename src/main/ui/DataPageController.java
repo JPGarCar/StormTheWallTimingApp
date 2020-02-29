@@ -227,12 +227,27 @@ public class DataPageController {
             } else if (param.getValue().getValue() instanceof Team) {
                 return new SimpleStringProperty(((Team) param.getValue().getValue()).getPoolName());
             } else {
-                return new SimpleStringProperty("Team League");
+                return new SimpleStringProperty("Pool Name");
             }
+        });
+        teamTypeHeatCol.setCellValueFactory(param -> {
+            if (param.getValue().getValue() instanceof Heat) {
+                return new SimpleStringProperty("");
+            } else if (param.getValue().getValue() instanceof Team) {
+                Heat heat = ((Heat) param.getValue().getParent().getValue());
+                Team team = ((Team) param.getValue().getValue());
+                try {
+                    return new SimpleStringProperty(team.getRunByHeatNumber(heat.getHeatNumber()).getSitrep().name());
+                } catch (NoTeamHeatException e) {
+                    e.printStackTrace();
+                }
+            }
+            return new SimpleStringProperty("Status");
         });
     }
 
     // EFFECTS: set all the teamTree columns their respective CellValueFactory
+    // TODO add unit to this table
     private void teamTreeConstructor() {
         teamIDTeamCol.setCellValueFactory(param -> {
             if (param.getValue().getValue() instanceof Team) {
@@ -262,7 +277,7 @@ public class DataPageController {
                     Team team = ((Team) param.getValue().getParent().getValue());
                     if (team.getRunByHeatNumber(heat.getHeatNumber()).getIsDone())
                     {
-                        return new SimpleStringProperty(heat.getTeams().get(team.getTeamNumber()).getRunByHeatNumber(heat.getHeatNumber()).getFinalTime().toString()); // TODO
+                        return new SimpleStringProperty(heat.getTeams().get(team.getTeamNumber()).getRunByHeatNumber(heat.getHeatNumber()).getFinalTime().toString());
                     } else {
                         return new SimpleStringProperty("Has not run yet.");
                     }
@@ -291,7 +306,7 @@ public class DataPageController {
             FXMLLoader root = new FXMLLoader(getClass().getResource("MainPage.fxml"));
             root.setControllerFactory(c -> new MainPageController(controller));
             runTreeTable.getScene().setRoot(root.load());
-            // TODO add save functionality
+            controller.saveData();
         } catch (IOException e) {
             e.printStackTrace();
         }

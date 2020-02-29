@@ -4,6 +4,9 @@ import models.Day;
 import models.Heat;
 import models.Team;
 import models.exceptions.AddHeatException;
+import models.exceptions.AddHeatRuntimeException;
+import models.exceptions.InvalidExcelException;
+import models.exceptions.NoHeatWithStartTimeException;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -51,40 +54,59 @@ public class ExcelInput {
         this.fileInputStream = fileInputStream;
         this.controller = controller;
         colIndentifiers = new HashMap<>();
-        createFiles();
-
-        firstRowEvaluateHeats();
-        try {
-            addHeatsFromData();
-        } catch (AddHeatException e) {
-            e.printStackTrace();
-        }
-
-        firstRowEvaluateTeams();
-        try {
-            addTeamsFromData();
-        } catch (AddHeatException e) {
-            e.printStackTrace();
-        }
     }
 
 // FUNCTIONS //
 
+    // EFFECTS: public function to do the entire process
+    public void inputData(boolean isHeats, boolean isTeams) throws AddHeatRuntimeException, InvalidExcelException, NoHeatWithStartTimeException {
+        createFiles(isHeats, isTeams);
+        evaluateData(isHeats, isTeams);
+        dataTransition(isHeats, isTeams);
+    }
+
+    // EFFECTS: evaluates all all the sheets to make sure the data is present and well organized
+    private void evaluateData(boolean isHeats, boolean isTeams) throws InvalidExcelException {
+        if (isHeats) {
+            firstRowEvaluateHeats();
+        }
+        if (isTeams) {
+            firstRowEvaluateTeams();
+        }
+    }
+
+    // EFFECTS: import the data itself, last of evaluate and create files
+    private void dataTransition(boolean isHeats, boolean isTeams) throws AddHeatRuntimeException, NoHeatWithStartTimeException {
+        if (isHeats) {
+            addHeatsFromData();
+        }
+        if (isTeams) {
+            addTeamsFromData();
+        }
+    }
+
     // EFFECTS: starts all the file and var creations
-    private void createFiles() {
+    private void createFiles(boolean isHeats, boolean isTeams) {
         try {
             workbook = new HSSFWorkbook(fileInputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        heatsSheet = workbook.getSheet("Heats"); // NOTICE file sheet must be named Heats
-        teamsSheet = workbook.getSheet("Teams"); // NOTICE file sheet must be names Teams
+        if (isHeats) {
+            heatsSheet = workbook.getSheet("Heats"); // NOTICE file sheet must be named Heats
+        }
+        if (isTeams) {
+            teamsSheet = workbook.getSheet("Teams"); // NOTICE file sheet must be names Teams
+        }
     }
 
     // EFFECTS: evaluate the first row of the excel for heat sheet
-    private void firstRowEvaluateHeats() {
+    private void firstRowEvaluateHeats() throws InvalidExcelException {
         Row titleRow = heatsSheet.getRow(0);
         int lastColUsed = titleRow.getLastCellNum();
+        if (titleRow.getCell(0).getCellTypeEnum() != CellType.STRING) {
+            throw new InvalidExcelException("There are no column values on first row.");
+        }
 
         for (int i = 0; i < lastColUsed; i++) {
             String colName = titleRow.getCell(i).getStringCellValue();
@@ -103,9 +125,12 @@ public class ExcelInput {
     }
 
     // EFFECTS: evaluate the first row of the excel for teams sheet
-    private void firstRowEvaluateTeams() {
+    private void firstRowEvaluateTeams() throws InvalidExcelException {
         Row titleRow = teamsSheet.getRow(0);
         int lastColUsed = titleRow.getLastCellNum();
+        if (titleRow.getCell(0).getCellTypeEnum() != CellType.STRING) {
+            throw new InvalidExcelException("There are no column values on first row.");
+        }
 
         for (int i = 0; i < lastColUsed; i++) {
             String colName = titleRow.getCell(i).getStringCellValue();
@@ -128,7 +153,7 @@ public class ExcelInput {
     }
 
     // EFFECTS: checks all the rows for data and adds teams
-    private void addTeamsFromData() throws AddHeatException {
+    private void addTeamsFromData() throws AddHeatRuntimeException, NoHeatWithStartTimeException {
         for (Row row : teamsSheet) {
 
             HSSFCell cell = (HSSFCell) row.getCell(colIndentifiers.get(TEAMIDIden));
@@ -137,7 +162,7 @@ public class ExcelInput {
 
                 String teamName = row.getCell(colIndentifiers.get(TEAMNAMEIden)).getStringCellValue();
                 String poolName = row.getCell(colIndentifiers.get(TEAMPOOLNAMEIden)).getStringCellValue();
-                String teamUnit = row.getCell(colIndentifiers.get(TEAMUNITIden)).getStringCellValue(); // TODO add unit to the team class
+                String teamUnit = row.getCell(colIndentifiers.get(TEAMUNITIden)).getStringCellValue();
                 String teamDayString = row.getCell(colIndentifiers.get(TEAMDAYIden)).getStringCellValue();
 
                 Heat heat = null;
@@ -146,8 +171,8 @@ public class ExcelInput {
                 if (runCell.getCellTypeEnum() != CellType.STRING) {
                     Calendar teamRunTime = Calendar.getInstance();
                     teamRunTime.setTime(row.getCell(colIndentifiers.get(TEAMRUNTIMEIden)).getDateCellValue());
-
                     heat = controller.getProgram().getProgramDays().get(teamDayString.substring(0, teamDayString.indexOf(","))).getHeatByStartTime(teamRunTime);
+
                 }
 
 
@@ -164,7 +189,7 @@ public class ExcelInput {
     }
 
     // EFFECTS: checks all the rows for data and adds heats
-    private void addHeatsFromData() throws AddHeatException {
+    private void addHeatsFromData() throws AddHeatRuntimeException {
 
         for (Row row : heatsSheet) {
 

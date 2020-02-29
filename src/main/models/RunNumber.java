@@ -63,6 +63,8 @@ public class RunNumber implements Comparable {
         RunNumber runNumber = (RunNumber) o;
         if (this.heatNumber > runNumber.getHeatNumber()) {
             return 1;
+        } else if (this.heatNumber == runNumber.getHeatNumber() && this.teamNumber == runNumber.getTeamNumber()) {
+            return 0;
         } else {
             return -1;
         }

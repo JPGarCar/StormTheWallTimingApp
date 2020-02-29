@@ -2,9 +2,7 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.internal.NotNull;
-import models.exceptions.AddHeatException;
-import models.exceptions.CanNotUndoHeatException;
-import models.exceptions.NoHeatWithIDException;
+import models.exceptions.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -118,7 +116,7 @@ public class Day {
     }
 
     // EFFECTS: add a heat to the list of heats
-    public void addHeat(@NotNull Heat heat) throws AddHeatException {
+    public void addHeat(@NotNull Heat heat) throws AddHeatRuntimeException {
         if (!heats.containsKey(heat.getHeatNumber())) {
             heats.put(heat.getHeatNumber(), heat);
             heat.setDayToRace(this);
@@ -131,7 +129,7 @@ public class Day {
     }
 
     // EFFECTS: adds all the heats to this day
-    public void addHeats(@NotNull ArrayList<Heat> heats) throws AddHeatException {
+    public void addHeats(@NotNull ArrayList<Heat> heats) throws AddHeatRuntimeException {
         for (Heat heat : heats) {
             addHeat(heat);
         }
@@ -164,13 +162,14 @@ public class Day {
     }
 
     // EFFECTS: return a heat by its start time
-    public Heat getHeatByStartTime(Calendar calendar) {
+    public Heat getHeatByStartTime(Calendar calendar) throws NoHeatWithStartTimeException {
         for (Heat heat : heats.values()) {
             if (heat.getTimeToStart().get(Calendar.HOUR_OF_DAY) == calendar.get(Calendar.HOUR_OF_DAY) &&
             heat.getTimeToStart().get(Calendar.MINUTE) == calendar.get(Calendar.MINUTE)) {
                 return heat;
             }
         }
-        return null; // TODO return exception
+        throw new NoHeatWithStartTimeException("Day affected: " + dayToRun + "Heat that could not find: " +
+                calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE));
     }
 }

@@ -80,6 +80,5 @@ public class EditHeatPageController {
         } catch (AddTeamException e) {
             e.printStackTrace();
         }
-        // TODO get team from database
     }
 }

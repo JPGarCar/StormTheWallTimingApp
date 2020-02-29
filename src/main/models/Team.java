@@ -186,7 +186,7 @@ public class Team {
     }
 
     // EFFECTS: add one heat to the heat array and remaining heat queue and add this team to the heat
-    public void addHeat(Heat heat) throws AddHeatException {
+    public void addHeat(Heat heat) throws AddHeatRuntimeException {
         if (!heats.containsKey(heat.getHeatNumber())) {
             heats.put(heat.getHeatNumber(), heat);
             Run run = heatToTeamHeat(heat);
@@ -198,7 +198,8 @@ public class Team {
             }
         }
         else {
-            throw new AddHeatException("because this team already has a heat with that ID.");
+            throw new AddHeatRuntimeException("Team affected: " + teamName + ", with team number: " + teamNumber +
+                    ". Could not be added to heat number: " + heat.getHeatNumber() + ".");
         }
     }
 

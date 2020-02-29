@@ -46,15 +46,42 @@
                         <Font size="36.0" />
                      </font>
                   </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Please select a file and click the import button. Only Excel files work at the moment." textAlignment="CENTER" wrappingWidth="249.087890625" />
-                  <Button fx:id="selectFileButton" mnemonicParsing="false" onAction="#selectFileButtonAction" text="Select File">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Please select a file and click the import button. Only Excel files with .xls work at the moment." textAlignment="CENTER" wrappingWidth="249.087890625" />
+                  <HBox alignment="CENTER">
+                     <children>
+                        <Button fx:id="selectFileButton" mnemonicParsing="false" onAction="#selectFileButtonAction" text="Select File">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="25.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Label fx:id="fileNotificationLabel" alignment="CENTER" />
+                     </children>
+                  </HBox>
+                  <Label text="Please select what you want to import with this file.">
                      <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font size="13.0" />
                      </font>
+                  </Label>
+                  <HBox alignment="CENTER" prefWidth="200.0" spacing="20.0" VBox.vgrow="NEVER">
+                     <children>
+                        <CheckBox fx:id="importTeamCheck" mnemonicParsing="false" text="Import Teams">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </CheckBox>
+                        <CheckBox fx:id="importHeatCheck" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Import Heats">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </CheckBox>
+                     </children>
                      <VBox.margin>
-                        <Insets top="25.0" />
+                        <Insets />
                      </VBox.margin>
-                  </Button>
+                  </HBox>
                   <Button mnemonicParsing="false" onAction="#importDataButtonAction" text="Import File Data">
                      <font>
                         <Font name="System Bold" size="14.0" />
@@ -68,7 +95,7 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" text="Connect Data Base">
+                  <Button mnemonicParsing="false" text="Connect to Web">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>

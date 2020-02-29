@@ -290,14 +290,13 @@ public class mainTimingController {
     @FXML
     private void backToMainMenuButtonAction() {
         try {
+            controller.saveData();
             FXMLLoader root = new FXMLLoader(getClass().getResource("MainPage.fxml"));
             root.setControllerFactory(c -> new MainPageController(controller));
             runningTeamsList.getScene().setRoot(root.load());
-            // TODO add save functionality
         } catch (IOException e) {
             e.printStackTrace();
         }
-        controller.saveData();
     }
 
 }
