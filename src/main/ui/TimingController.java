@@ -36,6 +36,9 @@ public class TimingController {
     @JsonIgnore
     private EditHeatPageController editHeatController;
 
+    @JsonIgnore
+    private Day currentDay;
+
     private Map<RunNumber, Timer> timerMap;
 
 // CONSTRUCTORS //
@@ -45,11 +48,15 @@ public class TimingController {
         currentRuns = new TreeMap<>();
         stoppedRuns = new HashMap<>();
         finishedRuns = new HashMap<>();
-        program = new Program();
         timerMap = new HashMap<>();
     }
 
 // GETTERS AND SETTERS, used by Jackson JSON //
+
+
+    public Day getCurrentDay() {
+        return currentDay;
+    }
 
     public Program getProgram() {
         return program;
@@ -107,7 +114,11 @@ public class TimingController {
         this.editHeatController = editHeatController;
     }
 
-// FUNCTIONS //
+    public void setCurrentDay(Day currentDay) {
+        this.currentDay = currentDay;
+    }
+
+    // FUNCTIONS //
 
     // EFFECTS: add a run to the stopped run list, included the task to move to finished
     public void stopRun(@NotNull Run run) {

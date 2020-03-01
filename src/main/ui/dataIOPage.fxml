@@ -8,7 +8,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.DataIOPageController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: Black;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.DataIOPageController">
    <children>
       <MenuBar maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
         <menus>
@@ -41,13 +41,13 @@
          <children>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Data Import">
+                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Data Import">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Please select a file and click the import button. Only Excel files with .xls work at the moment." textAlignment="CENTER" wrappingWidth="249.087890625" />
-                  <HBox alignment="CENTER">
+                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Please select a file and click the import button. Only Excel files with .xls work at the moment." textAlignment="CENTER" wrappingWidth="249.087890625" />
+                  <HBox alignment="CENTER" spacing="10.0">
                      <children>
                         <Button fx:id="selectFileButton" mnemonicParsing="false" onAction="#selectFileButtonAction" text="Select File">
                            <font>
@@ -57,24 +57,24 @@
                               <Insets top="25.0" />
                            </VBox.margin>
                         </Button>
-                        <Label fx:id="fileNotificationLabel" alignment="CENTER" />
+                        <Label fx:id="fileNotificationLabel" alignment="CENTER" textFill="WHITE" />
                      </children>
                   </HBox>
-                  <Label text="Please select what you want to import with this file.">
+                  <Label text="Please select what you want to import with this file." textFill="WHITE">
                      <font>
                         <Font size="13.0" />
                      </font>
                   </Label>
                   <HBox alignment="CENTER" prefWidth="200.0" spacing="20.0" VBox.vgrow="NEVER">
                      <children>
-                        <CheckBox fx:id="importTeamCheck" mnemonicParsing="false" text="Import Teams">
+                        <CheckBox fx:id="importTeamCheck" mnemonicParsing="false" text="Import Teams" textFill="WHITE">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </CheckBox>
-                        <CheckBox fx:id="importHeatCheck" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Import Heats">
+                        <CheckBox fx:id="importHeatCheck" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Import Heats" textFill="WHITE">
                            <font>
-                              <Font name="System Bold" size="13.0" />
+                              <Font size="13.0" />
                            </font>
                         </CheckBox>
                      </children>
@@ -104,15 +104,15 @@
             </VBox>
             <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" spacing="15.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Data Export">
+                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Data Export">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Please write down a file name. The file will be exported as an Excel file." textAlignment="CENTER" wrappingWidth="249.087890625" />
+                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Please write down a file name. The file will be exported as an Excel file." textAlignment="CENTER" wrappingWidth="249.087890625" />
                   <HBox alignment="CENTER" spacing="15.0">
                      <children>
-                        <Label text="File Name:">
+                        <Label text="File Name:" textFill="WHITE">
                            <font>
                               <Font size="14.0" />
                            </font>

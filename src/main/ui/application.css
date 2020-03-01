@@ -1,8 +1,43 @@
 /* JavaFx CSS */
 
-#randomButton {
-    -fx-font-size: 30px;
-    -fx-background-color: rgba(255,255,255,.08);
-    -fx-text-fill: blue;
-    -fx-font-weight: bold;
+.text-input {
+    -fx-text-fill: white;
+}
+
+.text {
+ -fx-text-fill: white;
+}
+
+.text-field {
+    -fx-background-color: Black;
+    -fx-border-color: #F26623;
+    -fx-border-radius: 5;
+  }
+
+.split-pane:horizontal > .split-pane-divider {
+   -fx-background-color: transparent;
+}
+
+.split-pane:vertical > .split-pane-divider {
+   -fx-background-color: transparent;
+}
+
+.separator {
+-fx-border-style: solid;
+-fx-border-width: 2px;
+-fx-background-color: #F26623;
+}
+
+.list-view .list-cell:even {
+-fx-background-color: #4c4b47;
+-fx-text-fill: white;
+}
+.list-view .list-cell:odd {
+-fx-background-color: black;
+-fx-text-fill: white;
+}
+
+.button {
+-fx-background-color: #F26623;
+-fx-text-fill: white;
 }

@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
+import models.Program;
 import models.exceptions.AddHeatException;
 import models.exceptions.AddHeatRuntimeException;
 import models.exceptions.InvalidExcelException;
@@ -56,6 +57,7 @@ public class DataIOPageController {
     @FXML
     public void importDataButtonAction() {
         FileInputStream fileInputStream = null;
+        controller.setProgram(new Program());
 
         try {
              fileInputStream = new FileInputStream(new File(fileToImport));
