@@ -28,7 +28,7 @@ public class DataPageController {
     private TreeTableView<Object> heatTreeTable;
 
     @FXML
-    private TreeTableColumn<Object, String> leagueTypeHeatCol;
+    private TreeTableColumn<Object, String> categoryHeatCol;
 
     @FXML
     private Tab heatTab;
@@ -58,10 +58,10 @@ public class DataPageController {
     private TreeTableColumn<Object, String> teamNumberTeamCol;
 
     @FXML
-    private TreeTableColumn<Object, String> teamTypeTeamCol;
+    private TreeTableColumn<Object, String> extraTeamCol;
 
     @FXML
-    private TreeTableColumn<Object, String> leagueTypeTeamCol;
+    private TreeTableColumn<Object, String> poolNameTeamCol;
 
     @FXML
     private TreeTableColumn<Object, String> situationRunCol;
@@ -221,7 +221,7 @@ public class DataPageController {
                 return new SimpleStringProperty("Team Name");
             }
         });
-        leagueTypeHeatCol.setCellValueFactory(param -> {
+        categoryHeatCol.setCellValueFactory(param -> {
             if (param.getValue().getValue() instanceof Heat) {
                 return new SimpleStringProperty(((Heat) param.getValue().getValue()).getCategory());
             } else if (param.getValue().getValue() instanceof Team) {
@@ -289,7 +289,7 @@ public class DataPageController {
                 return new SimpleStringProperty("Final Time on Heat");
             }
         });
-        leagueTypeTeamCol.setCellValueFactory(param -> {
+        poolNameTeamCol.setCellValueFactory(param -> {
             if (param.getValue().getValue() instanceof Team) {
                 return new SimpleStringProperty(((Team) param.getValue().getValue()).getPoolName());
             } else if (param.getValue().getValue() instanceof Heat) {

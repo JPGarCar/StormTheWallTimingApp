@@ -63,6 +63,7 @@ public class DataIOPageController {
              fileInputStream = new FileInputStream(new File(fileToImport));
         } catch (FileNotFoundException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "There was no file provided or the file is corrupted, please select a file and try again.");
+            alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
             alert.show();
         }
 
@@ -72,13 +73,16 @@ public class DataIOPageController {
         } catch (AddHeatRuntimeException | NoHeatWithStartTimeException e) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Data import was successful, however there was an error while" +
                     "importing the following data: " + e.getMessage());
+            alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
             alert.show();
         } catch (InvalidExcelException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "The file you are trying to use has no " +
                     "column names in the first row. Please look at the Info page for more information. The import did not occur.");
+            alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
             alert.show();
         }
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "Data has been imported successfully from the excel.");
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         alert.show();
 
 
@@ -107,6 +111,7 @@ public class DataIOPageController {
         assert controller != null;
         controller.setProgram(PersistanceWithJackson.toJavaProgram());
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "Data was successfully imported from the local save.");
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         alert.show();
     }
 

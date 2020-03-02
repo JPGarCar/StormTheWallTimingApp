@@ -291,12 +291,17 @@ public class mainTimingController {
 
     @FXML
     private void undoHeatStartAction() {
+        if (undoHeatTimer == null) {
+            // TODO
+            return;
+        }
         if (Calendar.getInstance().getTimeInMillis() - undoHeatTimer.getTimeInMillis() < 10000 ) {
             returnTeams(controller.getCurrentDay().getAtHeat() - 1);
             try {
                 controller.getCurrentDay().undoLastHeatStart();
             } catch (NoHeatWithIDException | CanNotUndoHeatException e) {
                 e.printStackTrace();
+                // TODO
             }
             stageHeatNumber.setText(Integer.toString(controller.getCurrentDay().getAtHeat()));
         }

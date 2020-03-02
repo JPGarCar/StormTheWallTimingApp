@@ -1,165 +1,29 @@
 {
-  "stagedHeat" : {
-    "@UUID" : "23a6ceff-f0be-4889-b4cd-e945fcd2bd3a",
-    "timeToStart" : -2209006500000,
-    "category" : "Community IronPerson Heat",
-    "heatID" : 2,
-    "heatNumber" : 102,
-    "hasStarted" : false,
-    "actualStartTime" : null,
-    "teams" : {
-      "2164" : {
-        "@UUID" : "c0b80bd0-53bd-4e20-81f1-34b3ad0a41f6",
-        "poolName" : "DIV Women's",
-        "teamID" : 52880,
-        "teamNumber" : 2164,
-        "teamName" : "All A-Bohr-d!",
-        "heats" : {
-          "102" : "23a6ceff-f0be-4889-b4cd-e945fcd2bd3a"
-        },
-        "runs" : {
-          "102" : {
-            "@UUID" : "cb871f87-f230-4963-a93b-04fed53d39d6",
-            "heatNumber" : 102,
-            "finalTime" : null,
-            "sitrep" : "NONE",
-            "team" : "c0b80bd0-53bd-4e20-81f1-34b3ad0a41f6",
-            "isDone" : false,
-            "canUndo" : false,
-            "runNumber" : {
-              "teamNumber" : 2164,
-              "heatNumber" : 102
-            }
-          }
-        },
-        "currentRun" : null,
-        "teamUnit" : "SUS"
-      },
-      "2502" : {
-        "@UUID" : "d491435b-a3d1-41d5-bbdc-fc11f42d97ea",
-        "poolName" : "JFF SAT",
-        "teamID" : 53029,
-        "teamNumber" : 2502,
-        "teamName" : "99 Sea Line",
-        "heats" : {
-          "102" : "23a6ceff-f0be-4889-b4cd-e945fcd2bd3a"
-        },
-        "runs" : {
-          "102" : {
-            "@UUID" : "8189bcb2-cff8-42f1-909c-d7a98769ec04",
-            "heatNumber" : 102,
-            "finalTime" : null,
-            "sitrep" : "NONE",
-            "team" : "d491435b-a3d1-41d5-bbdc-fc11f42d97ea",
-            "isDone" : false,
-            "canUndo" : false,
-            "runNumber" : {
-              "teamNumber" : 2502,
-              "heatNumber" : 102
-            }
-          }
-        },
-        "currentRun" : null,
-        "teamUnit" : "CWD"
-      },
-      "2171" : {
-        "@UUID" : "c417eb1b-fb78-48ad-b4f1-d0554e5e23a5",
-        "poolName" : "Community CoRec",
-        "teamID" : 53294,
-        "teamNumber" : 2171,
-        "teamName" : "Adrian's Kids",
-        "heats" : {
-          "102" : "23a6ceff-f0be-4889-b4cd-e945fcd2bd3a"
-        },
-        "runs" : {
-          "102" : {
-            "@UUID" : "7a079dc6-f32b-4f46-9186-0312b34ee429",
-            "heatNumber" : 102,
-            "finalTime" : null,
-            "sitrep" : "NONE",
-            "team" : "c417eb1b-fb78-48ad-b4f1-d0554e5e23a5",
-            "isDone" : false,
-            "canUndo" : false,
-            "runNumber" : {
-              "teamNumber" : 2171,
-              "heatNumber" : 102
-            }
-          }
-        },
-        "currentRun" : null,
-        "teamUnit" : "CTY"
-      },
-      "2108" : {
-        "@UUID" : "ba6cac12-4771-4294-b266-95ad01bd8ce9",
-        "poolName" : "CWD CoRec",
-        "teamID" : 52895,
-        "teamNumber" : 2108,
-        "teamName" : "4.0 GPA 1",
-        "heats" : {
-          "102" : "23a6ceff-f0be-4889-b4cd-e945fcd2bd3a"
-        },
-        "runs" : {
-          "102" : {
-            "@UUID" : "97338654-ae27-46ed-a737-329edaa7575e",
-            "heatNumber" : 102,
-            "finalTime" : null,
-            "sitrep" : "NONE",
-            "team" : "ba6cac12-4771-4294-b266-95ad01bd8ce9",
-            "isDone" : false,
-            "canUndo" : false,
-            "runNumber" : {
-              "teamNumber" : 2108,
-              "heatNumber" : 102
-            }
-          }
-        },
-        "currentRun" : null,
-        "teamUnit" : "CWD"
-      },
-      "2143" : {
-        "@UUID" : "14356d1b-c1f7-4f89-b688-edc910c0f3cb",
-        "poolName" : "DIV CoRec",
-        "teamID" : 52953,
-        "teamNumber" : 2143,
-        "teamName" : "???? Longest Boat Ever ????",
-        "heats" : {
-          "102" : "23a6ceff-f0be-4889-b4cd-e945fcd2bd3a"
-        },
-        "runs" : {
-          "102" : {
-            "@UUID" : "6fe22052-ee2b-43bc-a33a-8f2eabd38ab7",
-            "heatNumber" : 102,
-            "finalTime" : null,
-            "sitrep" : "NONE",
-            "team" : "14356d1b-c1f7-4f89-b688-edc910c0f3cb",
-            "isDone" : false,
-            "canUndo" : false,
-            "runNumber" : {
-              "teamNumber" : 2143,
-              "heatNumber" : 102
-            }
-          }
-        },
-        "currentRun" : null,
-        "teamUnit" : "SUS"
-      }
-    }
-  },
-  "currentRuns" : {
+  "stagedHeat" : null,
+  "currentRuns" : { },
+  "stoppedRuns" : { },
+  "finishedRuns" : {
     "2598-101" : {
-      "@UUID" : "c7313fee-6462-42ff-b699-5809604b5fdb",
+      "@UUID" : "4a1bf057-6d4b-45e7-8412-9e322176cf3e",
       "heatNumber" : 101,
-      "finalTime" : null,
+      "finalTime" : {
+        "millisecondOfSet" : 162375364,
+        "minutes" : 2706,
+        "seconds" : 15,
+        "milliseconds" : 364,
+        "startTime" : 1583027137518,
+        "stopTime" : 1583189512882
+      },
       "sitrep" : "NONE",
       "team" : {
-        "@UUID" : "0b8ceafc-06c0-4e27-b6fb-ed3299bf747b",
+        "@UUID" : "33b250d1-4052-4c41-8fca-bec652bde4d5",
         "poolName" : "JFF SUN",
         "teamID" : 52854,
         "teamNumber" : 2598,
         "teamName" : "99 B Line",
         "heats" : {
           "101" : {
-            "@UUID" : "b566d670-3583-4297-b1c8-5a4f9f6988a2",
+            "@UUID" : "1876021d-3077-49e4-92b7-400862fd5081",
             "timeToStart" : -2209006800000,
             "category" : "Community CoRec Heat",
             "heatID" : 1,
@@ -167,24 +31,31 @@
             "hasStarted" : true,
             "actualStartTime" : 1583027137518,
             "teams" : {
-              "2598" : "0b8ceafc-06c0-4e27-b6fb-ed3299bf747b",
+              "2598" : "33b250d1-4052-4c41-8fca-bec652bde4d5",
               "2470" : {
-                "@UUID" : "7c8bab22-6209-44f9-9e9c-07bd205a4c78",
+                "@UUID" : "f5512a7a-7742-4b91-8af9-e5faf0923997",
                 "poolName" : "JFF SAT",
                 "teamID" : 52799,
                 "teamNumber" : 2470,
                 "teamName" : "AcaBoat",
                 "heats" : {
-                  "101" : "b566d670-3583-4297-b1c8-5a4f9f6988a2"
+                  "101" : "1876021d-3077-49e4-92b7-400862fd5081"
                 },
                 "runs" : {
                   "101" : {
-                    "@UUID" : "007b62d6-8570-444e-9fd1-de719427116a",
+                    "@UUID" : "511bea77-dfc1-4e3f-89e8-f15b134fec10",
                     "heatNumber" : 101,
-                    "finalTime" : null,
+                    "finalTime" : {
+                      "millisecondOfSet" : 162375841,
+                      "minutes" : 2706,
+                      "seconds" : 15,
+                      "milliseconds" : 841,
+                      "startTime" : 1583027137518,
+                      "stopTime" : 1583189513359
+                    },
                     "sitrep" : "NONE",
-                    "team" : "7c8bab22-6209-44f9-9e9c-07bd205a4c78",
-                    "isDone" : false,
+                    "team" : "f5512a7a-7742-4b91-8af9-e5faf0923997",
+                    "isDone" : true,
                     "canUndo" : false,
                     "runNumber" : {
                       "teamNumber" : 2470,
@@ -192,26 +63,33 @@
                     }
                   }
                 },
-                "currentRun" : "007b62d6-8570-444e-9fd1-de719427116a",
+                "currentRun" : null,
                 "teamUnit" : "CWD"
               },
               "2471" : {
-                "@UUID" : "759a7be5-305b-4b0e-af02-35d3c79a5638",
+                "@UUID" : "dc057802-56ba-4a77-a1fd-ec3c0d880022",
                 "poolName" : "JFF SAT",
                 "teamID" : 52798,
                 "teamNumber" : 2471,
                 "teamName" : "All a-Bohr-d",
                 "heats" : {
-                  "101" : "b566d670-3583-4297-b1c8-5a4f9f6988a2"
+                  "101" : "1876021d-3077-49e4-92b7-400862fd5081"
                 },
                 "runs" : {
                   "101" : {
-                    "@UUID" : "f58ec55a-68a2-4902-bdf8-aaf2dc4a963b",
+                    "@UUID" : "c9a8eb40-cf36-4e66-b1df-a894be5d3718",
                     "heatNumber" : 101,
-                    "finalTime" : null,
+                    "finalTime" : {
+                      "millisecondOfSet" : 162376022,
+                      "minutes" : 2706,
+                      "seconds" : 16,
+                      "milliseconds" : 22,
+                      "startTime" : 1583027137518,
+                      "stopTime" : 1583189513540
+                    },
                     "sitrep" : "NONE",
-                    "team" : "759a7be5-305b-4b0e-af02-35d3c79a5638",
-                    "isDone" : false,
+                    "team" : "dc057802-56ba-4a77-a1fd-ec3c0d880022",
+                    "isDone" : true,
                     "canUndo" : false,
                     "runNumber" : {
                       "teamNumber" : 2471,
@@ -219,26 +97,33 @@
                     }
                   }
                 },
-                "currentRun" : "f58ec55a-68a2-4902-bdf8-aaf2dc4a963b",
+                "currentRun" : null,
                 "teamUnit" : "CWD"
               },
               "2443" : {
-                "@UUID" : "13bf80c0-c97c-480b-b3dd-6f4dd0836dee",
+                "@UUID" : "ef9b936b-69ee-4012-87ec-83a64dbf015f",
                 "poolName" : "JFF SAT",
                 "teamID" : 52889,
                 "teamNumber" : 2443,
                 "teamName" : " Longboiz 2",
                 "heats" : {
-                  "101" : "b566d670-3583-4297-b1c8-5a4f9f6988a2"
+                  "101" : "1876021d-3077-49e4-92b7-400862fd5081"
                 },
                 "runs" : {
                   "101" : {
-                    "@UUID" : "9fa6912c-a0fd-4237-a91d-a1dadf78235f",
+                    "@UUID" : "9a756c8a-97a4-4756-9877-13e6aeef26f9",
                     "heatNumber" : 101,
-                    "finalTime" : null,
+                    "finalTime" : {
+                      "millisecondOfSet" : 162376265,
+                      "minutes" : 2706,
+                      "seconds" : 16,
+                      "milliseconds" : 265,
+                      "startTime" : 1583027137518,
+                      "stopTime" : 1583189513783
+                    },
                     "sitrep" : "NONE",
-                    "team" : "13bf80c0-c97c-480b-b3dd-6f4dd0836dee",
-                    "isDone" : false,
+                    "team" : "ef9b936b-69ee-4012-87ec-83a64dbf015f",
+                    "isDone" : true,
                     "canUndo" : false,
                     "runNumber" : {
                       "teamNumber" : 2443,
@@ -246,26 +131,33 @@
                     }
                   }
                 },
-                "currentRun" : "9fa6912c-a0fd-4237-a91d-a1dadf78235f",
+                "currentRun" : null,
                 "teamUnit" : "CWD"
               },
               "2526" : {
-                "@UUID" : "8e99a2a4-4260-45fa-b9cf-7e55ca453c73",
+                "@UUID" : "12a7a8d2-6407-478b-940d-9ebb896ad839",
                 "poolName" : "CWD CoRec",
                 "teamID" : 53018,
                 "teamNumber" : 2526,
                 "teamName" : "2018 Survivors",
                 "heats" : {
-                  "101" : "b566d670-3583-4297-b1c8-5a4f9f6988a2"
+                  "101" : "1876021d-3077-49e4-92b7-400862fd5081"
                 },
                 "runs" : {
                   "101" : {
-                    "@UUID" : "d9bf764a-38d4-422f-9b6f-b052160b7e9a",
+                    "@UUID" : "b542b63d-6e01-44bb-92b2-c4d372dbff4c",
                     "heatNumber" : 101,
-                    "finalTime" : null,
+                    "finalTime" : {
+                      "millisecondOfSet" : 162376636,
+                      "minutes" : 2706,
+                      "seconds" : 16,
+                      "milliseconds" : 636,
+                      "startTime" : 1583027137518,
+                      "stopTime" : 1583189514154
+                    },
                     "sitrep" : "NONE",
-                    "team" : "8e99a2a4-4260-45fa-b9cf-7e55ca453c73",
-                    "isDone" : false,
+                    "team" : "12a7a8d2-6407-478b-940d-9ebb896ad839",
+                    "isDone" : true,
                     "canUndo" : false,
                     "runNumber" : {
                       "teamNumber" : 2526,
@@ -273,30 +165,178 @@
                     }
                   }
                 },
-                "currentRun" : "d9bf764a-38d4-422f-9b6f-b052160b7e9a",
+                "currentRun" : null,
                 "teamUnit" : "CWD"
               }
             }
           }
         },
         "runs" : {
-          "101" : "c7313fee-6462-42ff-b699-5809604b5fdb"
+          "101" : "4a1bf057-6d4b-45e7-8412-9e322176cf3e"
         },
-        "currentRun" : "c7313fee-6462-42ff-b699-5809604b5fdb",
+        "currentRun" : null,
         "teamUnit" : "CWD"
       },
-      "isDone" : false,
+      "isDone" : true,
       "canUndo" : false,
       "runNumber" : {
         "teamNumber" : 2598,
         "heatNumber" : 101
       }
     },
-    "2470-101" : "007b62d6-8570-444e-9fd1-de719427116a",
-    "2471-101" : "f58ec55a-68a2-4902-bdf8-aaf2dc4a963b",
-    "2443-101" : "9fa6912c-a0fd-4237-a91d-a1dadf78235f",
-    "2526-101" : "d9bf764a-38d4-422f-9b6f-b052160b7e9a"
-  },
-  "stoppedRuns" : { },
-  "finishedRuns" : { }
+    "2470-101" : "511bea77-dfc1-4e3f-89e8-f15b134fec10",
+    "2471-101" : "c9a8eb40-cf36-4e66-b1df-a894be5d3718",
+    "2443-101" : "9a756c8a-97a4-4756-9877-13e6aeef26f9",
+    "2526-101" : "b542b63d-6e01-44bb-92b2-c4d372dbff4c",
+    "2164-102" : {
+      "@UUID" : "96dbd80f-694a-437d-bccd-8557df7713ee",
+      "heatNumber" : 102,
+      "finalTime" : {
+        "millisecondOfSet" : 10601,
+        "minutes" : 0,
+        "seconds" : 10,
+        "milliseconds" : 601,
+        "startTime" : 1583189636421,
+        "stopTime" : 1583189647022
+      },
+      "sitrep" : "NONE",
+      "team" : {
+        "@UUID" : "18a6041a-e7b9-4c1b-bf7e-536f30606d65",
+        "poolName" : "DIV Women's",
+        "teamID" : 52880,
+        "teamNumber" : 2164,
+        "teamName" : "All A-Bohr-d!",
+        "heats" : {
+          "102" : {
+            "@UUID" : "10bee8b8-0a4c-4ea6-8abb-7c9b9f9e0d7b",
+            "timeToStart" : -2209006500000,
+            "category" : "Community IronPerson Heat",
+            "heatID" : 2,
+            "heatNumber" : 102,
+            "hasStarted" : true,
+            "actualStartTime" : 1583189636421,
+            "teams" : {
+              "2164" : "18a6041a-e7b9-4c1b-bf7e-536f30606d65",
+              "2502" : {
+                "@UUID" : "12cfb9af-40ea-4823-85de-aadc80e81926",
+                "poolName" : "JFF SAT",
+                "teamID" : 53029,
+                "teamNumber" : 2502,
+                "teamName" : "99 Sea Line",
+                "heats" : {
+                  "102" : "10bee8b8-0a4c-4ea6-8abb-7c9b9f9e0d7b"
+                },
+                "runs" : {
+                  "102" : {
+                    "@UUID" : "641753fb-f339-450d-b31a-35f17d5ae567",
+                    "heatNumber" : 102,
+                    "finalTime" : {
+                      "millisecondOfSet" : 11205,
+                      "minutes" : 0,
+                      "seconds" : 11,
+                      "milliseconds" : 205,
+                      "startTime" : 1583189636421,
+                      "stopTime" : 1583189647626
+                    },
+                    "sitrep" : "NONE",
+                    "team" : "12cfb9af-40ea-4823-85de-aadc80e81926",
+                    "isDone" : true,
+                    "canUndo" : false,
+                    "runNumber" : {
+                      "teamNumber" : 2502,
+                      "heatNumber" : 102
+                    }
+                  }
+                },
+                "currentRun" : null,
+                "teamUnit" : "CWD"
+              },
+              "2171" : {
+                "@UUID" : "f5b8693e-2cd1-485a-abbe-d6b0801ebd8b",
+                "poolName" : "Community CoRec",
+                "teamID" : 53294,
+                "teamNumber" : 2171,
+                "teamName" : "Adrian's Kids",
+                "heats" : {
+                  "102" : "10bee8b8-0a4c-4ea6-8abb-7c9b9f9e0d7b"
+                },
+                "runs" : {
+                  "102" : {
+                    "@UUID" : "ca96eb0f-484d-4a8c-8c34-a12a9570888d",
+                    "heatNumber" : 102,
+                    "finalTime" : {
+                      "millisecondOfSet" : 11605,
+                      "minutes" : 0,
+                      "seconds" : 11,
+                      "milliseconds" : 605,
+                      "startTime" : 1583189636421,
+                      "stopTime" : 1583189648026
+                    },
+                    "sitrep" : "NONE",
+                    "team" : "f5b8693e-2cd1-485a-abbe-d6b0801ebd8b",
+                    "isDone" : true,
+                    "canUndo" : false,
+                    "runNumber" : {
+                      "teamNumber" : 2171,
+                      "heatNumber" : 102
+                    }
+                  }
+                },
+                "currentRun" : null,
+                "teamUnit" : "CTY"
+              },
+              "2108" : {
+                "@UUID" : "66219734-697f-4c1e-92cb-ad7492e3b9c0",
+                "poolName" : "CWD CoRec",
+                "teamID" : 52895,
+                "teamNumber" : 2108,
+                "teamName" : "4.0 GPA 1",
+                "heats" : {
+                  "102" : "10bee8b8-0a4c-4ea6-8abb-7c9b9f9e0d7b"
+                },
+                "runs" : {
+                  "102" : {
+                    "@UUID" : "83b64173-fee0-4f2d-b849-4232e165cdd4",
+                    "heatNumber" : 102,
+                    "finalTime" : {
+                      "millisecondOfSet" : 11950,
+                      "minutes" : 0,
+                      "seconds" : 11,
+                      "milliseconds" : 950,
+                      "startTime" : 1583189636421,
+                      "stopTime" : 1583189648371
+                    },
+                    "sitrep" : "NONE",
+                    "team" : "66219734-697f-4c1e-92cb-ad7492e3b9c0",
+                    "isDone" : true,
+                    "canUndo" : false,
+                    "runNumber" : {
+                      "teamNumber" : 2108,
+                      "heatNumber" : 102
+                    }
+                  }
+                },
+                "currentRun" : null,
+                "teamUnit" : "CWD"
+              }
+            }
+          }
+        },
+        "runs" : {
+          "102" : "96dbd80f-694a-437d-bccd-8557df7713ee"
+        },
+        "currentRun" : null,
+        "teamUnit" : "SUS"
+      },
+      "isDone" : true,
+      "canUndo" : false,
+      "runNumber" : {
+        "teamNumber" : 2164,
+        "heatNumber" : 102
+      }
+    },
+    "2502-102" : "641753fb-f339-450d-b31a-35f17d5ae567",
+    "2171-102" : "ca96eb0f-484d-4a8c-8c34-a12a9570888d",
+    "2108-102" : "83b64173-fee0-4f2d-b849-4232e165cdd4"
+  }
 }

@@ -160,7 +160,7 @@
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <Label layoutX="107.0" layoutY="14.0" maxWidth="1.7976931348623157E308" prefHeight="19.0" prefWidth="80.0" style="-fx-text-fill: White;" text="Team Type" HBox.hgrow="ALWAYS">
+                        <Label layoutX="107.0" layoutY="14.0" maxWidth="1.7976931348623157E308" prefHeight="19.0" prefWidth="80.0" style="-fx-text-fill: White;" text="Pool Name" HBox.hgrow="ALWAYS">
                            <font>
                               <Font size="13.0" />
                            </font>
