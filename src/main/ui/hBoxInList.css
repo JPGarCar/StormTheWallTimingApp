@@ -29,6 +29,28 @@
     -fx-background-color: #F26623, #F26623, #F26623, #F26623;
 }
 
+.combo-box-popup .list-view .list-cell:filled:selected, .combo-box-popup .list-view .list-cell:filled:selected:hover
+{
+    -fx-background-color: #F26623;
+    -fx-text-fill: white;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover
+{
+    -fx-background-color: #F26623;
+    -fx-text-fill: white;
+}
+
+.combo-box-base:hover
+{
+    -fx-color: #F26623;
+}
+
+.combo-box-base:showing
+{
+    -fx-color: #F26623;
+}
+
 
 HBoxForRunningTeam, HBoxForEditHeatTeam, HBoxForFinishedTeam, HBoxForFinishedUndoTeam, HBoxForStagedTeam, HBoxForWaitListTeam {
     -fx-alignment: center ;

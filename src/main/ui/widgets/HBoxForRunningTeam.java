@@ -30,6 +30,7 @@ public class HBoxForRunningTeam extends CustomHBox {
 
         category.setText(teamTypeText);
         category.setPrefWidth(80);
+        category.setMaxWidth(120);
         HBox.setHgrow(category, Priority.ALWAYS);
 
         id.setText(idText);
@@ -37,7 +38,7 @@ public class HBoxForRunningTeam extends CustomHBox {
         HBox.setHgrow(id, Priority.ALWAYS);
 
         teamName.setText(teamNameText);
-        teamName.setPrefWidth(Double.MAX_VALUE);
+        teamName.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(teamName, Priority.ALWAYS);
 
         button.setText("Finish");

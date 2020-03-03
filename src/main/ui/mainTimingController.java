@@ -321,5 +321,25 @@ public class mainTimingController {
         }
     }
 
+    @FXML
+    private void skipHeatButtonAction() {
+        if (undoHeatTimer == null) {
+            // TODO
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to skip this heat?");
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.OK) {
+            controller.getCurrentDay().atNextHeat();
+            stageHeatNumber.setText(Integer.toString(controller.getCurrentDay().getAtHeat()));
+
+            timeToStartLabel.setText("Stage Heat to Get Info");
+            categoryLabel.setText("Stage Heat to Get Info");
+        }
+    }
+
 }
 

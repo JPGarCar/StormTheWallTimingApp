@@ -46,8 +46,8 @@ public class TimingController {
     // DUMMY CONSTRUCTOR for Jackson JSON
     public TimingController() {
         currentRuns = new TreeMap<>();
-        stoppedRuns = new HashMap<>();
-        finishedRuns = new HashMap<>();
+        stoppedRuns = new LinkedHashMap<>();
+        finishedRuns = new LinkedHashMap<>();
         timerMap = new HashMap<>();
     }
 

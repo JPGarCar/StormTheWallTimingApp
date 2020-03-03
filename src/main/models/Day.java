@@ -5,6 +5,7 @@ import com.sun.istack.internal.NotNull;
 import models.exceptions.*;
 
 import javax.persistence.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -169,7 +170,8 @@ public class Day {
                 return heat;
             }
         }
-        throw new NoHeatWithStartTimeException("Day affected: " + dayToRun + "Heat that could not find: " +
-                calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE));
+        DecimalFormat decimalFormat = new DecimalFormat("00");
+        throw new NoHeatWithStartTimeException("Day affected: " + dayToRun + ". Heat that could not find: " +
+                decimalFormat.format(calendar.get(Calendar.HOUR_OF_DAY)) + ":" + decimalFormat.format(calendar.get(Calendar.MINUTE)));
     }
 }

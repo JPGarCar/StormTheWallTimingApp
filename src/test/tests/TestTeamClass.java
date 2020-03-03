@@ -66,8 +66,6 @@ public class TestTeamClass {
             team.markEndTime(endTime);
         } catch (NoHeatsException e) {
             e.printStackTrace();
-        } catch (NoCurrentHeatIDException e) {
-            e.printStackTrace();
         } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
             couldNotCalculateFinalTimeExcpetion.printStackTrace();
         } catch (NoRemainingHeatsException e) {

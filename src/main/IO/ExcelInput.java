@@ -1,23 +1,24 @@
 package IO;
 
+import com.sun.xml.internal.bind.v2.model.impl.BuiltinLeafInfoImpl;
+import javafx.scene.control.Alert;
 import models.Day;
 import models.Heat;
 import models.Team;
-import models.exceptions.AddHeatException;
 import models.exceptions.AddHeatRuntimeException;
 import models.exceptions.InvalidExcelException;
+import models.exceptions.NoDayRuntimeException;
 import models.exceptions.NoHeatWithStartTimeException;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import ui.TimingController;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class ExcelInput {
@@ -42,11 +43,15 @@ public class ExcelInput {
 // VARIABLES //
 
     private FileInputStream fileInputStream;
-    private HSSFWorkbook workbook;
-    private HSSFSheet heatsSheet;
-    private HSSFSheet teamsSheet;
+    private XSSFWorkbook workbook;
+    private XSSFSheet heatsSheet;
+    private XSSFSheet teamsSheet;
     private Map<Integer, Integer> colIndentifiers;
     private TimingController controller;
+
+
+    // Represents all the alerts to send because of errors
+    private LinkedList<Alert> alertLinkedList;
 
 // CONSTRUCTORS //
 
@@ -54,15 +59,17 @@ public class ExcelInput {
         this.fileInputStream = fileInputStream;
         this.controller = controller;
         colIndentifiers = new HashMap<>();
+        alertLinkedList = new LinkedList<>();
     }
 
 // FUNCTIONS //
 
     // EFFECTS: public function to do the entire process
-    public void inputData(boolean isHeats, boolean isTeams) throws AddHeatRuntimeException, InvalidExcelException, NoHeatWithStartTimeException {
+    public LinkedList<Alert> inputData(boolean isHeats, boolean isTeams) throws InvalidExcelException {
         createFiles(isHeats, isTeams);
         evaluateData(isHeats, isTeams);
         dataTransition(isHeats, isTeams);
+        return alertLinkedList;
     }
 
     // EFFECTS: evaluates all all the sheets to make sure the data is present and well organized
@@ -76,7 +83,7 @@ public class ExcelInput {
     }
 
     // EFFECTS: import the data itself, last of evaluate and create files
-    private void dataTransition(boolean isHeats, boolean isTeams) throws AddHeatRuntimeException, NoHeatWithStartTimeException {
+    private void dataTransition(boolean isHeats, boolean isTeams) {
         if (isHeats) {
             addHeatsFromData();
         }
@@ -88,7 +95,7 @@ public class ExcelInput {
     // EFFECTS: starts all the file and var creations
     private void createFiles(boolean isHeats, boolean isTeams) {
         try {
-            workbook = new HSSFWorkbook(fileInputStream);
+            workbook = new XSSFWorkbook(fileInputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -104,7 +111,7 @@ public class ExcelInput {
     private void firstRowEvaluateHeats() throws InvalidExcelException {
         Row titleRow = heatsSheet.getRow(0);
         int lastColUsed = titleRow.getLastCellNum();
-        if (titleRow.getCell(0).getCellTypeEnum() != CellType.STRING) {
+        if (titleRow.getCell(0).getCellType() != CellType.STRING) {
             throw new InvalidExcelException("There are no column values on first row.");
         }
 
@@ -128,7 +135,7 @@ public class ExcelInput {
     private void firstRowEvaluateTeams() throws InvalidExcelException {
         Row titleRow = teamsSheet.getRow(0);
         int lastColUsed = titleRow.getLastCellNum();
-        if (titleRow.getCell(0).getCellTypeEnum() != CellType.STRING) {
+        if (titleRow.getCell(0).getCellType() != CellType.STRING) {
             throw new InvalidExcelException("There are no column values on first row.");
         }
 
@@ -153,12 +160,12 @@ public class ExcelInput {
     }
 
     // EFFECTS: checks all the rows for data and adds teams
-    private void addTeamsFromData() throws AddHeatRuntimeException, NoHeatWithStartTimeException {
+    private void addTeamsFromData() {
         for (Row row : teamsSheet) {
 
-            HSSFCell cell = (HSSFCell) row.getCell(colIndentifiers.get(TEAMIDIden));
+            XSSFCell cell = (XSSFCell) row.getCell(colIndentifiers.get(TEAMIDIden));
 
-            if (cell.getCellTypeEnum() == CellType.NUMERIC) {
+            if (cell.getCellType() == CellType.NUMERIC) {
 
                 String teamName = row.getCell(colIndentifiers.get(TEAMNAMEIden)).getStringCellValue();
                 String poolName = row.getCell(colIndentifiers.get(TEAMPOOLNAMEIden)).getStringCellValue();
@@ -167,12 +174,54 @@ public class ExcelInput {
 
                 Heat heat = null;
 
-                HSSFCell runCell = (HSSFCell) row.getCell(colIndentifiers.get(TEAMRUNTIMEIden));
-                if (runCell.getCellTypeEnum() != CellType.STRING) {
-                    Calendar teamRunTime = Calendar.getInstance();
-                    teamRunTime.setTime(row.getCell(colIndentifiers.get(TEAMRUNTIMEIden)).getDateCellValue());
-                    heat = controller.getProgram().getProgramDays().get(teamDayString.substring(0, teamDayString.indexOf(","))).getHeatByStartTime(teamRunTime);
+                XSSFCell runCell = (XSSFCell) row.getCell(colIndentifiers.get(TEAMRUNTIMEIden));
+                if (runCell.getCellType() == CellType.STRING) {
+                    String string = runCell.getStringCellValue();
 
+                    if (string.matches("\\d{2}:\\d{2}.*") && !string.isEmpty()) {
+                        string = string.replaceAll(" ", "");
+                        Calendar teamRunTime = Calendar.getInstance();
+                        teamRunTime.clear();
+
+                        if (string.matches(".*PM")) {
+                            string = string.replaceAll("[a-zA-Z]", "");
+                            int hour = Integer.parseInt(string.substring(0, string.indexOf(":")));
+                            int minute = Integer.parseInt(string.substring(string.indexOf(":") + 1));
+
+                            if (hour == 12) {
+                                teamRunTime.set(Calendar.HOUR_OF_DAY, hour);
+                            } else {
+                                teamRunTime.set(Calendar.HOUR_OF_DAY, hour + 12);
+                            }
+                            teamRunTime.set(Calendar.MINUTE, minute);
+                        } else if (string.matches(".*AM")) {
+                            string = string.replaceAll("[a-zA-Z]", "");
+                            int hour = Integer.parseInt(string.substring(0, string.indexOf(":")));
+                            int minute = Integer.parseInt(string.substring(string.indexOf(":") + 1));
+                            teamRunTime.set(Calendar.HOUR_OF_DAY, hour);
+                            teamRunTime.set(Calendar.MINUTE, minute);
+                        }
+
+                        try {
+                            heat = controller.getProgram().getProgramDays().get(teamDayString.substring(0, teamDayString.indexOf(","))).getHeatByStartTime(teamRunTime);
+                        } catch (NoHeatWithStartTimeException e) {
+                            alertLinkedList.add(new Alert(Alert.AlertType.WARNING, "Data import was successful, however there was an error while" +
+                                    " importing the team: " + teamName + ". " + e.getMessage()));
+                        }
+                    }
+                } else if (runCell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(runCell)) {
+                    Calendar teamRunTime = Calendar.getInstance();
+                    Cell cellDate = row.getCell(colIndentifiers.get(TEAMRUNTIMEIden));
+                    teamRunTime.setTime(cellDate.getDateCellValue());
+                    try {
+                        heat = controller.getProgram().getProgramDay(teamDayString.substring(0, teamDayString.indexOf(","))).getHeatByStartTime(teamRunTime);
+                    } catch (NoHeatWithStartTimeException | NoDayRuntimeException e) {
+                        alertLinkedList.add(new Alert(Alert.AlertType.WARNING, "Data import was successful, however there was an error while" +
+                                " importing the team: " + teamName + ". " + e.getMessage()));
+                    }
+                } else {
+                    alertLinkedList.add(new Alert(Alert.AlertType.WARNING, "Data import was successful, however there was an error while" +
+                            " importing the team: " + teamName + ". The Run Time format is incorrect and so the team was not able to connect to a heat."));
                 }
 
 
@@ -181,7 +230,12 @@ public class ExcelInput {
 
                 Team team = new Team(poolName, teamNumber, teamName, teamID, teamUnit);
                 if (heat != null) {
-                    team.addHeat(heat);
+                    try {
+                        team.addHeat(heat);
+                    } catch (AddHeatRuntimeException e) {
+                        alertLinkedList.add(new Alert(Alert.AlertType.WARNING, "Data import was successful, however there was an error while" +
+                                " importing the following data: " + e.getMessage()));
+                    }
                     controller.getProgram().addTeam(team);
                 }
             }
@@ -189,11 +243,11 @@ public class ExcelInput {
     }
 
     // EFFECTS: checks all the rows for data and adds heats
-    private void addHeatsFromData() throws AddHeatRuntimeException {
+    private void addHeatsFromData() {
 
         for (Row row : heatsSheet) {
 
-            HSSFCell cell = (HSSFCell) row.getCell(colIndentifiers.get(HEATNUMBERIden));
+            XSSFCell cell = (XSSFCell) row.getCell(colIndentifiers.get(HEATNUMBERIden));
 
             if (cell != null && cell.getCellTypeEnum() == CellType.NUMERIC && cell.getNumericCellValue() > 0) {
 
@@ -210,7 +264,12 @@ public class ExcelInput {
 
                 Heat heat = new Heat(startTime, category, heatNumber, day, row.getRowNum()); // TODO add the heat id not the row number
 
-                controller.getProgram().getProgramDays().get(dayToRun).addHeat(heat);
+                try {
+                    controller.getProgram().getProgramDays().get(dayToRun).addHeat(heat);
+                } catch (AddHeatRuntimeException e) {
+                    alertLinkedList.add(new Alert(Alert.AlertType.WARNING, "Data import was successful, however there was an error while" +
+                            " importing the following data: " + e.getMessage()));
+                }
             }
 
         }

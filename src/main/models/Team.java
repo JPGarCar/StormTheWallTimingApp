@@ -157,7 +157,7 @@ public class Team {
 
     // EFFECTS: set the end time to the appropriate TeamHeat, depends on the heat number given.
     //          will also move the TeamHeat who got a final time to the done heat list
-    public void markEndTime(@NotNull Calendar endTime) throws NoHeatsException, NoCurrentHeatIDException, CouldNotCalculateFinalTimeExcpetion, NoRemainingHeatsException {
+    public void markEndTime(@NotNull Calendar endTime) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion, NoRemainingHeatsException {
         if (runs.size() == 0 || currentRun == null) {
             throw new NoRemainingHeatsException();
         }
@@ -165,7 +165,7 @@ public class Team {
     }
 
     // EFFECTS: add the heats in the input array to the heats array and the remaining heats queue
-    public void addHeats(ArrayList<Heat> heats) throws AddHeatException {
+    public void addHeats(ArrayList<Heat> heats) throws AddHeatRuntimeException {
         for (Heat heat : heats) {
             addHeat(heat);
         }

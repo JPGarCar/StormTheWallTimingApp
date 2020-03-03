@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class DataIOPageController {
 
@@ -45,7 +46,7 @@ public class DataIOPageController {
     @FXML
     public void selectFileButtonAction() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Excel Files", "*.xls"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx"));
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
@@ -57,7 +58,10 @@ public class DataIOPageController {
     @FXML
     public void importDataButtonAction() {
         FileInputStream fileInputStream = null;
-        controller.setProgram(new Program());
+        if (controller.getProgram() == null) {
+            controller.setProgram(new Program());
+        }
+
 
         try {
              fileInputStream = new FileInputStream(new File(fileToImport));
@@ -69,12 +73,11 @@ public class DataIOPageController {
 
         ExcelInput excelInput = new ExcelInput(fileInputStream, controller);
         try {
-            excelInput.inputData(importHeatCheck.isSelected(), importTeamCheck.isSelected());
-        } catch (AddHeatRuntimeException | NoHeatWithStartTimeException e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Data import was successful, however there was an error while" +
-                    "importing the following data: " + e.getMessage());
-            alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-            alert.show();
+            LinkedList<Alert> alertLinkedList = excelInput.inputData(importHeatCheck.isSelected(), importTeamCheck.isSelected());
+            for (Alert alert : alertLinkedList) {
+                alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+                alert.show();
+            }
         } catch (InvalidExcelException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "The file you are trying to use has no " +
                     "column names in the first row. Please look at the Info page for more information. The import did not occur.");
