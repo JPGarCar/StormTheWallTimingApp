@@ -1,7 +1,7 @@
 package models;
 
 import com.sun.istack.internal.NotNull;
-import models.exceptions.NoDayRuntimeException;
+import models.exceptions.NoDayException;
 
 import java.util.*;
 
@@ -116,11 +116,11 @@ public class Program {
     }
 
     // EFFECTS: returns a program day or throws exception
-    public Day getProgramDay(String programDay) throws NoDayRuntimeException {
+    public Day getProgramDay(String programDay) throws NoDayException {
         if (programDays.get(programDay) != null) {
             return programDays.get(programDay);
         } else {
-            throw new NoDayRuntimeException("Dey not found: " + programDay);
+            throw new NoDayException("Dey not found: " + programDay);
         }
     }
 

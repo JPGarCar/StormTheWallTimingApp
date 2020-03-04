@@ -4,7 +4,7 @@ import models.Day;
 import models.Heat;
 import models.Team;
 import models.Run;
-import models.exceptions.AddHeatRuntimeException;
+import models.exceptions.AddHeatException;
 import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
 import models.exceptions.NoHeatsException;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ public class TestRunClass {
         Team team = new Team("Just for fun", 1232, "The Invinsibles", 1232, "CWD");
         try {
             team.addHeat(heat);
-        } catch (AddHeatRuntimeException e) {
+        } catch (AddHeatException e) {
             e.printStackTrace();
         }
         run = new Run(heat.getHeatNumber(), team);

@@ -30,7 +30,7 @@ public class TestTeamClass {
     }
 
     @Test
-    public void testAddingHeats() {
+    public void testAddingHeats() throws AddHeatException {
         Day day = new Day("Sunday",1);
         Heat heat = new Heat(null, "LeagueType.COMP", 1, day, 1);
         team.addHeat(heat);
@@ -53,7 +53,7 @@ public class TestTeamClass {
     }
 
     @Test
-    public void testSetEndTime() {
+    public void testSetEndTime() throws AddHeatException {
         Day day = new Day("Sunday",1);
         Calendar startTime = Calendar.getInstance();
         Heat heat = new Heat(null, "LeagueType", 1, day, 1);
@@ -73,7 +73,7 @@ public class TestTeamClass {
     }
 
     @Test
-    public void TestRemoveHeat() throws NoHeatsException {
+    public void TestRemoveHeat() throws NoHeatsException, AddHeatException {
         Day day = new Day("Sunday",1);
         Heat heat = new Heat(null, "LeagueType", 1, day, 1);
         team.addHeat(heat);

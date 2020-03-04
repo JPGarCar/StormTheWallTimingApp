@@ -2,6 +2,7 @@ package tests;
 
 import models.Day;
 import models.Heat;
+import models.exceptions.AddHeatException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,7 +31,11 @@ public class TestDayClass {
         Day day = new Day("Saturday", 1);
         Heat heat = new Heat(timeToStart, "Just for fun", 123, day, 123);
 
-        day.addHeat(heat);
+        try {
+            day.addHeat(heat);
+        } catch (AddHeatException e) {
+            e.printStackTrace();
+        }
         assertFalse(day.getHeats().isEmpty());
 
         Heat heat1 = new Heat(timeToStart, "Just for fun", 32, day, 23);
@@ -41,7 +46,11 @@ public class TestDayClass {
         heats.add(heat1);
         heats.add(heat2);
 
-        day.addHeats(heats);
+        try {
+            day.addHeats(heats);
+        } catch (AddHeatException e) {
+            e.printStackTrace();
+        }
 
     }
 

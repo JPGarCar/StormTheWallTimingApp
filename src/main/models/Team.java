@@ -166,7 +166,7 @@ public class Team {
     }
 
     // EFFECTS: add the heats in the input array to the heats array and the remaining heats queue
-    public void addHeats(ArrayList<Heat> heats) throws AddHeatRuntimeException {
+    public void addHeats(ArrayList<Heat> heats) throws AddHeatException {
         for (Heat heat : heats) {
             addHeat(heat);
         }
@@ -187,7 +187,7 @@ public class Team {
     }
 
     // EFFECTS: add one heat to the heat array and remaining heat queue and add this team to the heat
-    public void addHeat(Heat heat) throws AddHeatRuntimeException {
+    public void addHeat(Heat heat) throws AddHeatException {
         if (!heats.containsKey(heat.getHeatNumber())) {
             heats.put(heat.getHeatNumber(), heat);
             Run run = heatToTeamHeat(heat);
@@ -199,7 +199,7 @@ public class Team {
             }
         }
         else {
-            throw new AddHeatRuntimeException("Team affected: " + teamName + ", with team number: " + teamNumber +
+            throw new AddHeatException("Team affected: " + teamName + ", with team number: " + teamNumber +
                     ". Could not be added to heat number: " + heat.getHeatNumber() + ".");
         }
     }

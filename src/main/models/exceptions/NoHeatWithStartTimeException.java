@@ -1,6 +1,6 @@
 package models.exceptions;
 
-public class NoHeatWithStartTimeException extends RuntimeException {
+public class NoHeatWithStartTimeException extends Exception {
 
     public NoHeatWithStartTimeException() {
         super("Could not find a heat with that start time.");

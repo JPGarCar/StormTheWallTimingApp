@@ -4,10 +4,11 @@ import javafx.scene.control.Alert;
 import models.Day;
 import models.Heat;
 import models.Team;
-import models.exceptions.AddHeatRuntimeException;
+import models.exceptions.AddHeatException;
 import models.exceptions.InvalidExcelException;
-import models.exceptions.NoDayRuntimeException;
+import models.exceptions.NoDayException;
 import models.exceptions.NoHeatWithStartTimeException;
+import org.apache.commons.math3.analysis.function.Add;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -214,7 +215,7 @@ public class ExcelInput {
                     teamRunTime.setTime(cellDate.getDateCellValue());
                     try {
                         heat = controller.getProgram().getProgramDay(teamDayString.substring(0, teamDayString.indexOf(","))).getHeatByStartTime(teamRunTime);
-                    } catch (NoHeatWithStartTimeException | NoDayRuntimeException e) {
+                    } catch (NoHeatWithStartTimeException | NoDayException e) {
                         alertLinkedList.add(new Alert(Alert.AlertType.WARNING, "Data import was successful, however there was an error while" +
                                 " importing the team: " + teamName + ". " + e.getMessage()));
                     }
@@ -231,7 +232,7 @@ public class ExcelInput {
                 if (heat != null) {
                     try {
                         team.addHeat(heat);
-                    } catch (AddHeatRuntimeException e) {
+                    } catch (AddHeatException e) {
                         alertLinkedList.add(new Alert(Alert.AlertType.WARNING, "Data import was successful, however there was an error while" +
                                 " importing the following data: " + e.getMessage()));
                     }
@@ -248,7 +249,7 @@ public class ExcelInput {
 
             XSSFCell cell = (XSSFCell) row.getCell(colIndentifiers.get(HEATNUMBERIden));
 
-            if (cell != null && cell.getCellTypeEnum() == CellType.NUMERIC && cell.getNumericCellValue() > 0) {
+            if (cell != null && cell.getCellType() == CellType.NUMERIC && cell.getNumericCellValue() > 0) {
 
                 String category = row.getCell(colIndentifiers.get(HEATCATEGORYIden)).getStringCellValue();
                 //int heatID = (int) row.getCell(HEATIDIden).getNumericCellValue(); TODO add this in
@@ -265,7 +266,7 @@ public class ExcelInput {
 
                 try {
                     controller.getProgram().getProgramDays().get(dayToRun).addHeat(heat);
-                } catch (AddHeatRuntimeException e) {
+                } catch (AddHeatException e) {
                     alertLinkedList.add(new Alert(Alert.AlertType.WARNING, "Data import was successful, however there was an error while" +
                             " importing the following data: " + e.getMessage()));
                 }

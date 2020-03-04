@@ -172,7 +172,7 @@ public class Heat {
         }
         try {
             day.addHeat(this);
-        } catch (AddHeatRuntimeException e) {
+        } catch (AddHeatException e) {
             // nothing because we expect this due to one to one connection
         }
         this.dayToRace = day;
@@ -191,7 +191,7 @@ public class Heat {
             teams.put(team.getTeamNumber(), team);
             try {
                 team.addHeat(this);
-            } catch (AddHeatRuntimeException e) {
+            } catch (AddHeatException e) {
                 // do nothing as we expect this to happen because of the many to many connection
             }
         } else {

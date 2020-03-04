@@ -118,7 +118,7 @@ public class Day {
     }
 
     // EFFECTS: add a heat to the list of heats
-    public void addHeat(@NotNull Heat heat) throws AddHeatRuntimeException {
+    public void addHeat(@NotNull Heat heat) throws AddHeatException {
         if (!heats.containsKey(heat.getHeatNumber())) {
             heats.put(heat.getHeatNumber(), heat);
             heat.setDayToRace(this);
@@ -131,7 +131,7 @@ public class Day {
     }
 
     // EFFECTS: adds all the heats to this day
-    public void addHeats(@NotNull ArrayList<Heat> heats) throws AddHeatRuntimeException {
+    public void addHeats(@NotNull ArrayList<Heat> heats) throws AddHeatException {
         for (Heat heat : heats) {
             addHeat(heat);
         }
