@@ -21,6 +21,7 @@ import java.util.Map;
     - All the heats this team is running in - Map<Integer, Heat>
     - All the Runs that the team has - Map<Integer, Run>
     - Current run if the team is running, null otherwise - Run
+    - Team unit that represents the unit of this team - String
 
     Usage:
     -
@@ -153,13 +154,13 @@ public class Team {
         this.teamUnit = teamUnit;
     }
 
-    // FUNCTIONS //
+// FUNCTIONS //
 
     // EFFECTS: set the end time to the appropriate TeamHeat, depends on the heat number given.
     //          will also move the TeamHeat who got a final time to the done heat list
     public void markEndTime(@NotNull Calendar endTime) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion, NoRemainingHeatsException {
         if (runs.size() == 0 || currentRun == null) {
-            throw new NoRemainingHeatsException();
+            throw new NoRemainingHeatsException("Team affected: " + teamNumber);
         }
         currentRun.calculateEndTime(endTime);
     }
@@ -180,7 +181,7 @@ public class Team {
         }
     }
 
-    // Helper function: creates a TeamHeat out of a Heat
+    // Helper function: creates a Run out of a Heat
     private Run heatToTeamHeat(@NotNull Heat heat) {
         return new Run(heat.getHeatNumber(), this);
     }
@@ -213,7 +214,8 @@ public class Team {
             }
             runs.remove(heatNumber);
         } else {
-            throw new NoHeatsException();
+            throw new NoHeatsException("Error while trying to remove heat from team. Team affected: " + teamNumber +
+                    ". Heat that could not be removed: " + heatNumber);
         }
     }
 
@@ -223,10 +225,10 @@ public class Team {
     }
 
     // EFFECTS: get teamHeat by its heat number from remainingHeats
-    public Run getRunByHeatNumber(int heatNumber) throws NoTeamHeatException {
+    public Run getRunByHeatNumber(int heatNumber) throws NoRunFoundException {
         Run run = runs.get(heatNumber);
         if (run == null) {
-            throw new NoTeamHeatException();
+            throw new NoRunFoundException("Affected team: " + teamNumber + "Searching for run with heat: " + heatNumber);
         }
         return run;
     }

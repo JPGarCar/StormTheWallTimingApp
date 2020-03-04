@@ -24,7 +24,7 @@ public abstract class CustomHBox extends HBox {
             } else {
                 team.getRunByHeatNumber(heatNumber).setSitrep(Sitrep.valueOf(sitrep));
             }
-        } catch (NoTeamHeatException e) {
+        } catch (NoRunFoundException e) {
             e.printStackTrace();
         }
     }
@@ -40,7 +40,7 @@ public abstract class CustomHBox extends HBox {
 
     // EFFECTS: take team out of the running team list, set its final time and show in finished team list
     // ASSUME: id is part of a current team running
-    public void endTeam(int teamNumber, int heatNumber, TimingController controller) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion, NoCurrentHeatIDException, NoTeamException, NoRemainingHeatsException {
+    public void endTeam(int teamNumber, int heatNumber, TimingController controller) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion {
         controller.endRun(teamNumber, heatNumber);
     }
 

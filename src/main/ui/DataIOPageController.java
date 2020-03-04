@@ -7,10 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import models.Program;
-import models.exceptions.AddHeatException;
-import models.exceptions.AddHeatRuntimeException;
 import models.exceptions.InvalidExcelException;
-import models.exceptions.NoHeatWithStartTimeException;
 import persistance.PersistanceWithJackson;
 
 import java.io.File;

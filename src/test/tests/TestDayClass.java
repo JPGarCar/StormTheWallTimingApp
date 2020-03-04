@@ -2,7 +2,6 @@ package tests;
 
 import models.Day;
 import models.Heat;
-import models.exceptions.AddHeatException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,11 +20,10 @@ public class TestDayClass {
         assertEquals("Sunday", day.getDayToRun());
         assertEquals(1, day.getDayNumber());
         assertTrue(day.getHeats().isEmpty());
-        assertEquals(0, day.numberOfHeats());
     }
 
     @Test
-    public void TestAddAndRemoveHeat() throws AddHeatException {
+    public void TestAddAndRemoveHeat() {
         day = new Day("Saturday", 1);
 
         Calendar timeToStart = Calendar.getInstance();
@@ -44,10 +42,6 @@ public class TestDayClass {
         heats.add(heat2);
 
         day.addHeats(heats);
-        assertEquals(3, day.numberOfHeats());
-
-        day.removeHeat(heat.getHeatNumber());
-        assertEquals(2, day.numberOfHeats());
 
     }
 

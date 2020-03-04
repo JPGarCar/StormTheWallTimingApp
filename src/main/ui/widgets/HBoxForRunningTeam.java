@@ -49,12 +49,6 @@ public class HBoxForRunningTeam extends CustomHBox {
                 e.printStackTrace();
             } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
                 couldNotCalculateFinalTimeExcpetion.printStackTrace();
-            } catch (NoCurrentHeatIDException e) {
-                e.printStackTrace();
-            } catch (NoTeamException e) {
-                e.printStackTrace();
-            } catch (NoRemainingHeatsException e) {
-                e.printStackTrace();
             }
         });
 

@@ -15,10 +15,10 @@ import java.util.Map;
     Represents a day of the event and everything that it entails
     Purpose: Control the heats to be run during that day.
     Contains:
-    - Calendar representation of the day - Calendar
+    - String representation of the day, ex "Saturday" - String
     - Integer representation of the day, starts at 1 in chronological order - int
     - Next heat number to be staged - int
-    - All the heats that will run during this day - Map<Integer, Heat>
+    - All the heats that will run during this day, key is the heat´s number - Map<Integer, Heat>
 
     Usage:
     - main timing controller to advance current heat (atHeat)
@@ -40,6 +40,7 @@ public class Day {
 
 // VARIABLES //
 
+    // Represents the day in string, ex "Saturday"
     private String dayToRun;
 
     // Represents the day in an int for easier access starting at 1
@@ -112,7 +113,7 @@ public class Day {
     }
 
     // EFFECTS: increase atHeat by one, to move to next heat
-    public void atNextHeat() {
+    public void goToNextHeat() {
         atHeat++;
     }
 
@@ -136,22 +137,11 @@ public class Day {
         }
     }
 
-    // EFFECTS: remove the heat from this day by the heats number
-    public void removeHeat(@NotNull int heatNumber) {
-        heats.remove(heatNumber);
-        // TODO delete the heat object by setting everything to null
-    }
-
-    // EFFECTS: Return the number of heats in the day
-    public int numberOfHeats(){
-        return heats.size(); // TODO, if not used delete
-    }
-
     // EFFECTS: returns heat with specific heat number
     public Heat getHeatByHeatNumber(@NotNull int heatNumber) throws NoHeatWithIDException {
         Heat heat = heats.get(heatNumber);
         if (heat == null) {
-            throw new NoHeatWithIDException();
+            throw new NoHeatWithIDException("Heat number used: " + heatNumber + ". Day affected: " + dayToRun);
         }
         return heat;
     }
@@ -162,7 +152,7 @@ public class Day {
         atHeat --;
     }
 
-    // EFFECTS: return a heat by its start time
+    // EFFECTS: return a heat by its start time or a noHeatWithStatTimeException
     public Heat getHeatByStartTime(Calendar calendar) throws NoHeatWithStartTimeException {
         for (Heat heat : heats.values()) {
             if (heat.getTimeToStart().get(Calendar.HOUR_OF_DAY) == calendar.get(Calendar.HOUR_OF_DAY) &&
@@ -170,8 +160,15 @@ public class Day {
                 return heat;
             }
         }
+
+        // Used to format the time strings to two digits
         DecimalFormat decimalFormat = new DecimalFormat("00");
         throw new NoHeatWithStartTimeException("Day affected: " + dayToRun + ". Heat that could not find: " +
                 decimalFormat.format(calendar.get(Calendar.HOUR_OF_DAY)) + ":" + decimalFormat.format(calendar.get(Calendar.MINUTE)));
+    }
+
+    // EFFECTS: remove a heat from the heats TreeMap
+    public void removeHeatByHeatNumber(int heatNumber) {
+        heats.remove(heatNumber);
     }
 }

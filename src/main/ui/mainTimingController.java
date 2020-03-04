@@ -147,8 +147,8 @@ public class mainTimingController {
                 HBoxForStagedTeam hBoxForStagedTeam = new HBoxForStagedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getRunByHeatNumber(controller.getStagedHeat().getHeatNumber()).getSitrep(), controller);
                 hBoxForStagedTeam.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
                 list.add(hBoxForStagedTeam);
-            } catch (NoTeamHeatException e) {
-                e.printStackTrace();
+            } catch (NoRunFoundException e) {
+                e.printStackTrace(); // TODO
             }
         }
 
@@ -234,9 +234,17 @@ public class mainTimingController {
         Heat stagedHeat = controller.getStagedHeat();
         if (stagedHeat != null) {
             stagedHeat.markActualStartTime(Calendar.getInstance());
-            controller.addRunningRunsFromTeams(stagedHeat.teamsThatWillRun(), stagedHeat.getHeatNumber());
+            try {
+                controller.addRunningRunsFromTeams(stagedHeat.teamsThatWillRun(), stagedHeat.getHeatNumber());
+            } catch (NoRunFoundException e) {
+                e.printStackTrace(); // TODO
+            } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
+                couldNotCalculateFinalTimeExcpetion.printStackTrace(); // TODO
+            } catch (NoHeatsException e) {
+                e.printStackTrace(); // TODO
+            }
 
-            controller.getCurrentDay().atNextHeat();
+            controller.getCurrentDay().goToNextHeat();
             stageHeatNumber.setText(Integer.toString(controller.getCurrentDay().getAtHeat()));
             stageHeatTeamList.setItems(null);
 
@@ -323,7 +331,7 @@ public class mainTimingController {
 
     @FXML
     private void skipHeatButtonAction() {
-        if (undoHeatTimer == null) {
+        if (controller.getStagedHeat() == null) {
             // TODO
             return;
         }
@@ -333,7 +341,7 @@ public class mainTimingController {
         alert.showAndWait();
 
         if (alert.getResult() == ButtonType.OK) {
-            controller.getCurrentDay().atNextHeat();
+            controller.getCurrentDay().goToNextHeat();
             stageHeatNumber.setText(Integer.toString(controller.getCurrentDay().getAtHeat()));
 
             timeToStartLabel.setText("Stage Heat to Get Info");

@@ -3,7 +3,6 @@ package tests;
 import models.Day;
 import models.Heat;
 import models.Team;
-import models.exceptions.AddHeatException;
 import models.exceptions.AddTeamException;
 import models.exceptions.NoTeamException;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ public class TestHeatClass {
     Heat heat;
 
     @Test
-    public void TestConstructor() throws AddHeatException {
+    public void TestConstructor() {
         Calendar timeToStart = Calendar.getInstance();
         Day day = new Day("Saturday", 1);
         heat = new Heat(timeToStart, "Competitive", 123, day, 123);
@@ -30,7 +29,7 @@ public class TestHeatClass {
     }
 
     @Test
-    public void TestAddTeams() throws AddHeatException, AddTeamException {
+    public void TestAddTeams() throws AddTeamException {
         Calendar timeToStart = Calendar.getInstance();
         Day day = new Day("Saturday", 1);
         heat = new Heat(timeToStart, "Competitive", 123, day, 123);
@@ -48,7 +47,6 @@ public class TestHeatClass {
         teams.add(team1);
         teams.add(team2);
 
-        heat.addTeams(teams);
         assertEquals(3, heat.getTeams().size());
 
         assertEquals(1, team.getHeats().size());
@@ -56,7 +54,7 @@ public class TestHeatClass {
     }
 
     @Test
-    public void TestRemoveTeam() throws AddHeatException, AddTeamException, NoTeamException {
+    public void TestRemoveTeam() throws AddTeamException, NoTeamException {
         Calendar timeToStart = Calendar.getInstance();
         Day day = new Day("Saturday", 1);
         heat = new Heat(timeToStart, "Competitive", 123, day, 123);

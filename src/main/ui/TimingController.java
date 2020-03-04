@@ -178,7 +178,7 @@ public class TimingController {
         for (Team team : teams) {
             try {
                 addRunningRun(team.getRunByHeatNumber(heatNumber));
-            } catch (NoTeamHeatException e) {
+            } catch (NoRunFoundException e) {
                 e.printStackTrace();
             }
         }

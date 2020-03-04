@@ -110,7 +110,7 @@ public class FinalTime {
     // EFFECTS: public function to call calculateSeconds and calculateFinalTime
     public void calculate() throws CouldNotCalculateFinalTimeExcpetion {
         if (startTime == null || stopTime == null) {
-            throw new CouldNotCalculateFinalTimeExcpetion();
+            throw new CouldNotCalculateFinalTimeExcpetion("This is because the startTime or the endTime is null.");
         }
         calculateFinalTime();
     }

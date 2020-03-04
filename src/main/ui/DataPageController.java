@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import models.*;
-import models.exceptions.NoTeamHeatException;
+import models.exceptions.NoRunFoundException;
 
 import java.io.IOException;
 
@@ -204,7 +204,7 @@ public class DataPageController {
                         return new SimpleStringProperty("Has not run yet.");
                     }
 
-                } catch (NoTeamHeatException e) {
+                } catch (NoRunFoundException e) {
                     e.printStackTrace();
                     return new SimpleStringProperty("");
                 }
@@ -214,7 +214,7 @@ public class DataPageController {
         });
         timeToStartHeatCol.setCellValueFactory(param -> {
             if (param.getValue().getValue() instanceof Heat) {
-                return new SimpleStringProperty(((Heat) param.getValue().getValue()).startTimeString());
+                return new SimpleStringProperty(((Heat) param.getValue().getValue()).timeToStartString());
             } else if (param.getValue().getValue() instanceof Team) {
                 return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamName());
             } else {
@@ -238,7 +238,7 @@ public class DataPageController {
                 Team team = ((Team) param.getValue().getValue());
                 try {
                     return new SimpleStringProperty(team.getRunByHeatNumber(heat.getHeatNumber()).getSitrep().name());
-                } catch (NoTeamHeatException e) {
+                } catch (NoRunFoundException e) {
                     e.printStackTrace();
                 }
             }
@@ -281,7 +281,7 @@ public class DataPageController {
                     } else {
                         return new SimpleStringProperty("Has not run yet.");
                     }
-                } catch (NoTeamHeatException e) {
+                } catch (NoRunFoundException e) {
                     e.printStackTrace();
                     return new SimpleStringProperty("");
                 }

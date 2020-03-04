@@ -7,24 +7,20 @@ import models.exceptions.*;
 
 import javax.persistence.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /*
     Represents a regular heat that will run during the event
     Purpose: Control the teams that are running in this heat, when it starts and what kind of teams are running
     Contains:
-    - Expected time to start
-    - Category - String
-    - Team type
-    - Heat ID (used by db and access) - UNIQUE
-    - Heat Number (used by participants and this program) - UNIQUE
-    - If heat has started
-    - Actual start time
-    - Teams to run this heat
-    - Day this heat is running in
+    - Expected time to start - Calendar
+    - Category of the heat - String
+    - Heat ID (used by db and access) - UNIQUE - int
+    - Heat Number (used by participants and this program) - UNIQUE - int
+    - Boolean that represents if the heat has started - boolean
+    - The actual time the heat started - Calendar
+    - TreeMap of all the teams that are assigned to this heat, key is the team's number - TreeMap<Integer, Team>
+    - Day this heat is assigned to and running on - Day
 
     Usage:
     -
@@ -76,7 +72,8 @@ public class Heat {
 
     // DUMMY CONSTRUCTOR used by Jackson JSON
     public Heat() {
-        teams = new HashMap<>();
+        teams = new TreeMap<>();
+        this.hasStarted = false;
     }
 
     // CONSTRUCTOR
@@ -86,9 +83,10 @@ public class Heat {
         this.category = category;
         this.heatNumber = heatNumber;
         this.heatID = heatID;
-        this.hasStarted = false;
 
-        teams = new HashMap<>();
+        this.hasStarted = false;
+        teams = new TreeMap<>();
+
         setDayToRace(dayToRace);
     }
 
@@ -121,6 +119,10 @@ public class Heat {
 
     public Calendar getTimeToStart() {
         return timeToStart;
+    }
+
+    public boolean isHasStarted() {
+        return hasStarted;
     }
 
     public void setHeatID(@NotNull int heatID) {
@@ -163,12 +165,11 @@ public class Heat {
         }
     }
 
-    // EFFECTS: returns value of hasStarted
-    public boolean isHasStarted() {
-        return hasStarted;
-    }
-
+    // EFFECTS: sets the given day as the day this heat will race, will delete itself from the day it was in
     public void setDayToRace(@NotNull Day day) {
+        if (dayToRace != null) {
+            dayToRace.removeHeatByHeatNumber(heatNumber);
+        }
         try {
             day.addHeat(this);
         } catch (AddHeatRuntimeException e) {
@@ -179,6 +180,7 @@ public class Heat {
 
     // EFFECTS: return the time to start as a string
     public String timeToStartString() {
+        // used to set the time string to two values
         DecimalFormat decimalFormat = new DecimalFormat("00");
         return decimalFormat.format(timeToStart.get(Calendar.HOUR_OF_DAY)) + ":" + decimalFormat.format(timeToStart.get(Calendar.MINUTE));
     }
@@ -193,14 +195,7 @@ public class Heat {
                 // do nothing as we expect this to happen because of the many to many connection
             }
         } else {
-            throw new AddTeamException();
-        }
-    }
-
-    // EFFECTS: add all the teams from a list of teams
-    public void addTeams(@NotNull ArrayList<Team> teams) throws AddTeamException {
-        for (Team team : teams) {
-            addTeam(team);
+            throw new AddTeamException("Heat affected: " + heatNumber + ". Team number that tried to get added: " + team.getTeamNumber());
         }
     }
 
@@ -215,7 +210,8 @@ public class Heat {
             }
             return team;
         } else {
-            throw new NoTeamException();
+            throw new NoTeamException("Could not remove a team. Heat affected: " + heatNumber +
+                    ". Team number that go tried to remove: " + teamNumber);
         }
     }
 
@@ -228,7 +224,7 @@ public class Heat {
                 team.markCurrentRun(-1);
             }
         } else {
-            throw new CanNotUndoHeatException();
+            throw new CanNotUndoHeatException("Affected heat number: " + heatNumber);
         }
     }
 
@@ -238,42 +234,26 @@ public class Heat {
     }
 
     // EFFECTS: return only those heats with teamHeats that don't have DNS, those that do get a 0 time
-    public ArrayList<Team> teamsThatWillRun() {
+    public ArrayList<Team> teamsThatWillRun() throws NoRunFoundException, CouldNotCalculateFinalTimeExcpetion, NoHeatsException {
         ArrayList<Team> runnableTeams = new ArrayList<>();
         for (Team team : teams.values()) {
-            try {
-                if (team.getRunByHeatNumber(heatNumber).getSitrep() != Sitrep.DNS) {
-                    runnableTeams.add(team);
-                } else {
-                    team.getRunByHeatNumber(heatNumber).calculateEndTime(actualStartTime);
-                }
-            } catch (NoTeamHeatException e) {
-                e.printStackTrace();
-            } catch (NoHeatsException e) {
-                e.printStackTrace();
-            } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
-                couldNotCalculateFinalTimeExcpetion.printStackTrace();
+            if (team.getRunByHeatNumber(heatNumber).getSitrep() != Sitrep.DNS) {
+                runnableTeams.add(team);
+            } else {
+                team.getRunByHeatNumber(heatNumber).calculateEndTime(actualStartTime);
             }
         }
         return runnableTeams;
     }
 
-    // EFFECTS: return the actual start time as a string
+    // EFFECTS: return the actual start time as a string, if it has not started return empty string
     public String actualStartTimeString() {
-        if (actualStartTime == null) {
+        if (!hasStarted) {
             return "";
         }
+        // used to format the time string to two values
         DecimalFormat formatter = new DecimalFormat("00");
         return formatter.format(actualStartTime.get(Calendar.HOUR_OF_DAY)) + ":" + formatter.format(actualStartTime.get(Calendar.MINUTE));
-    }
-
-    // EFFECTS: return the intended start time as a string
-    public String startTimeString() {
-        if (timeToStart == null) {
-            return "";
-        }
-        DecimalFormat formatter = new DecimalFormat("00");
-        return formatter.format(timeToStart.get(Calendar.HOUR_OF_DAY)) + ":" + formatter.format(timeToStart.get(Calendar.MINUTE));
     }
 
 }

@@ -2,8 +2,8 @@ package models.exceptions;
 
 public class CanNotUndoHeatException extends Exception{
 
-    public CanNotUndoHeatException() {
-        super("Can not undo heat as it has not started");
+    public CanNotUndoHeatException(String s) {
+        super("Can not undo heat as it has not started. " + s);
     }
 
 }

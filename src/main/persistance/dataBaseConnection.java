@@ -1,7 +1,6 @@
 package persistance;
 
 import models.*;
-import models.exceptions.AddHeatException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -11,12 +10,12 @@ import java.util.Calendar;
 
 public class dataBaseConnection {
 
-    public static void main( String[] args ) throws AddHeatException {
+    public static void main( String[] args ) {
         dataBaseConnection dataBaseConnection = new dataBaseConnection();
     }
 
 
-    public dataBaseConnection() throws AddHeatException {
+    public dataBaseConnection() {
         Day day = new Day();
 
         Heat heat = new Heat(Calendar.getInstance(), "Just For Fun", 4562, day, 1);

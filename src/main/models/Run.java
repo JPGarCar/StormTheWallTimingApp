@@ -76,6 +76,8 @@ public class Run {
 
     // DUMMY CONSTRUCTOR for Jackson JSON
     public Run() {
+        isDone = false;
+        canUndo = false;
     }
 
     // CONSTRUCTOR
@@ -89,7 +91,6 @@ public class Run {
     }
 
 // GETTERS AND SETTERS, used for Jackson JSON //
-
 
     public RunNumber getRunNumber() {
         return runNumber;
@@ -147,7 +148,7 @@ public class Run {
         this.runNumber = runNumber;
     }
 
-    // FUNCTIONS //
+// FUNCTIONS //
 
     // EFFECTS: constructs a FinalTime with the heat's start and input end time and sets canUndo and isDone to true
     public void calculateEndTime(@NotNull Calendar endTime) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion {
@@ -156,7 +157,8 @@ public class Run {
 
         Heat heat = getHeatFromTeam();
         if (heat == null) {
-            throw new NoHeatsException();
+            throw new NoHeatsException("Error while trying to calculate end time. Team affected: " +
+                    team.getTeamNumber() + "Heat that was not found: " + heatNumber);
         }
 
         finalTime = new FinalTime(heat.getActualStartTime(), endTime);

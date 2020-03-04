@@ -9,9 +9,9 @@ import java.util.*;
     General class for the program.
     Purpose: control list of all teams, builds teams and has list of all days to be run.
     Contains:
-    - Team list of all teams
-    - Wait list of teams
-    - Day list of all days to be run
+    - A TreeMap of all the teams available in the program - TreeMap<Integer, Team>
+    - A TreeMap of teams that are currently wait listed by the user - TreeMap<Integer, Team>
+    - A TreeMap of all the days available in the program - TreeMap<String, Day>
 
     Usage:
     - Used by edit heat page to control the teams that are in the wait list
@@ -38,9 +38,9 @@ public class Program {
 // CONSTRUCTORS //
 
     public Program() {
-        programDays = new HashMap<>();
-        allTeams = new HashMap<>();
-        waitList = new HashMap<>();
+        programDays = new TreeMap<>();
+        allTeams = new TreeMap<>();
+        waitList = new TreeMap<>();
     }
 
 // GETTERS AND SETTERS //
@@ -104,17 +104,6 @@ public class Program {
         waitList.remove(teamNumber);
     }
 
-//    // EFFECTS: creates a team to use by the program with an automatic number
-//    public Team createTeamAutoNumber(@NotNull TeamType teamType, @NotNull LeagueType teamLeague, @NotNull String teamName) {
-//        Team team = null;
-//        for (int i = 0; i < allTeams.size() + 1; i++) {
-//            if(allTeams.get(i) == null) {
-//                team = createTeam(teamType, teamLeague, i, teamName);
-//            }
-//        }
-//        return team;
-//    }
-
     // EFFECTS: returns a day or builds a new one and returns that day
     public Day getProgramDayOrBuild(String programDay) {
         if (programDays.get(programDay) != null) {
@@ -131,7 +120,7 @@ public class Program {
         if (programDays.get(programDay) != null) {
             return programDays.get(programDay);
         } else {
-            throw new NoDayRuntimeException(programDay);
+            throw new NoDayRuntimeException("Dey not found: " + programDay);
         }
     }
 

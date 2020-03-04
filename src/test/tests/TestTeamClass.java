@@ -30,7 +30,7 @@ public class TestTeamClass {
     }
 
     @Test
-    public void testAddingHeats() throws AddHeatException {
+    public void testAddingHeats() {
         Day day = new Day("Sunday",1);
         Heat heat = new Heat(null, "LeagueType.COMP", 1, day, 1);
         team.addHeat(heat);
@@ -53,7 +53,7 @@ public class TestTeamClass {
     }
 
     @Test
-    public void testSetEndTime() throws AddHeatException {
+    public void testSetEndTime() {
         Day day = new Day("Sunday",1);
         Calendar startTime = Calendar.getInstance();
         Heat heat = new Heat(null, "LeagueType", 1, day, 1);
@@ -64,11 +64,7 @@ public class TestTeamClass {
         endTime.add(Calendar.MINUTE, 5);
         try {
             team.markEndTime(endTime);
-        } catch (NoHeatsException e) {
-            e.printStackTrace();
-        } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
-            couldNotCalculateFinalTimeExcpetion.printStackTrace();
-        } catch (NoRemainingHeatsException e) {
+        } catch (NoHeatsException | CouldNotCalculateFinalTimeExcpetion | NoRemainingHeatsException e) {
             e.printStackTrace();
         }
 
@@ -77,7 +73,7 @@ public class TestTeamClass {
     }
 
     @Test
-    public void TestRemoveHeat() throws AddHeatException, NoHeatsException {
+    public void TestRemoveHeat() throws NoHeatsException {
         Day day = new Day("Sunday",1);
         Heat heat = new Heat(null, "LeagueType", 1, day, 1);
         team.addHeat(heat);

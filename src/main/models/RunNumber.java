@@ -2,6 +2,12 @@ package models;
 
 import java.util.Objects;
 
+/*
+    Represents a key of a Run
+    Purpose: used to differentiate runs by the team and heat numbers
+ */
+
+
 public class RunNumber implements Comparable {
 
 // VARIABLES //
@@ -37,9 +43,10 @@ public class RunNumber implements Comparable {
         this.teamNumber = teamNumber;
     }
 
-    // FUNCTIONS //
+// FUNCTIONS //
 
-
+    // To be able to use it as a key for TreeMap, needed to set all these functions
+    // EFFECTS: for runNumber to equal, teamNumber and heatNumber need to be the same
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -54,6 +61,8 @@ public class RunNumber implements Comparable {
         return Objects.hash(teamNumber, heatNumber);
     }
 
+    // EFFECTS: set to sort the runNumbers by increasing heat number, set to equal each other if heatNumber and
+    //          teamNumber are equal
     @Override
     public int compareTo(Object o) {
         if (this.equals(o)) {
@@ -70,6 +79,8 @@ public class RunNumber implements Comparable {
         }
     }
 
+    // EFFECTS: returns the teamNumber - heatNumber,
+    //          if you are going to change, you need to change the json deserializer too
     @Override
     public String toString() {
         return teamNumber + "-" + heatNumber;
