@@ -60,7 +60,7 @@ public class MainPageController {
 
         try {
             FXMLLoader root = new FXMLLoader(getClass().getResource("MainTiming.fxml"));
-            root.setControllerFactory(c -> new mainTimingController(controller));
+            root.setControllerFactory(c -> new MainTimingController(controller));
             startRaceButton.getScene().setRoot(root.load());
         } catch (IOException e) {
             System.out.println("Error on startRaceActionButton");

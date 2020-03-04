@@ -1,5 +1,6 @@
 package ui.widgets;
 
+import javafx.scene.control.Alert;
 import javafx.scene.layout.HBox;
 import models.Team;
 import models.enums.Sitrep;
@@ -8,10 +9,13 @@ import ui.TimingController;
 
 public abstract class CustomHBox extends HBox {
 
+// CONSTRUCTOR //
 
     CustomHBox(double spacing) {
         super(spacing);
     }
+
+// FUNCTIONS //
 
     // EFFECTS: update the status of a specific team private does all the work, three publics for different situations
     private void updateStatus(int teamNumber, String sitrep, TimingController timingController, int heatNumber, boolean fromRemaining, boolean staged) {
@@ -25,7 +29,11 @@ public abstract class CustomHBox extends HBox {
                 team.getRunByHeatNumber(heatNumber).setSitrep(Sitrep.valueOf(sitrep));
             }
         } catch (NoRunFoundException e) {
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "If the error persists please " +
+                    "contact an admin. Error: " + e.getMessage());
+            alert.setHeaderText("There has been an error while trying to update the status");
+            alert.getDialogPane().getStylesheets().add(timingController.getClass().getResource("application.css").toExternalForm());
+            alert.show();
         }
     }
     public void updateStatusForStaged(int teamID, String sitrep, TimingController timingController) {

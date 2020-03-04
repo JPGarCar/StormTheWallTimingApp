@@ -6,6 +6,7 @@
 -fx-font-weight: bold;
 }
 
+/** Combo box styling**/
 .combo-box .list-cell
 {
     -fx-background-color: #F26623;
@@ -51,6 +52,7 @@
     -fx-color: #F26623;
 }
 
+/** keep everything centered in the HBoxes **/
 
 HBoxForRunningTeam, HBoxForEditHeatTeam, HBoxForFinishedTeam, HBoxForFinishedUndoTeam, HBoxForStagedTeam, HBoxForWaitListTeam {
     -fx-alignment: center ;

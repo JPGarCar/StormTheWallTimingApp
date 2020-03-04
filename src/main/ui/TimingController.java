@@ -15,6 +15,8 @@ public class TimingController {
 
 // VARIABLES //
 
+    final int RUNUNDODELAYTIME = 10000;
+
     // Contains the current staged heat
     private Heat stagedHeat;
 
@@ -31,7 +33,7 @@ public class TimingController {
     private Program program;
 
     @JsonIgnore
-    private mainTimingController uiController;
+    private MainTimingController uiController;
 
     @JsonIgnore
     private EditHeatPageController editHeatController;
@@ -78,7 +80,7 @@ public class TimingController {
         return finishedRuns;
     }
 
-    public mainTimingController getUiController() {
+    public MainTimingController getUiController() {
         return uiController;
     }
 
@@ -106,7 +108,7 @@ public class TimingController {
         this.finishedRuns = finishedRuns;
     }
 
-    public void setUiController(@NotNull mainTimingController uiController) {
+    public void setUiController(@NotNull MainTimingController uiController) {
         this.uiController = uiController;
     }
 
@@ -118,10 +120,10 @@ public class TimingController {
         this.currentDay = currentDay;
     }
 
-    // FUNCTIONS //
+// FUNCTIONS //
 
     // EFFECTS: add a run to the stopped run list, included the task to move to finished
-    public void stopRun(@NotNull Run run) {
+    private void stopRun(@NotNull Run run) {
         stoppedRuns.put(run.getRunNumber(), run);
         uiController.updateStoppedRunList();
         Timer t = new Timer();
@@ -131,7 +133,6 @@ public class TimingController {
             public void run() {
                 if (run.getCanUndo()) {
                     run.setCanUndo(false);
-                    int heatNumber = run.getHeatNumber();
                     run.getTeam().markCurrentRun(-1);
 
                     Platform.runLater(() -> addFinishedRun(run));
@@ -140,7 +141,7 @@ public class TimingController {
                 }
             }
         },
-        10000);
+        RUNUNDODELAYTIME);
     }
 
     // EFFECTS: remove a run from the running run list
@@ -165,22 +166,10 @@ public class TimingController {
         uiController.addToRunningRunListToTop(run);
     }
 
-    // EFFECTS: add multiple runs to the running team list, input as an array
-    public void addRunningRuns(ArrayList<Run> runs) {
-        for (Run run : runs) {
-            addRunningRun(run);
-        }
-        uiController.updateRunningRunList();
-    }
-
     // EFFECTS: add multiple runs to the running team list, input as an array of teams
-    public void addRunningRunsFromTeams(ArrayList<Team> teams, int heatNumber) {
+    public void addRunningRunsFromTeams(ArrayList<Team> teams, int heatNumber) throws NoRunFoundException {
         for (Team team : teams) {
-            try {
-                addRunningRun(team.getRunByHeatNumber(heatNumber));
-            } catch (NoRunFoundException e) {
-                e.printStackTrace();
-            }
+            addRunningRun(team.getRunByHeatNumber(heatNumber));
         }
         uiController.updateRunningRunList();
     }
@@ -213,7 +202,7 @@ public class TimingController {
         uiController.addToFinishedRunListToTop(run);
     }
 
-    // EFFECTS: ends a run
+    // EFFECTS: ends a run, first with team and heat number, second with runNumber
     public void endRun(int teamNumber, int heatNumber) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion {
         RunNumber runNumber = new RunNumber(teamNumber, heatNumber);
         Run run = currentRuns.get(runNumber);
@@ -221,6 +210,7 @@ public class TimingController {
         stopRun(run);
 
         removeRunningRunWithUpdate(runNumber);
+        saveData();
     }
     public void endRun(RunNumber runNumber) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion {
 
@@ -229,6 +219,7 @@ public class TimingController {
         stopRun(run);
 
         removeRunningRunWithUpdate(runNumber);
+        saveData();
     }
 
     // EFFECTS: save the data to json

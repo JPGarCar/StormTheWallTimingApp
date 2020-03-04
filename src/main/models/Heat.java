@@ -19,7 +19,7 @@ import java.util.*;
     - Heat Number (used by participants and this program) - UNIQUE - int
     - Boolean that represents if the heat has started - boolean
     - The actual time the heat started - Calendar
-    - TreeMap of all the teams that are assigned to this heat, key is the team's number - TreeMap<Integer, Team>
+    - TreeMap of all the teams that are assigned to this heat, key is the team's number - LinkedHashMap<Integer, Team>
     - Day this heat is assigned to and running on - Day
 
     Usage:
@@ -72,7 +72,7 @@ public class Heat {
 
     // DUMMY CONSTRUCTOR used by Jackson JSON
     public Heat() {
-        teams = new TreeMap<>();
+        teams = new LinkedHashMap<>();
         this.hasStarted = false;
     }
 
@@ -85,7 +85,7 @@ public class Heat {
         this.heatID = heatID;
 
         this.hasStarted = false;
-        teams = new TreeMap<>();
+        teams = new LinkedHashMap<>();
 
         setDayToRace(dayToRace);
     }
@@ -234,13 +234,17 @@ public class Heat {
     }
 
     // EFFECTS: return only those heats with teamHeats that don't have DNS, those that do get a 0 time
-    public ArrayList<Team> teamsThatWillRun() throws NoRunFoundException, CouldNotCalculateFinalTimeExcpetion, NoHeatsException {
+    public ArrayList<Team> teamsThatWillRun() throws NoRunFoundException, NoHeatsException {
         ArrayList<Team> runnableTeams = new ArrayList<>();
         for (Team team : teams.values()) {
             if (team.getRunByHeatNumber(heatNumber).getSitrep() != Sitrep.DNS) {
                 runnableTeams.add(team);
             } else {
-                team.getRunByHeatNumber(heatNumber).calculateEndTime(actualStartTime);
+                try {
+                    team.getRunByHeatNumber(heatNumber).calculateEndTime(actualStartTime);
+                } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
+                    // Nothing to be done as this is technically impossible
+                }
             }
         }
         return runnableTeams;

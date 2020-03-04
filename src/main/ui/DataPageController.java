@@ -15,6 +15,8 @@ public class DataPageController {
 
     private TimingController controller;
 
+// FXML TAGS //
+
     @FXML
     private TreeTableColumn<Object, String> timeToStartHeatCol;
 
@@ -82,7 +84,7 @@ public class DataPageController {
     private TreeTableColumn<Object, String> heatNumberRunCol;
 
 
-// CONSTRUCTORS //
+// CONSTRUCTORS and INITIALIZER //
 
     public DataPageController(TimingController controller) {
         this.controller = controller;
@@ -110,6 +112,16 @@ public class DataPageController {
 
         heatTreeTable.setRoot(heatRoot);
         heatTreeTable.setShowRoot(false);
+    }
+
+// FUNCTIONS //
+
+    // EFFECTS: shows an alert
+    private void showAlert(Alert.AlertType alertType, String message, String header) {
+        Alert alert = new Alert(alertType, message);
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+        alert.setHeaderText(header);
+        alert.show();
     }
 
     // EFFECTS: adds all the runs from the program
@@ -205,7 +217,8 @@ public class DataPageController {
                     }
 
                 } catch (NoRunFoundException e) {
-                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "If the error persists please contact an admin. Error: "
+                                + e.getMessage(), "There has been an error at actualStartTimeHeatCol cell value factory.");
                     return new SimpleStringProperty("");
                 }
             } else {
@@ -239,7 +252,9 @@ public class DataPageController {
                 try {
                     return new SimpleStringProperty(team.getRunByHeatNumber(heat.getHeatNumber()).getSitrep().name());
                 } catch (NoRunFoundException e) {
-                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "If the error persists please contact an admin. Error: "
+                            + e.getMessage(), "There has been an error at teamTypeHeatCol cell value factory.");
+                    return new SimpleStringProperty("");
                 }
             }
             return new SimpleStringProperty("Status");
@@ -282,7 +297,8 @@ public class DataPageController {
                         return new SimpleStringProperty("Has not run yet.");
                     }
                 } catch (NoRunFoundException e) {
-                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "If the error persists please contact an admin. Error: "
+                            + e.getMessage(), "There has been an error at teamNameTeamCol cell value factory.");
                     return new SimpleStringProperty("");
                 }
             } else {
@@ -300,6 +316,9 @@ public class DataPageController {
         });
     }
 
+// FXML FUNCTIONS //
+
+    // EFFECTS: go back to the main menu within same scene
     @FXML
     private void backToMainMenuButtonAction() {
         try {
@@ -308,7 +327,8 @@ public class DataPageController {
             runTreeTable.getScene().setRoot(root.load());
             controller.saveData();
         } catch (IOException e) {
-            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Please contact an admin if the error persists. Error: "
+                        + e.getMessage(), "There has been an error when moving back to main menu");
         }
     }
 

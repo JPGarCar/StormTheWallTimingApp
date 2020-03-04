@@ -1,6 +1,7 @@
 package ui.widgets;
 
 import javafx.collections.FXCollections;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -45,10 +46,12 @@ public class HBoxForRunningTeam extends CustomHBox {
         button.setOnAction(event -> {
             try {
                 endTeam(Integer.parseInt(idText), heatNumberInt, controller);
-            } catch (NoHeatsException e) {
-                e.printStackTrace();
-            } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
-                couldNotCalculateFinalTimeExcpetion.printStackTrace();
+            } catch (NoHeatsException | CouldNotCalculateFinalTimeExcpetion e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "If the error persists please " +
+                        "contact an admin. Error: " + e.getMessage());
+                alert.setHeaderText("There has been an error while trying to finish a team");
+                alert.getDialogPane().getStylesheets().add(controller.getClass().getResource("application.css").toExternalForm());
+                alert.show();
             }
         });
 

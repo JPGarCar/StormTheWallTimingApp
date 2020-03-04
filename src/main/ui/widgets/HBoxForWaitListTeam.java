@@ -1,5 +1,6 @@
 package ui.widgets;
 
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -35,8 +36,11 @@ public class HBoxForWaitListTeam extends CustomHBox {
                 controller.getEditHeatController().setTeamHeatListTeams();
                 controller.getEditHeatController().setWaitListTeams();
             } catch (AddTeamException e) {
-                e.printStackTrace();
-                // TODO
+                Alert alert = new Alert(Alert.AlertType.ERROR, "If the error persists please " +
+                        "contact an admin. Error: " + e.getMessage());
+                alert.setHeaderText("There has been an error while trying to add wait list team to heat");
+                alert.getDialogPane().getStylesheets().add(controller.getClass().getResource("application.css").toExternalForm());
+                alert.show();
             }
         });
 
