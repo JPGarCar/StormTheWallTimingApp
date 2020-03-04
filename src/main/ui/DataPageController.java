@@ -45,7 +45,7 @@ public class DataPageController {
     private TreeTableColumn<Object, String> heatNumCol;
 
     @FXML
-    private TreeTableColumn<Object, String> teamTypeHeatCol;
+    private TreeTableColumn<Object, String> extraHeatCol;
 
     @FXML
     private Tab teamTab;
@@ -60,7 +60,7 @@ public class DataPageController {
     private TreeTableColumn<Object, String> teamNumberTeamCol;
 
     @FXML
-    private TreeTableColumn<Object, String> extraTeamCol;
+    private TreeTableColumn<Object, String> teamUnitTeamCol;
 
     @FXML
     private TreeTableColumn<Object, String> poolNameTeamCol;
@@ -243,7 +243,7 @@ public class DataPageController {
                 return new SimpleStringProperty("Pool Name");
             }
         });
-        teamTypeHeatCol.setCellValueFactory(param -> {
+        extraHeatCol.setCellValueFactory(param -> {
             if (param.getValue().getValue() instanceof Heat) {
                 return new SimpleStringProperty("");
             } else if (param.getValue().getValue() instanceof Team) {
@@ -262,7 +262,6 @@ public class DataPageController {
     }
 
     // EFFECTS: set all the teamTree columns their respective CellValueFactory
-    // TODO add unit to this table
     private void teamTreeConstructor() {
         teamIDTeamCol.setCellValueFactory(param -> {
             if (param.getValue().getValue() instanceof Team) {
@@ -287,6 +286,24 @@ public class DataPageController {
             if (param.getValue().getValue() instanceof Team) {
                 return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamName());
             } else if (param.getValue().getValue() instanceof Heat) {
+                return new SimpleStringProperty(((Heat) param.getValue().getValue()).timeToStartString());
+            } else {
+                return new SimpleStringProperty("Start Time");
+            }
+        });
+        poolNameTeamCol.setCellValueFactory(param -> {
+            if (param.getValue().getValue() instanceof Team) {
+                return new SimpleStringProperty(((Team) param.getValue().getValue()).getPoolName());
+            } else if (param.getValue().getValue() instanceof Heat) {
+                return new SimpleStringProperty(((Heat) param.getValue().getValue()).getCategory());
+            } else {
+                return new SimpleStringProperty("Heat Category");
+            }
+        });
+        teamUnitTeamCol.setCellValueFactory(param -> {
+            if (param.getValue().getValue() instanceof Team) {
+                return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamUnit());
+            } else if (param.getValue().getValue() instanceof Heat) {
                 try {
                     Heat heat = ((Heat) param.getValue().getValue());
                     Team team = ((Team) param.getValue().getParent().getValue());
@@ -303,15 +320,6 @@ public class DataPageController {
                 }
             } else {
                 return new SimpleStringProperty("Final Time on Heat");
-            }
-        });
-        poolNameTeamCol.setCellValueFactory(param -> {
-            if (param.getValue().getValue() instanceof Team) {
-                return new SimpleStringProperty(((Team) param.getValue().getValue()).getPoolName());
-            } else if (param.getValue().getValue() instanceof Heat) {
-                return new SimpleStringProperty(((Heat) param.getValue().getValue()).getCategory());
-            } else {
-                return new SimpleStringProperty("Heat Category");
             }
         });
     }

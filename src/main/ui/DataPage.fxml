@@ -55,7 +55,7 @@
                         <TreeTableColumn fx:id="categoryHeatCol" prefWidth="185.0" text="Category" />
                         <TreeTableColumn fx:id="timeToStartHeatCol" prefWidth="202.0" text="Time To Start" />
                         <TreeTableColumn fx:id="actualStartTimeHeatCol" prefWidth="148.0" text="Actual Start Time" />
-                        <TreeTableColumn fx:id="teamTypeHeatCol" minWidth="5.0" prefWidth="169.0" text="Team Type" />
+                        <TreeTableColumn fx:id="extraHeatCol" minWidth="5.0" prefWidth="169.0" />
                     </columns>
                   </TreeTableView>
                </content>
@@ -68,7 +68,7 @@
                       <TreeTableColumn fx:id="teamNumberTeamCol" prefWidth="125.0" text="Team Number" />
                         <TreeTableColumn fx:id="teamNameTeamCol" prefWidth="275.0" text="Team Name" />
                         <TreeTableColumn fx:id="poolNameTeamCol" prefWidth="165.0" text="Pool Name" />
-                        <TreeTableColumn fx:id="extraTeamCol" prefWidth="146.0" />
+                        <TreeTableColumn fx:id="teamUnitTeamCol" prefWidth="146.0" text="Team Unit" />
                     </columns>
                   </TreeTableView>
                </content>
