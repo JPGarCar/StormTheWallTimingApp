@@ -1,0 +1,8 @@
+/* JavaFx CSS */
+
+.tree-table-row-cell {
+    -fx-background-color: #F26623;
+    -fx-font-color: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15;
+}

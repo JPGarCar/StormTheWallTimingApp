@@ -7,6 +7,8 @@ import javafx.scene.control.*;
 import models.*;
 import models.exceptions.NoRunFoundException;
 
+import javax.security.auth.callback.Callback;
+import java.beans.beancontext.BeanContext;
 import java.io.IOException;
 
 public class DataPageController {
@@ -194,15 +196,6 @@ public class DataPageController {
             }
 
         });
-        heatNumCol.setCellValueFactory(param -> {
-            if (param.getValue().getValue() instanceof Heat) {
-                return new SimpleStringProperty(Integer.toString(((Heat) param.getValue().getValue()).getHeatNumber()));
-            } else if (param.getValue().getValue() instanceof Team) {
-                return new SimpleStringProperty(Integer.toString(((Team) param.getValue().getValue()).getTeamNumber()));
-            } else {
-                return new SimpleStringProperty("Team Number");
-            }
-        });
         actualStartTimeHeatCol.setCellValueFactory( param -> {
             if (param.getValue().getValue() instanceof Heat) {
                 return new SimpleStringProperty(((Heat) param.getValue().getValue()).actualStartTimeString());
@@ -259,6 +252,17 @@ public class DataPageController {
             }
             return new SimpleStringProperty("Status");
         });
+
+        heatNumCol.setCellValueFactory(param -> {
+            if (param.getValue().getValue() instanceof Heat) {
+                return new SimpleStringProperty(Integer.toString(((Heat) param.getValue().getValue()).getHeatNumber()));
+            } else if (param.getValue().getValue() instanceof Team) {
+                return new SimpleStringProperty(Integer.toString(((Team) param.getValue().getValue()).getTeamNumber()));
+            } else {
+                return new SimpleStringProperty("Team Number");
+            }
+        });
+
     }
 
     // EFFECTS: set all the teamTree columns their respective CellValueFactory
