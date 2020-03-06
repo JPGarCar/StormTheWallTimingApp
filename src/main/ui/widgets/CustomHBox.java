@@ -2,6 +2,7 @@ package ui.widgets;
 
 import javafx.scene.control.Alert;
 import javafx.scene.layout.HBox;
+import models.Run;
 import models.Team;
 import models.enums.Sitrep;
 import models.exceptions.*;
@@ -17,17 +18,21 @@ public abstract class CustomHBox extends HBox {
 
 // FUNCTIONS //
 
-    // EFFECTS: update the status of a specific team private does all the work, three publics for different situations
+    // EFFECTS: update the status of a specific team private does all the work, three public for different situations
     private void updateStatus(int teamNumber, String sitrep, TimingController timingController, int heatNumber, boolean fromRemaining, boolean staged) {
         Team team = timingController.getProgram().getTeamByTeamNumber(teamNumber);
         try {
+            Run run;
             if (fromRemaining && staged) {
-                team.getRunByHeatNumber(timingController.getStagedHeat().getHeatNumber()).setSitrep(Sitrep.valueOf(sitrep));
+                run = team.getRunByHeatNumber(timingController.getStagedHeat().getHeatNumber());
             } else if (fromRemaining) {
-                team.getCurrentRun().setSitrep(Sitrep.valueOf(sitrep));
+                run = team.getCurrentRun();
             } else {
-                team.getRunByHeatNumber(heatNumber).setSitrep(Sitrep.valueOf(sitrep));
+                run = team.getRunByHeatNumber(heatNumber);
             }
+
+            run.setSitrep(Sitrep.valueOf(sitrep));
+            timingController.getDbConnection().runDBUpdate(run);
         } catch (NoRunFoundException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "If the error persists please " +
                     "contact an admin. Error: " + e.getMessage());

@@ -45,6 +45,7 @@ public class Run {
 // VARIABLES //
 
     // Represents the heat number of the heat in which the team is running
+    @Column(insertable = false, updatable = false)
     private int heatNumber;
 
     // Represents the id of the run to be used by db, thus no need to instantiate in program - UNIQUE

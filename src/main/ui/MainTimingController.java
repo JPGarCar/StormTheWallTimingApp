@@ -270,7 +270,7 @@ public class MainTimingController {
             }
 
             // update controller next heat, staged heat list, and text fields
-            controller.getCurrentDay().goToNextHeat();
+            controller.goToNextHeat();
             stageHeatNumber.setText(Integer.toString(controller.getCurrentDay().getAtHeat()));
             stageHeatTeamList.setItems(null);
 

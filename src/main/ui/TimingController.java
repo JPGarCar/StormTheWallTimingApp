@@ -6,9 +6,8 @@ import com.sun.istack.internal.NotNull;
 import javafx.application.Platform;
 import models.*;
 import models.exceptions.*;
-import org.hibernate.Session;
+import persistance.DataBaseConnection;
 import persistance.PersistanceWithJackson;
-import persistance.RunPolling;
 
 
 import java.util.*;
@@ -46,7 +45,7 @@ public class TimingController {
 
     private Map<RunNumber, Timer> timerMap;
 
-    private Session session;
+    private DataBaseConnection dbConnection;
 
 // CONSTRUCTORS //
 
@@ -60,8 +59,9 @@ public class TimingController {
 
 // GETTERS AND SETTERS, used by Jackson JSON //
 
-    public Session getSession() {
-        return session;
+
+    public DataBaseConnection getDbConnection() {
+        return dbConnection;
     }
 
     public Day getCurrentDay() {
@@ -128,8 +128,8 @@ public class TimingController {
         this.currentDay = currentDay;
     }
 
-    public void setSession(Session session) {
-        this.session = session;
+    public void setDbConnection(DataBaseConnection dbConnection) {
+        this.dbConnection = dbConnection;
     }
 
     // FUNCTIONS //
@@ -159,6 +159,7 @@ public class TimingController {
     // EFFECTS: remove a run from the running run list
     public void removeRunningTeam(RunNumber runNumber) {
         currentRuns.remove(runNumber);
+        dbConnection.removeRunningRunDBUpdate(runNumber);
     }
 
     // EFFECTS: remove a run from the running run list and update the ui running run list
@@ -170,6 +171,7 @@ public class TimingController {
     // EFFECTS: add a run to the running run list
     public void addRunningRun(Run run) {
         currentRuns.put(run.getRunNumber(), run);
+        dbConnection.addRunningRunDBUpdate(run.getRunNumber());
     }
 
     // EFFECTS: add a run to the running run list and update the ui running run list
@@ -212,6 +214,7 @@ public class TimingController {
     public void addFinishedRun(Run run) {
         finishedRuns.put(run.getRunNumber(), run);
         uiController.addToFinishedRunListToTop(run);
+        dbConnection.addFinishedRunNeedDBUpdate(run.getRunNumber());
     }
 
     // EFFECTS: ends a run, first with team and heat number, second with runNumber
@@ -238,6 +241,12 @@ public class TimingController {
     public void saveData() {
         PersistanceWithJackson.toJsonController(this);
         PersistanceWithJackson.toJsonProgram(program);
+    }
+
+    // EFFECTS: goes to next heat and does db update
+    public void goToNextHeat() {
+        getCurrentDay().goToNextHeat();
+        dbConnection.updateNextHeat(getCurrentDay().getDayToRun(), getCurrentDay().getAtHeat());
     }
 
 

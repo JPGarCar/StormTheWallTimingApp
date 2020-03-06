@@ -54,7 +54,7 @@ public class Team {
     private String teamName;
 
     // Contains all the heats this team is in, will be mapped by the heats table in db
-    @ManyToMany(mappedBy = "heat_table")
+    @ManyToMany(mappedBy = "teams")
     private Map<Integer, Heat> heats;
 
     // Contains the TeamHeats that have not finished
@@ -62,6 +62,7 @@ public class Team {
     private Map<Integer, Run> runs;
 
     // Contains the current run the team is running
+    @OneToOne
     private Run currentRun;
 
     private String teamUnit;

@@ -24,7 +24,6 @@ public class RunPolling {
 // VARIABLES //
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     // represents the runs running right now, using RunNumbers
@@ -34,18 +33,17 @@ public class RunPolling {
     private ArrayList<RunNumber> finishedTeamsRunNumbers;
 
     // represents the next heat to stage, depends on day
+    @ElementCollection(targetClass = Integer.class)
     private Map<String, Integer> nextHeatToStage;
 
-    // represents the controller
-    TimingController controller;
 
 // CONSTRUCTOR //
 
-    public RunPolling(TimingController controller) {
+    public RunPolling() {
+        id = 0;
         runningTeamsRunNumbers = new ArrayList();
         finishedTeamsRunNumbers = new ArrayList();
         nextHeatToStage = new HashMap<>();
-        this.controller = controller;
     }
 
 // GETTERS AND SETTERS //
@@ -77,42 +75,30 @@ public class RunPolling {
 
 // FUNCTIONS //
 
-    // EFFECTS: update the db
-    private void updateDB() {
-        Transaction transaction = controller.getSession().beginTransaction();
-        controller.getSession().update(this);
-        transaction.commit();
-    }
-
     // EFFECTS: add a RunNumber to running runs
     public void addRunToRunning(RunNumber runNumber) {
         runningTeamsRunNumbers.add(runNumber);
-        updateDB();
     }
 
     // EFFECTS: remove a RunNumber from running runs
     public void removeRunFromRunning(RunNumber runNumber) {
         runningTeamsRunNumbers.remove(runNumber);
-        updateDB();
     }
 
     // EFFECTS: add a RunNumber to finished runs
     public void addRunToFinished(RunNumber runNumber) {
         finishedTeamsRunNumbers.add(runNumber);
-        updateDB();
     }
 
     // EFFECTS: remove a runNumber from the finished runs
     public void removeRunFromFinished(RunNumber runNumber) {
         finishedTeamsRunNumbers.remove(runNumber);
-        updateDB();
     }
 
     // EFFECTS: will update the heat to stage for a certain day
     public void updateNextHeat(String day, int nextHeat) {
         nextHeatToStage.remove(day);
         nextHeatToStage.put(day, nextHeat);
-        updateDB();
     }
 
 

@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import models.Program;
 import models.exceptions.InvalidExcelException;
+import persistance.DataBaseConnection;
 import persistance.PersistanceWithJackson;
 
 import java.io.File;
@@ -143,8 +144,18 @@ public class DataIOPageController {
     }
 
     @FXML
-    private void connectTODBActionButton() {
+    private void connectToDBActionButton() {
+        DataBaseConnection dataBaseConnection = new DataBaseConnection(controller);
 
+        // if there is no controller, so new data, build new controller and download all available data
+        if (controller.getProgram() == null) {
+            controller.setProgram(new Program());
+            dataBaseConnection.downloadAllData();
+        } else {
+            dataBaseConnection.uploadAllData();
+        }
+
+        dataBaseConnection.startPolling();
     }
 
 

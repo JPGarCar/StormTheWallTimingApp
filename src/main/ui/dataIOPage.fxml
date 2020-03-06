@@ -95,7 +95,7 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" text="Connect to Web">
+                  <Button mnemonicParsing="false" onAction="#connectToDBActionButton" text="Connect to Web">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
