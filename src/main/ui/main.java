@@ -26,6 +26,7 @@ public class main extends Application {
         primaryStage.setTitle("Storm the Wall Timing App");
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
 
 }
