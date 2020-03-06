@@ -2,8 +2,8 @@ package models.exceptions;
 
 public class NoHeatWithIDException extends Exception {
 
-    public NoHeatWithIDException() {
-        super("Could not find a heat with that ID.");
+    public NoHeatWithIDException(String s) {
+        super("Could not find a heat with that ID. " + s);
     }
 
 }

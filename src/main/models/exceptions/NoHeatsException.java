@@ -7,7 +7,7 @@ public class NoHeatsException extends Exception{
     }
 
     public NoHeatsException(String s) {
-        super("There are no heats available to grab " + s + " from.");
+        super("There are no heats available to grab." + s);
     }
 
 }
