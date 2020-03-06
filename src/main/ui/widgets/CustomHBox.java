@@ -32,7 +32,6 @@ public abstract class CustomHBox extends HBox {
             }
 
             run.setSitrep(Sitrep.valueOf(sitrep));
-            timingController.getDbConnection().runDBUpdate(run);
         } catch (NoRunFoundException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "If the error persists please " +
                     "contact an admin. Error: " + e.getMessage());

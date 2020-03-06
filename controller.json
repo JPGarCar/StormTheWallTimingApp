@@ -2,6 +2,5 @@
   "stagedHeat" : null,
   "currentRuns" : { },
   "stoppedRuns" : { },
-  "finishedRuns" : { },
-  "dbConnection" : null
+  "finishedRuns" : { }
 }

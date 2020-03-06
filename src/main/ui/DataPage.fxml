@@ -44,7 +44,7 @@
             <Insets left="10.0" right="10.0" />
          </padding>
       </HBox>
-      <TabPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: Black;" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+      <TabPane fx:id="tabePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: Black;" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
         <tabs>
           <Tab fx:id="heatTab" text="Heats">
                <content>
@@ -73,7 +73,7 @@
                   </TreeTableView>
                </content>
           </Tab>
-            <Tab text="Runs">
+            <Tab fx:id="runtab" text="Runs">
                <content>
                   <TreeTableView fx:id="runTreeTable" prefHeight="200.0" prefWidth="200.0">
                     <columns>

@@ -26,8 +26,7 @@ public class MainTimingController {
 // VARIABLES //
 
     // represents milliseconds to wait before not undoing a heat
-    @JsonIgnore
-    final int UNDOHEATAMOUNT = 10000;
+    final int UNDOHEATAMOUNT = 20000;
 
     private TimingController controller;
     private Calendar undoHeatTimer;
@@ -338,15 +337,25 @@ public class MainTimingController {
 
         // to undo heat, heat must have started within UNDOHEATAMOUNT milliseconds
         if (undoHeatTimer != null && Calendar.getInstance().getTimeInMillis() - undoHeatTimer.getTimeInMillis() < UNDOHEATAMOUNT ) {
-            returnTeams(controller.getCurrentDay().getAtHeat() - 1);
-            try {
-                controller.getCurrentDay().undoLastHeatStart();
-            } catch (NoHeatWithIDException | CanNotUndoHeatException e) {
-               showAlert(Alert.AlertType.ERROR, "Please contact an admin if the error persists. Error: " +
-                       e.getMessage(), "There has been an error.");
+
+            // ensure the user wants to undo the heat
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to undo the " +
+                    "last heat, heat num: " + (controller.getCurrentDay().getAtHeat() - 1));
+            alert.setHeaderText("Are you sure you want to undo?");
+            alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+            alert.showAndWait();
+
+            if (alert.getResult() == ButtonType.OK) {
+                returnTeams(controller.getCurrentDay().getAtHeat() - 1);
+                try {
+                    controller.getCurrentDay().undoLastHeatStart();
+                } catch (NoHeatWithIDException | CanNotUndoHeatException e) {
+                    showAlert(Alert.AlertType.ERROR, "Please contact an admin if the error persists. Error: " +
+                            e.getMessage(), "There has been an error.");
+                }
+                stageHeatNumber.setText(Integer.toString(controller.getCurrentDay().getAtHeat()));
+                controller.saveData();
             }
-            stageHeatNumber.setText(Integer.toString(controller.getCurrentDay().getAtHeat()));
-            controller.saveData();
         } else {
             showAlert(Alert.AlertType.WARNING, "Can not undo the heat because it has been more than 10 " +
                     "seconds since the last heat started.", "Can not undo heat.");

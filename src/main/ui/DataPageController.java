@@ -85,6 +85,13 @@ public class DataPageController {
     @FXML
     private TreeTableColumn<Object, String> heatNumberRunCol;
 
+    @FXML
+    private TabPane tabePane;
+
+    @FXML
+    private Tab runtab;
+
+
 
 // CONSTRUCTORS and INITIALIZER //
 
@@ -108,6 +115,8 @@ public class DataPageController {
 
         runTreeTable.setRoot(runRoot);
         runTreeTable.setShowRoot(false);
+        // hide this tab
+        tabePane.getTabs().remove(runtab);
 
         teamTreeTable.setRoot(teamRoot);
         teamTreeTable.setShowRoot(false);
@@ -336,7 +345,7 @@ public class DataPageController {
         try {
             FXMLLoader root = new FXMLLoader(getClass().getResource("MainPage.fxml"));
             root.setControllerFactory(c -> new MainPageController(controller));
-            runTreeTable.getScene().setRoot(root.load());
+            tabePane.getScene().setRoot(root.load());
             controller.saveData();
         } catch (IOException e) {
             showAlert(Alert.AlertType.ERROR, "Please contact an admin if the error persists. Error: "
