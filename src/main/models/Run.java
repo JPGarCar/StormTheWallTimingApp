@@ -8,6 +8,7 @@ import com.sun.istack.internal.NotNull;
 import models.enums.Sitrep;
 import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
 import models.exceptions.NoHeatsException;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -47,7 +48,7 @@ public class Run {
     private int heatNumber;
 
     // Represents the id of the run to be used by db, thus no need to instantiate in program - UNIQUE
-    @Id
+    @NaturalId
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
@@ -70,6 +71,7 @@ public class Run {
 
     // Represents the run number, a unique number for each run to be used by the program
     @Embedded
+    @Id
     private RunNumber runNumber;
 
 // CONSTRUCTORS //

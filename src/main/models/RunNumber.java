@@ -1,5 +1,6 @@
 package models;
 
+import javax.persistence.*;
 import java.util.Objects;
 
 /*
@@ -7,10 +8,10 @@ import java.util.Objects;
     Purpose: used to differentiate runs by the team and heat numbers
  */
 
-
 public class RunNumber implements Comparable {
 
 // VARIABLES //
+
     private int teamNumber;
     private int heatNumber;
 

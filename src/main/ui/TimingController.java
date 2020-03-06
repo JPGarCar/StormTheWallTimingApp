@@ -6,7 +6,9 @@ import com.sun.istack.internal.NotNull;
 import javafx.application.Platform;
 import models.*;
 import models.exceptions.*;
+import org.hibernate.Session;
 import persistance.PersistanceWithJackson;
+import persistance.RunPolling;
 
 
 import java.util.*;
@@ -15,6 +17,7 @@ public class TimingController {
 
 // VARIABLES //
 
+    @JsonIgnore
     final int RUNUNDODELAYTIME = 10000;
 
     // Contains the current staged heat
@@ -43,6 +46,8 @@ public class TimingController {
 
     private Map<RunNumber, Timer> timerMap;
 
+    private Session session;
+
 // CONSTRUCTORS //
 
     // DUMMY CONSTRUCTOR for Jackson JSON
@@ -55,6 +60,9 @@ public class TimingController {
 
 // GETTERS AND SETTERS, used by Jackson JSON //
 
+    public Session getSession() {
+        return session;
+    }
 
     public Day getCurrentDay() {
         return currentDay;
@@ -120,7 +128,11 @@ public class TimingController {
         this.currentDay = currentDay;
     }
 
-// FUNCTIONS //
+    public void setSession(Session session) {
+        this.session = session;
+    }
+
+    // FUNCTIONS //
 
     // EFFECTS: add a run to the stopped run list, included the task to move to finished
     private void stopRun(@NotNull Run run) {

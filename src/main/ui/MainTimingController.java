@@ -1,5 +1,6 @@
 package ui;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.internal.NotNull;
 import javafx.collections.FXCollections;
 import javafx.event.Event;
@@ -25,6 +26,7 @@ public class MainTimingController {
 // VARIABLES //
 
     // represents milliseconds to wait before not undoing a heat
+    @JsonIgnore
     final int UNDOHEATAMOUNT = 10000;
 
     private TimingController controller;
@@ -234,19 +236,18 @@ public class MainTimingController {
         // try to stage the heat with the given heat number from stageHeatNumber
         try {
             controller.setStagedHeat(controller.getCurrentDay().getHeatByHeatNumber(Integer.parseInt(stageHeatNumber.getText())));
+            Heat stagedHeat = controller.getStagedHeat();
+
+            // make sure the heat has not run yet
+            if (!stagedHeat.isHasStarted()) {
+                updateStagedHeatTeamList();
+                timeToStartLabel.setText(stagedHeat.timeToStartString());
+                categoryLabel.setText(stagedHeat.getCategory());
+            }
+
         } catch (NoHeatWithIDException e) {
             showAlert(Alert.AlertType.ERROR, e.getMessage(), "The following error while staging the heat has come up." );
             stageHeatNumber.setText(Integer.toString(controller.getCurrentDay().getAtHeat()));
-        }
-        Heat stagedHeat = controller.getStagedHeat();
-
-        // make sure the heat has not run yet
-        if (!stagedHeat.isHasStarted()) {
-            updateStagedHeatTeamList();
-
-            timeToStartLabel.setText(stagedHeat.timeToStartString());
-            categoryLabel.setText(stagedHeat.getCategory());
-
         }
     }
 
