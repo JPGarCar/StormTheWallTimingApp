@@ -1,0 +1,76 @@
+/* JavaFx CSS */
+
+.text-input {
+    -fx-text-fill: white;
+}
+
+.text {
+ -fx-text-fill: white;
+}
+
+.text-field {
+    -fx-background-color: Black;
+    -fx-border-color: #F26623;
+    -fx-border-radius: 5;
+ }
+
+.button {
+-fx-background-color: #F26623;
+-fx-text-fill: white;
+}
+
+/** Keep the split pane dividers transparent **/
+.split-pane:horizontal > .split-pane-divider {
+   -fx-background-color: transparent;
+}
+
+.split-pane:vertical > .split-pane-divider {
+   -fx-background-color: transparent;
+}
+
+.separator {
+-fx-border-style: solid;
+-fx-border-width: 2px;
+-fx-background-color: #F26623;
+}
+
+/** List view styling **/
+.list-view .list-cell:even {
+-fx-background-color: #4c4b47;
+-fx-text-fill: white;
+}
+.list-view .list-cell:odd {
+-fx-background-color: black;
+-fx-text-fill: white;
+}
+
+/** To customize the alert panel **/
+.dialog-pane{
+    -fx-border-color: #F26623;
+    -fx-border-radius: 4px;
+}
+
+.dialog-pane > .button-bar > .container {
+    -fx-background-color: white;
+}
+
+.dialog-pane > .content.label {
+   -fx-background-color: white;
+   -fx-text-fill:black;
+   -fx-font-size:15.0px;
+}
+
+.dialog-pane:header .header-panel {
+  -fx-background-color: White;
+}
+
+.dialog-pane:header .header-panel .label{
+  -fx-text-fill: Black;
+  -fx-font-size: 18.0px;
+}
+
+
+.dialog-pane .button{
+   -fx-background-color: #F26623;
+   -fx-text-fill: white;
+ }

@@ -4,7 +4,6 @@ package persistance;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import models.Day;
 import models.Program;
 import models.RunNumber;
 import ui.TimingController;

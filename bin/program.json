@@ -1,0 +1,43 @@
+{
+  "programDays" : {
+    "Saturday" : {
+      "dayToRun" : "Saturday",
+      "dayNumber" : 0,
+      "atHeat" : 101,
+      "heats" : {
+        "101" : {
+          "@UUID" : "a1f6ed5a-9683-4073-a69e-e04ff53ac655",
+          "timeToStart" : -2209006800000,
+          "category" : "Community CoRec Heat",
+          "heatID" : 1,
+          "heatNumber" : 101,
+          "hasStarted" : false,
+          "actualStartTime" : null,
+          "teams" : { }
+        },
+        "102" : {
+          "@UUID" : "489c6665-0028-4bb9-a2a7-4291af79d3d4",
+          "timeToStart" : -2209006500000,
+          "category" : "Community IronPerson Heat",
+          "heatID" : 2,
+          "heatNumber" : 102,
+          "hasStarted" : false,
+          "actualStartTime" : null,
+          "teams" : { }
+        },
+        "103" : {
+          "@UUID" : "536f7b52-1099-4809-8bb5-80826ffc3574",
+          "timeToStart" : -2209006200000,
+          "category" : "UBC Alumni",
+          "heatID" : 3,
+          "heatNumber" : 103,
+          "hasStarted" : false,
+          "actualStartTime" : null,
+          "teams" : { }
+        }
+      }
+    }
+  },
+  "allTeams" : { },
+  "waitList" : { }
+}

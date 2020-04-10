@@ -40,14 +40,13 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="java-json" level="project" />
-    <orderEntry type="library" name="jackson-core-2.10.2" level="project" />
-    <orderEntry type="library" name="jackson-annotations-2.10.2" level="project" />
-    <orderEntry type="library" name="jackson-databind-2.10.2" level="project" />
-    <orderEntry type="library" name="openjfx-11.0.2_windows-x64_bin-sdk" level="project" />
     <orderEntry type="library" name="com.google.code.maven-play-plugin.org.hibernate:hibernate-core:5.2.10.Final-patched-play-1.5.0" level="project" />
-    <orderEntry type="library" name="mysql-connector-java-8.0.19" level="project" />
     <orderEntry type="library" name="org.apache.poi:poi:4.1.1" level="project" />
     <orderEntry type="library" name="org.apache.poi:poi-ooxml:4.1.1" level="project" />
+    <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-annotations:2.10.3" level="project" />
+    <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-databind:2.10.3" level="project" />
+    <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-core:2.10.3" level="project" />
+    <orderEntry type="library" name="org.json:json:20190722" level="project" />
+    <orderEntry type="library" name="mysql:mysql-connector-java:8.0.19" level="project" />
   </component>
 </module>
