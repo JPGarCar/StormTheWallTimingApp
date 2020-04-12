@@ -13,9 +13,9 @@ import java.util.Arrays;
 public class HBoxForFinishedTeam extends CustomHBox {
 
     private static final double HBoxSpacing = 10;
-    Label label = new Label();
+    Label teamName = new Label();
     Label id = new Label();
-    Label thirdLabel = new Label();
+    Label finalTime = new Label();
     ComboBox comboBox = new ComboBox();
 
     public HBoxForFinishedTeam(String idText, String teamName, String finalTime, Sitrep sitrep, TimingController controller, int heatNumber){
@@ -24,11 +24,11 @@ public class HBoxForFinishedTeam extends CustomHBox {
         id.setText(idText);
         id.setMaxWidth(45);
         HBox.setHgrow(id, Priority.ALWAYS);
-        label.setText(teamName);
-        label.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(label, Priority.ALWAYS);
+        this.teamName.setText(teamName);
+        this.teamName.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(this.teamName, Priority.ALWAYS);
 
-        thirdLabel.setText(finalTime);
+        this.finalTime.setText(finalTime);
 
         comboBox.setItems(FXCollections.observableList(Arrays.asList(Sitrep.values())));
         comboBox.setValue(sitrep.name());
@@ -36,6 +36,6 @@ public class HBoxForFinishedTeam extends CustomHBox {
             super.updateStatusForFinished(Integer.parseInt(idText), comboBox.getValue().toString(), controller, heatNumber);
         });
 
-        this.getChildren().addAll(id, label, comboBox, thirdLabel);
+        this.getChildren().addAll(id, this.teamName, comboBox, this.finalTime);
     }
 }

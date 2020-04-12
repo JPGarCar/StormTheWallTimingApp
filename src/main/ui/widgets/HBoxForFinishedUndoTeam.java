@@ -9,7 +9,7 @@ import ui.TimingController;
 public class HBoxForFinishedUndoTeam extends CustomHBox {
 
     private static final double HBoxSpacing = 10;
-    Label name = new Label();
+    Label teamName = new Label();
     Label id = new Label();
     Label finalTimeLabel = new Label();
     Button undoButton = new Button();
@@ -20,9 +20,9 @@ public class HBoxForFinishedUndoTeam extends CustomHBox {
         id.setText(idText);
         id.setMaxWidth(45);
         HBox.setHgrow(id, Priority.ALWAYS);
-        name.setText(teamName);
-        name.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(name, Priority.ALWAYS);
+        this.teamName.setText(teamName);
+        this.teamName.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(this.teamName, Priority.ALWAYS);
 
         undoButton.setText("Undo");
         undoButton.setOnAction(event -> {
@@ -32,6 +32,6 @@ public class HBoxForFinishedUndoTeam extends CustomHBox {
         finalTimeLabel.setText(finalTime);
 
 
-        this.getChildren().addAll(id, name, finalTimeLabel, undoButton);
+        this.getChildren().addAll(id, this.teamName, finalTimeLabel, undoButton);
     }
 }

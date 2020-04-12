@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 public class HBoxForStagedTeam extends CustomHBox {
     private static final double HBoxSpacing = 12;
-    Label label = new Label();
+    Label teamNameLabel = new Label();
     Label id = new Label();
     ComboBox comboBox = new ComboBox();
 
@@ -23,9 +23,9 @@ public class HBoxForStagedTeam extends CustomHBox {
         id.setMaxWidth(45);
         HBox.setHgrow(id, Priority.ALWAYS);
 
-        label.setText(teamName);
-        label.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(label, Priority.ALWAYS);
+        teamNameLabel.setText(teamName);
+        teamNameLabel.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(teamNameLabel, Priority.ALWAYS);
 
 
         comboBox.setItems(FXCollections.observableList(Arrays.asList(Sitrep.values())));
@@ -34,6 +34,6 @@ public class HBoxForStagedTeam extends CustomHBox {
             updateStatusForStaged(Integer.parseInt(idText), comboBox.getValue().toString(), controller);
         });
 
-        this.getChildren().addAll(id, label, comboBox);
+        this.getChildren().addAll(id, teamNameLabel, comboBox);
     }
 }

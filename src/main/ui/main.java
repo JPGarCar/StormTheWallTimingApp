@@ -30,9 +30,10 @@ public class main extends Application {
             primaryStage.show();
         } catch (NullPointerException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "There has been an critical error. " +
-                    "Please contact admin for assistance.");
+                    "Please contact admin for assistance. " + e.getMessage());
             alert.setHeaderText("There has been an error!");
             alert.show();
+            e.printStackTrace();
         }
 
     }
