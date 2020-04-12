@@ -58,7 +58,7 @@ public class TestTeamClass {
         Calendar startTime = Calendar.getInstance();
         Heat heat = new Heat(null, "LeagueType", 1, day, 1);
         team.addHeat(heat);
-        heat.markActualStartTime(startTime);
+        heat.markStartTime(startTime);
 
         Calendar endTime = Calendar.getInstance();
         endTime.add(Calendar.MINUTE, 5);

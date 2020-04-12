@@ -7,8 +7,6 @@ import javafx.scene.control.*;
 import models.*;
 import models.exceptions.NoRunFoundException;
 
-import javax.security.auth.callback.Callback;
-import java.beans.beancontext.BeanContext;
 import java.io.IOException;
 
 public class DataPageController {
@@ -207,7 +205,7 @@ public class DataPageController {
         });
         actualStartTimeHeatCol.setCellValueFactory( param -> {
             if (param.getValue().getValue() instanceof Heat) {
-                return new SimpleStringProperty(((Heat) param.getValue().getValue()).actualStartTimeString());
+                return new SimpleStringProperty(((Heat) param.getValue().getValue()).startTimeString());
             } else if (param.getValue().getValue() instanceof Team) {
                 try {
                     Heat heat = ((Heat) param.getValue().getParent().getValue());
@@ -229,7 +227,7 @@ public class DataPageController {
         });
         timeToStartHeatCol.setCellValueFactory(param -> {
             if (param.getValue().getValue() instanceof Heat) {
-                return new SimpleStringProperty(((Heat) param.getValue().getValue()).timeToStartString());
+                return new SimpleStringProperty(((Heat) param.getValue().getValue()).scheduledTimeString());
             } else if (param.getValue().getValue() instanceof Team) {
                 return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamName());
             } else {
@@ -299,7 +297,7 @@ public class DataPageController {
             if (param.getValue().getValue() instanceof Team) {
                 return new SimpleStringProperty(((Team) param.getValue().getValue()).getTeamName());
             } else if (param.getValue().getValue() instanceof Heat) {
-                return new SimpleStringProperty(((Heat) param.getValue().getValue()).timeToStartString());
+                return new SimpleStringProperty(((Heat) param.getValue().getValue()).scheduledTimeString());
             } else {
                 return new SimpleStringProperty("Start Time");
             }

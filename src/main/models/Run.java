@@ -1,7 +1,6 @@
 package models;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sun.istack.internal.NotNull;
@@ -164,7 +163,7 @@ public class Run {
                     team.getTeamNumber() + "Heat that was not found: " + heatNumber);
         }
 
-        finalTime = new FinalTime(heat.getActualStartTime(), endTime);
+        finalTime = new FinalTime(heat.getStartTime(), endTime);
     }
 
 

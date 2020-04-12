@@ -1,6 +1,5 @@
 package ui;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.internal.NotNull;
 import javafx.collections.FXCollections;
 import javafx.event.Event;
@@ -8,9 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import models.*;
 import models.exceptions.*;
 import ui.widgets.HBoxForFinishedTeam;
@@ -240,7 +237,7 @@ public class MainTimingController {
             // make sure the heat has not run yet
             if (!stagedHeat.isHasStarted()) {
                 updateStagedHeatTeamList();
-                timeToStartLabel.setText(stagedHeat.timeToStartString());
+                timeToStartLabel.setText(stagedHeat.scheduledTimeString());
                 categoryLabel.setText(stagedHeat.getCategory());
             }
 
@@ -257,7 +254,7 @@ public class MainTimingController {
 
         // make sure there is a staged heat
         if (stagedHeat != null) {
-            stagedHeat.markActualStartTime(Calendar.getInstance());
+            stagedHeat.markStartTime(Calendar.getInstance());
 
             // try to add a run from every team in the heat
             try {

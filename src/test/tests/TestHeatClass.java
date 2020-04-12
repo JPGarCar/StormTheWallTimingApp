@@ -22,7 +22,7 @@ public class TestHeatClass {
         Day day = new Day("Saturday", 1);
         heat = new Heat(timeToStart, "Competitive", 123, day, 123);
 
-        assertEquals(timeToStart.get(Calendar.HOUR_OF_DAY) + ":" + timeToStart.get(Calendar.MINUTE), heat.timeToStartString());
+        assertEquals(timeToStart.get(Calendar.HOUR_OF_DAY) + ":" + timeToStart.get(Calendar.MINUTE), heat.scheduledTimeString());
         assertEquals(123, heat.getHeatNumber());
         assertEquals(day, heat.getDayToRace());
         assertEquals(0, heat.getTeams().size());

@@ -155,8 +155,8 @@ public class Day {
     // EFFECTS: return a heat by its start time or a noHeatWithStatTimeException
     public Heat getHeatByStartTime(Calendar calendar) throws NoHeatWithStartTimeException {
         for (Heat heat : heats.values()) {
-            if (heat.getTimeToStart().get(Calendar.HOUR_OF_DAY) == calendar.get(Calendar.HOUR_OF_DAY) &&
-            heat.getTimeToStart().get(Calendar.MINUTE) == calendar.get(Calendar.MINUTE)) {
+            if (heat.getScheduledTime().get(Calendar.HOUR_OF_DAY) == calendar.get(Calendar.HOUR_OF_DAY) &&
+            heat.getScheduledTime().get(Calendar.MINUTE) == calendar.get(Calendar.MINUTE)) {
                 return heat;
             }
         }

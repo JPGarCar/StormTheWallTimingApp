@@ -183,7 +183,7 @@ public class Team {
     }
 
     // Helper function: creates a Run out of a Heat
-    private Run heatToTeamHeat(@NotNull Heat heat) {
+    private Run heatToRun(@NotNull Heat heat) {
         return new Run(heat.getHeatNumber(), this);
     }
 
@@ -191,7 +191,7 @@ public class Team {
     public void addHeat(Heat heat) throws AddHeatException {
         if (!heats.containsKey(heat.getHeatNumber())) {
             heats.put(heat.getHeatNumber(), heat);
-            Run run = heatToTeamHeat(heat);
+            Run run = heatToRun(heat);
             runs.put(run.getHeatNumber(), run);
             try {
                 heat.addTeam(this);
