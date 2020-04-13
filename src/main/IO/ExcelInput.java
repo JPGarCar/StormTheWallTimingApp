@@ -8,7 +8,6 @@ import models.exceptions.AddHeatException;
 import models.exceptions.InvalidExcelException;
 import models.exceptions.NoDayException;
 import models.exceptions.NoHeatWithStartTimeException;
-import org.apache.commons.math3.analysis.function.Add;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -231,7 +230,7 @@ public class ExcelInput {
                 Team team = new Team(poolName, teamNumber, teamName, teamID, teamUnit);
                 if (heat != null) {
                     try {
-                        team.addHeat(heat);
+                        team.addRunFromHeat(heat);
                     } catch (AddHeatException e) {
                         alertLinkedList.add(new Alert(Alert.AlertType.WARNING, "Data import was successful, however there was an error while" +
                                 " importing the following data: " + e.getMessage()));

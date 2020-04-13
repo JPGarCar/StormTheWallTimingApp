@@ -5,6 +5,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import models.Run;
+import models.Team;
 import models.enums.Sitrep;
 import ui.TimingController;
 
@@ -18,22 +20,25 @@ public class HBoxForFinishedTeam extends CustomHBox {
     Label finalTime = new Label();
     ComboBox comboBox = new ComboBox();
 
-    public HBoxForFinishedTeam(String idText, String teamName, String finalTime, Sitrep sitrep, TimingController controller, int heatNumber){
-        super(HBoxSpacing);
+    public HBoxForFinishedTeam(Run run, TimingController controller){
+        super(HBoxSpacing, run);
 
-        id.setText(idText);
+        Team team = run.getTeam();
+
+        id.setText(Integer.toString(team.getTeamNumber()));
         id.setMaxWidth(45);
         HBox.setHgrow(id, Priority.ALWAYS);
-        this.teamName.setText(teamName);
+
+        this.teamName.setText(team.getTeamName());
         this.teamName.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(this.teamName, Priority.ALWAYS);
 
-        this.finalTime.setText(finalTime);
+        this.finalTime.setText(run.getFinalTime().toString());
 
         comboBox.setItems(FXCollections.observableList(Arrays.asList(Sitrep.values())));
-        comboBox.setValue(sitrep.name());
+        comboBox.setValue(run.getSitrep().name());
         comboBox.setOnAction(event -> {
-            super.updateStatusForFinished(Integer.parseInt(idText), comboBox.getValue().toString(), controller, heatNumber);
+            super.updateStatus(comboBox.getValue().toString(), controller);
         });
 
         this.getChildren().addAll(id, this.teamName, comboBox, this.finalTime);

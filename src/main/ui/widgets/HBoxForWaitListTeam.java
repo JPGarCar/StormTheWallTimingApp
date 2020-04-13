@@ -5,6 +5,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import models.Run;
+import models.Team;
 import models.exceptions.AddTeamException;
 import ui.TimingController;
 
@@ -16,23 +18,25 @@ public class HBoxForWaitListTeam extends CustomHBox {
     Label teamType = new Label();
     Button addTeamButton = new Button();
 
-    public HBoxForWaitListTeam(String idText, String teamName, String category, TimingController controller){
-        super(HBoxSpacing);
+    public HBoxForWaitListTeam(Run run, TimingController controller){
+        super(HBoxSpacing, run);
 
-        id.setText(idText);
+        Team team = run.getTeam();
+
+        id.setText(Integer.toString(team.getTeamNumber()));
         id.setMaxWidth(45);
         HBox.setHgrow(id, Priority.ALWAYS);
-        this.teamName.setText(teamName);
+        this.teamName.setText(team.getTeamName());
         this.teamName.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(this.teamName, Priority.ALWAYS);
 
-        this.teamType.setText(category);
+        this.teamType.setText(team.getPoolName());
 
         addTeamButton.setText("Add Team");
         addTeamButton.setOnAction(event -> {
             try {
-                controller.getStagedHeat().addTeam(controller.getProgram().getTeamByTeamNumber(Integer.parseInt(idText)));
-                controller.getProgram().removeTeamFromWaitList(Integer.parseInt(idText));
+                controller.getStagedHeat().addRun(run);
+                controller.getProgram().removeRunFromWaitList(run.getRunNumber());
                 controller.getEditHeatController().setTeamHeatListTeams();
                 controller.getEditHeatController().setWaitListTeams();
             } catch (AddTeamException e) {

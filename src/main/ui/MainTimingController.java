@@ -50,8 +50,7 @@ public class MainTimingController {
     public void updateRunningRunList() {
         ArrayList<HBoxForRunningTeam> hBoxForRunningTeams = new ArrayList<>();
         for (Run run : controller.getCurrentRuns().values()) {
-            Team team = run.getTeam();
-            HBoxForRunningTeam hBox = new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), run.getSitrep(), run.getHeatNumber(), team.getPoolName(), controller);
+            HBoxForRunningTeam hBox = new HBoxForRunningTeam(run, controller);
             hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
             hBoxForRunningTeams.add(hBox);
         }
@@ -60,9 +59,8 @@ public class MainTimingController {
 
     // EFFECTS: add a run to the running run list, first is private, second and third are the public ones to use
     public void addToRunningRunList(Run run, boolean top) {
-        Team team = run.getTeam();
         ArrayList<HBoxForRunningTeam> hBoxForRunningTeams = new ArrayList<>();
-        HBoxForRunningTeam hBox = new HBoxForRunningTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), run.getSitrep(), run.getHeatNumber(), team.getPoolName(), controller);
+        HBoxForRunningTeam hBox = new HBoxForRunningTeam(run, controller);
         hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
         hBoxForRunningTeams.add(hBox);
         if (top) {
@@ -82,8 +80,7 @@ public class MainTimingController {
     public void updateStoppedRunList() {
         ArrayList<HBoxForFinishedUndoTeam> hBoxForFinishedUndoTeams = new ArrayList<>();
         for (Run run : controller.getStoppedRuns().values()) {
-            Team team = run.getTeam();
-            HBoxForFinishedUndoTeam hBox = new HBoxForFinishedUndoTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), run.getFinalTime().toString(), controller, run.getHeatNumber());
+            HBoxForFinishedUndoTeam hBox = new HBoxForFinishedUndoTeam(run, controller);
             hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
             hBoxForFinishedUndoTeams.add(hBox);
         }
@@ -92,9 +89,8 @@ public class MainTimingController {
 
     // EFFECTS: add a team to the finished team list, first is private, second and third are the public ones to use
     private void addToStoppedRunList(Run run, boolean top) {
-        Team team = run.getTeam();
         ArrayList<HBoxForFinishedUndoTeam> hBoxForFinishedUndoTeams = new ArrayList<>();
-        HBoxForFinishedUndoTeam hBox = new HBoxForFinishedUndoTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), run.getFinalTime().toString(), controller, run.getHeatNumber());
+        HBoxForFinishedUndoTeam hBox = new HBoxForFinishedUndoTeam(run, controller);
         hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
         hBoxForFinishedUndoTeams.add(hBox);
         if (top) {
@@ -115,8 +111,7 @@ public class MainTimingController {
     public void updateFinishedRunList() {
         ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
         for (Run run : controller.getFinishedRuns().values()) {
-            Team team = run.getTeam();
-            HBoxForFinishedTeam hBox =  new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), run.getFinalTime().toString(), run.getSitrep(), controller, run.getHeatNumber());
+            HBoxForFinishedTeam hBox =  new HBoxForFinishedTeam(run, controller);
             hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
             hBoxForFinishedTeams.add(hBox);
         }
@@ -126,9 +121,8 @@ public class MainTimingController {
 
     // EFFECTS: add a team to the final finished team list, first is private, second and third are the public ones to use
     private void addToFinishedRunList(@NotNull Run run, boolean top) {
-        Team team = run.getTeam();
         ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
-        HBoxForFinishedTeam hBox = new HBoxForFinishedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), run.getFinalTime().toString(), run.getSitrep(), controller, run.getHeatNumber());
+        HBoxForFinishedTeam hBox = new HBoxForFinishedTeam(run, controller);
         hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
         hBoxForFinishedTeams.add(hBox);
         if (top) {
@@ -147,15 +141,10 @@ public class MainTimingController {
     // EFFECTS: set the list for teams in the staged list from the controller's staged heat heat
     public void updateStagedHeatTeamList() {
         ArrayList<HBoxForStagedTeam> list = new ArrayList<>();
-        for (Team team : controller.getStagedHeat().getTeams().values()) {
-            try {
-                HBoxForStagedTeam hBoxForStagedTeam = new HBoxForStagedTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getRunByHeatNumber(controller.getStagedHeat().getHeatNumber()).getSitrep(), controller);
-                hBoxForStagedTeam.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
-                list.add(hBoxForStagedTeam);
-            } catch (NoRunFoundException e) {
-                showAlert(Alert.AlertType.ERROR, "Please talk to an admin if the error persists" + e.getMessage(),
-                        "There has been an updateStagedHeatTeamList Error");
-            }
+        for (Run run : controller.getStagedHeat().getRuns().values()) {
+            HBoxForStagedTeam hBoxForStagedTeam = new HBoxForStagedTeam(run, controller);
+            hBoxForStagedTeam.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
+            list.add(hBoxForStagedTeam);
         }
 
         stageHeatTeamList.setItems(FXCollections.observableList(list));
@@ -178,14 +167,10 @@ public class MainTimingController {
         stageHeatNumber.setText(Integer.toString(controller.getCurrentDay().getAtHeat()));
     }
 
-    // EFFECTS: move the teams from heatNumber back to staging list from running list
-    private void returnTeams(int heatNumber) {
-        List<Object> runList = Arrays.asList(controller.getCurrentRuns().values().toArray());
-        for (int i = 0; i < runList.size(); i++) {
-            Run run = (Run) runList.get(i);
-            if (run.getHeatNumber() == heatNumber) {
-                controller.removeRunningTeam(run.getRunNumber());
-            }
+    // EFFECTS: move active runs back to stagedHeat list
+    private void returnTeams(int heatNumber) throws NoHeatWithIDException {
+        for (Run run : controller.getCurrentDay().getHeatByHeatNumber(heatNumber).getRuns().values()) {
+            controller.removeRunningTeam(run.getRunNumber());
         }
         updateRunningRunList();
     }
@@ -258,8 +243,8 @@ public class MainTimingController {
 
             // try to add a run from every team in the heat
             try {
-                controller.addRunningRunsFromTeams(stagedHeat.teamsThatWillRun(), stagedHeat.getHeatNumber());
-            } catch (NoRunFoundException | NoHeatsException e) {
+                controller.addRunningRunsFromTeams(stagedHeat.listOfRunsWithoutDNS());
+            } catch (NoHeatsException e) {
                 showAlert(Alert.AlertType.WARNING, "The heat started properly, however, " +
                         "the following error came up. " + e.getMessage(),
                         "There has been an error while starting the heat.");
@@ -343,8 +328,9 @@ public class MainTimingController {
             alert.showAndWait();
 
             if (alert.getResult() == ButtonType.OK) {
-                returnTeams(controller.getCurrentDay().getAtHeat() - 1);
+
                 try {
+                    returnTeams(controller.getCurrentDay().getAtHeat() - 1);
                     controller.getCurrentDay().undoLastHeatStart();
                 } catch (NoHeatWithIDException | CanNotUndoHeatException e) {
                     showAlert(Alert.AlertType.ERROR, "Please contact an admin if the error persists. Error: " +

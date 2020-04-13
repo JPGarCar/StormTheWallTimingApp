@@ -33,14 +33,14 @@ public class Program {
 
     private Map<Integer, Team> allTeams;
 
-    private Map<Integer, Team> waitList;
+    private Map<RunNumber, Run> waitList;
 
 // CONSTRUCTORS //
 
     public Program() {
         programDays = new TreeMap<>();
-        allTeams = new TreeMap<>();
-        waitList = new TreeMap<>();
+        allTeams = new TreeMap<Integer, Team>();
+        waitList = new TreeMap<RunNumber, Run>();
     }
 
 // GETTERS AND SETTERS //
@@ -54,7 +54,7 @@ public class Program {
     }
 
 
-    public Map<Integer, Team> getWaitList() {
+    public Map<RunNumber, Run> getWaitList() {
         return waitList;
     }
 
@@ -66,7 +66,7 @@ public class Program {
         this.programDays = programDays;
     }
 
-    public void setWaitList(Map<Integer, Team> waitList) {
+    public void setWaitList(Map<RunNumber, Run> waitList) {
         this.waitList = waitList;
     }
 
@@ -83,15 +83,15 @@ public class Program {
     }
 
     // EFFECTS: creates a team to use by the program
-    public Team createTeam( @NotNull String poolName, @NotNull int teamNumber, @NotNull String teamName, @NotNull int teamID, String teamUnit) {
+    public Team createTeam(@NotNull String poolName, @NotNull int teamNumber, @NotNull String teamName, @NotNull int teamID, String teamUnit) {
         Team team = new Team(poolName, teamNumber, teamName, teamID, teamUnit);
         addTeam(team);
         return team;
     }
 
     // EFFECTS: add a team to the waitList team list
-    public void addTeamToWaitList(@NotNull Team team) {
-        waitList.put(team.getTeamNumber(), team);
+    public void addRunToWaitList(@NotNull Run run) {
+        waitList.put(run.getRunNumber(), run);
     }
 
     // EFFECTS: returns a team by its team number
@@ -100,8 +100,8 @@ public class Program {
     }
 
     // EFFECTS: remove a team from wait list by its team number
-    public void removeTeamFromWaitList(@NotNull int teamNumber) {
-        waitList.remove(teamNumber);
+    public void removeRunFromWaitList(@NotNull RunNumber runNumber) {
+        waitList.remove(runNumber);
     }
 
     // EFFECTS: returns a day or builds a new one and returns that day

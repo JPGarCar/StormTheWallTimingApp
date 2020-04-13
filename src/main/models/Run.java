@@ -7,6 +7,7 @@ import com.sun.istack.internal.NotNull;
 import models.enums.Sitrep;
 import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
 import models.exceptions.NoHeatsException;
+import models.exceptions.NoTeamException;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -44,8 +45,12 @@ public class Run {
 // VARIABLES //
 
     // Represents the heat number of the heat in which the team is running
-    @Column(insertable = false, updatable = false)
-    private int heatNumber;
+    @Column()
+    private Heat heat;
+
+    // Contains the team that is running this run
+    @ManyToOne
+    private Team team;
 
     // Represents the id of the run to be used by db, thus no need to instantiate in program - UNIQUE
     @NaturalId
@@ -56,23 +61,19 @@ public class Run {
     @Embedded
     private FinalTime finalTime;
 
+    // Represents the run number, a unique number for each run to be used by the program
+    @Embedded
+    @Id
+    private RunNumber runNumber;
+
     // Represents the situation of the team in this run, ex. DNS, DNF, DQ, etc
     private Sitrep sitrep;
-
-    // Contains the team that is running this run
-    @ManyToOne
-    private Team team;
 
     // Represents if the run has been completed
     private boolean isDone;
 
     // Represents the possibility to undo the run end time
     private boolean canUndo;
-
-    // Represents the run number, a unique number for each run to be used by the program
-    @Embedded
-    @Id
-    private RunNumber runNumber;
 
 // CONSTRUCTORS //
 
@@ -83,13 +84,13 @@ public class Run {
     }
 
     // CONSTRUCTOR
-    public Run(@NotNull int heatNumber, @NotNull Team team) {
-        this.heatNumber = heatNumber;
+    public Run(@NotNull Heat heat, @NotNull Team team) {
+        this.heat = heat;
         this.team = team;
         this.sitrep = Sitrep.NONE;
         isDone = false;
         canUndo = false;
-        runNumber = new RunNumber(team.getTeamNumber(), heatNumber);
+        runNumber = new RunNumber(team.getTeamNumber(), heat.getHeatNumber());
     }
 
 // GETTERS AND SETTERS, used for Jackson JSON //
@@ -110,8 +111,8 @@ public class Run {
         return finalTime;
     }
 
-    public int getHeatNumber() {
-        return heatNumber;
+    public Heat getHeat() {
+        return heat;
     }
 
     public Team getTeam() {
@@ -134,8 +135,8 @@ public class Run {
         this.finalTime = finalTime;
     }
 
-    public void setHeatNumber(@NotNull int heatNumber) {
-        this.heatNumber = heatNumber;
+    public void setHeat(@NotNull Heat heat) {
+        this.heat = heat;
     }
 
     public void setTeam(@NotNull Team team) {
@@ -157,21 +158,28 @@ public class Run {
         canUndo = true;
         isDone = true;
 
-        Heat heat = getHeatFromTeam();
         if (heat == null) {
             throw new NoHeatsException("Error while trying to calculate end time. Team affected: " +
-                    team.getTeamNumber() + "Heat that was not found: " + heatNumber);
+                    team.getTeamNumber() + "Heat that was not found: " + heat.getHeatNumber());
         }
 
         finalTime = new FinalTime(heat.getStartTime(), endTime);
     }
 
+    //EFFECTS: delete this run by nulling all associations and deleting itself from heat and team
+    public void selfDelete() {
+        team.removeRun(runNumber);
+        team = null;
+        try {
+            heat.removeRun(runNumber);
+        } catch (NoTeamException e) {
+            // this should not happen TODO
+        }
+        heat = null;
+        finalTime = null;
+        sitrep = null;
+        runNumber = null;
 
-    // EFFECTS: return the heat´s number associated with the TeamHeat
-    private Heat getHeatFromTeam() {
-        return team.getHeats().get(heatNumber);
     }
-
-
 
 }

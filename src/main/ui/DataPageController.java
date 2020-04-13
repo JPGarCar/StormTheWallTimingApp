@@ -148,7 +148,8 @@ public class DataPageController {
             TreeItem<Object> teamTreeItem = new TreeItem<>(team);
             TreeItem<Object> tableNamesItem = new TreeItem<>();
             teamTreeItem.getChildren().add(tableNamesItem);
-            for (Heat heat : team.getHeats().values()) {
+            for (Run run : team.getRuns().values()) {
+                Heat heat = run.getHeat();
                 TreeItem<Object> heatTreeItem = new TreeItem<>(heat);
                 teamTreeItem.getChildren().add(heatTreeItem);
             }
@@ -163,7 +164,8 @@ public class DataPageController {
                 TreeItem<Object> heatTreeItem = new TreeItem<>(heat);
                 TreeItem<Object> tableNamesItem = new TreeItem<>();
                 heatTreeItem.getChildren().add(tableNamesItem);
-                for (Team team : heat.getTeams().values()) {
+                for (Run run : heat.getRuns().values()) {
+                    Team team = run.getTeam();
                     TreeItem<Object> teamTreeItem = new TreeItem<>(team);
                     heatTreeItem.getChildren().add(teamTreeItem);
                 }
@@ -188,7 +190,7 @@ public class DataPageController {
 
         });
         situationRunCol.setCellValueFactory(param -> new SimpleStringProperty(((Run) param.getValue().getValue()).getSitrep().name()));
-        heatNumberRunCol.setCellValueFactory(param -> new SimpleStringProperty(Integer.toString(((Run) param.getValue().getValue()).getHeatNumber())));
+        heatNumberRunCol.setCellValueFactory(param -> new SimpleStringProperty(Integer.toString(((Run) param.getValue().getValue()).getHeat().getHeatNumber())));
     }
 
     // EFFECTS: set all the heatTree columns their respective CellValueFactory
@@ -320,7 +322,7 @@ public class DataPageController {
                     Team team = ((Team) param.getValue().getParent().getValue());
                     if (team.getRunByHeatNumber(heat.getHeatNumber()).getIsDone())
                     {
-                        return new SimpleStringProperty(heat.getTeams().get(team.getTeamNumber()).getRunByHeatNumber(heat.getHeatNumber()).getFinalTime().toString());
+                        return new SimpleStringProperty(team.getRunByHeatNumber(heat.getHeatNumber()).getFinalTime().toString());
                     } else {
                         return new SimpleStringProperty("Has not run yet.");
                     }

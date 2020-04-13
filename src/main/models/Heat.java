@@ -61,7 +61,7 @@ public class Heat {
 
     // All the teams that are running in this heat
     @ManyToMany
-    private Map<Integer,Team> teams;
+    private Map<RunNumber, Run> runs;
 
     // A back reference to the day this heat is running in
     @ManyToOne
@@ -72,7 +72,7 @@ public class Heat {
 
     // DUMMY CONSTRUCTOR used by Jackson JSON
     public Heat() {
-        teams = new LinkedHashMap<>();
+        runs = new LinkedHashMap<RunNumber, Run>();
         this.hasStarted = false;
     }
 
@@ -85,7 +85,7 @@ public class Heat {
         this.heatID = heatID;
 
         this.hasStarted = false;
-        teams = new LinkedHashMap<>();
+        runs = new LinkedHashMap<RunNumber, Run>();
 
         setDayToRace(dayToRace);
     }
@@ -113,8 +113,8 @@ public class Heat {
         return startTime;
     }
 
-    public Map<Integer, Team> getTeams() {
-        return teams;
+    public Map<RunNumber, Run> getRuns() {
+        return runs;
     }
 
     public Calendar getScheduledTime() {
@@ -145,8 +145,8 @@ public class Heat {
         this.category = category;
     }
 
-    public void setTeams(@NotNull Map<Integer, Team> teams) {
-        this.teams = teams;
+    public void setRuns(@NotNull Map<RunNumber, Run> runs) {
+        this.runs = runs;
     }
 
     public void setScheduledTime(@NotNull Calendar scheduledTime) {
@@ -156,13 +156,10 @@ public class Heat {
 // FUNCTIONS //
 
     // MODIFIES: startTime, hasStarted, teams(children)
-    // EFFECTS: sets the heat's startTime, marks hasStarted to true, and sets this heat's team's current heat to this
+    // EFFECTS: sets the heat's startTime, marks hasStarted to true
     public void markStartTime(@NotNull Calendar startTime) {
         this.startTime = startTime;
         hasStarted = true;
-        for (Team team : teams.values()) {
-            team.markCurrentRun(heatNumber);
-        }
     }
 
     // EFFECTS: sets the given day as the day this heat will race, will delete itself from the day it was in
@@ -185,33 +182,40 @@ public class Heat {
         return decimalFormat.format(scheduledTime.get(Calendar.HOUR_OF_DAY)) + ":" + decimalFormat.format(scheduledTime.get(Calendar.MINUTE));
     }
 
-    // EFFECTS: add a team to the heat and add this heat to the team
-    public void addTeam(@NotNull Team team) throws AddTeamException {
-        if (!teams.containsKey(team.getTeamNumber())) {
-            teams.put(team.getTeamNumber(), team);
+    // EFFECTS: add a run to the heat and add this heat to the run from a team
+    public void addRunFromTeam(@NotNull Team team) throws AddTeamException {
+        Run run = new Run(this, team);
+
+        if (!runs.containsKey(run.getRunNumber())) {
+            runs.put(run.getRunNumber(), run);
             try {
-                team.addHeat(this);
+                run.getTeam().addRun(run);
             } catch (AddHeatException e) {
-                // do nothing as we expect this to happen because of the many to many connection
+                // we expect this
             }
         } else {
-            throw new AddTeamException("Heat affected: " + heatNumber + ". Team number that tried to get added: " + team.getTeamNumber());
+            throw new AddTeamException("Heat affected: " + heatNumber + ". RunNumber that tried to get added: " + run.getRunNumber());
         }
     }
 
-    // EFFECTS: remove a team from this heat and this heat from the team by team number
-    public Team removeTeam(@NotNull int teamNumber) throws NoTeamException {
-        if (teams.containsKey(teamNumber)) {
-            Team team = teams.remove(teamNumber);
-            try {
-                team.removeHeat(heatNumber);
-            } catch (NoHeatsException e) {
-                // do nothing as we expect this to happen because of the many to many connection
-            }
-            return team;
+    //EFFECTS: adds a run to the run list
+    public void addRun(Run run) throws AddTeamException {
+        if (!runs.containsKey(run.getRunNumber())) {
+            runs.put(run.getRunNumber(), run);
         } else {
-            throw new NoTeamException("Could not remove a team. Heat affected: " + heatNumber +
-                    ". Team number that go tried to remove: " + teamNumber);
+            throw new AddTeamException("Heat affected: " + heatNumber + ". RunNumber that tried to get added: " + run.getRunNumber()); // TODO
+        }
+    }
+
+    // EFFECTS: remove a run from this heat and this heat from the run by RunNumber
+    public Run removeRun(@NotNull RunNumber runNumber) throws NoTeamException {
+        if (runs.containsKey(runNumber)) {
+            Run run = runs.remove(runNumber);
+            run.setHeat(null);
+            return run;
+        } else {
+            throw new NoTeamException("Could not remove a run. Heat affected: " + heatNumber +
+                    ". RunNumber that go tried to remove: " + runNumber);
         }
     }
 
@@ -220,28 +224,20 @@ public class Heat {
         if (hasStarted) {
             hasStarted = false;
             startTime = null;
-            for (Team team : teams.values()) {
-                team.markCurrentRun(-1);
-            }
         } else {
             throw new CanNotUndoHeatException("Affected heat number: " + heatNumber);
         }
     }
 
-    // EFFECTS: return a team from this heat by its team number
-    public Team teamFromHeatByTeamNumber(@NotNull int teamNumber) {
-        return teams.get(teamNumber);
-    }
-
-    // EFFECTS: return only those heats with teamHeats that don't have DNS, those that do get a 0 time
-    public ArrayList<Team> teamsThatWillRun() throws NoRunFoundException, NoHeatsException {
-        ArrayList<Team> runnableTeams = new ArrayList<>();
-        for (Team team : teams.values()) {
-            if (team.getRunByHeatNumber(heatNumber).getSitrep() != Sitrep.DNS) {
-                runnableTeams.add(team);
+    // EFFECTS: return only Run without a DNS, if have DNS endTime == startTime for totalTime of 0
+    public ArrayList<Run> listOfRunsWithoutDNS() throws NoHeatsException {
+        ArrayList<Run> runnableTeams = new ArrayList<>();
+        for (Run run : runs.values()) {
+            if (run.getSitrep() != Sitrep.DNS) {
+                runnableTeams.add(run);
             } else {
                 try {
-                    team.getRunByHeatNumber(heatNumber).calculateEndTime(startTime);
+                    run.calculateEndTime(startTime);
                 } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
                     // Nothing to be done as this is technically impossible
                 }

@@ -9,6 +9,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import models.Heat;
+import models.Run;
 import models.Team;
 import models.exceptions.AddTeamException;
 import ui.widgets.HBoxForEditHeatTeam;
@@ -45,16 +46,16 @@ public class EditHeatPageController {
 
     public void setTeamHeatListTeams() {
         ArrayList<HBoxForEditHeatTeam> hBoxForEditHeatTeams = new ArrayList<>();
-        for (Team team : heat.getTeams().values()) {
-            hBoxForEditHeatTeams.add(new HBoxForEditHeatTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getPoolName(), controller));
+        for (Run run : heat.getRuns().values()) {
+            hBoxForEditHeatTeams.add(new HBoxForEditHeatTeam(run, controller));
         }
         teamHeatList.setItems(FXCollections.observableList(hBoxForEditHeatTeams));
     }
 
     public void setWaitListTeams() {
         ArrayList<HBoxForWaitListTeam> hBoxForWaitListTeams = new ArrayList<>();
-        for (Team team : controller.getProgram().getWaitList().values()) {
-            hBoxForWaitListTeams.add(new HBoxForWaitListTeam(Integer.toString(team.getTeamNumber()), team.getTeamName(), team.getPoolName(), controller));
+        for (Run run : controller.getProgram().getWaitList().values()) {
+            hBoxForWaitListTeams.add(new HBoxForWaitListTeam(run, controller));
         }
         availableTeamList.setItems(FXCollections.observableList(hBoxForWaitListTeams));
     }
@@ -90,7 +91,7 @@ public class EditHeatPageController {
     @FXML
     public void addTeamByID() {
         try {
-            controller.getStagedHeat().addTeam(controller.getProgram().getAllTeams().get(Integer.parseInt(addTeamIDField.getText())));
+            controller.getStagedHeat().addRunFromTeam(controller.getProgram().getAllTeams().get(Integer.parseInt(addTeamIDField.getText())));
             setTeamHeatListTeams();
         } catch (AddTeamException e) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "The team number: " + addTeamIDField.getText() +

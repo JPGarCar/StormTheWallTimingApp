@@ -7,6 +7,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import models.Run;
+import models.Team;
 import models.enums.Sitrep;
 import models.exceptions.*;
 import ui.TimingController;
@@ -22,30 +24,32 @@ public class HBoxForRunningTeam extends CustomHBox {
     Button button = new Button();
     ComboBox comboBox = new ComboBox();
 
-    public HBoxForRunningTeam(String idText, String teamNameText, Sitrep sitrep, int heatNumberInt, String teamTypeText, TimingController controller) {
-        super(HBoxSpacingRunning);
+    public HBoxForRunningTeam(Run run, TimingController controller) {
+        super(HBoxSpacingRunning, run);
 
-        heatNumber.setText(Integer.toString(heatNumberInt));
+        Team team = run.getTeam();
+
+        heatNumber.setText(Integer.toString(run.getHeat().getHeatNumber()));
         heatNumber.setMaxWidth(45);
         HBox.setHgrow(heatNumber, Priority.ALWAYS);
 
-        category.setText(teamTypeText);
+        category.setText(run.getHeat().getCategory());
         category.setPrefWidth(80);
         category.setMaxWidth(120);
         HBox.setHgrow(category, Priority.ALWAYS);
 
-        id.setText(idText);
+        id.setText(Integer.toString(team.getTeamNumber()));
         id.setMaxWidth(50);
         HBox.setHgrow(id, Priority.ALWAYS);
 
-        teamName.setText(teamNameText);
+        teamName.setText(team.getTeamName());
         teamName.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(teamName, Priority.ALWAYS);
 
         button.setText("Finish");
         button.setOnAction(event -> {
             try {
-                endTeam(Integer.parseInt(idText), heatNumberInt, controller);
+                endTeam(controller);
             } catch (NoHeatsException | CouldNotCalculateFinalTimeExcpetion e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "If the error persists please " +
                         "contact an admin. Error: " + e.getMessage());
@@ -56,9 +60,9 @@ public class HBoxForRunningTeam extends CustomHBox {
         });
 
         comboBox.setItems(FXCollections.observableList(Arrays.asList(Sitrep.values())));
-        comboBox.setValue(sitrep.name());
+        comboBox.setValue(run.getSitrep().name());
         comboBox.setOnAction(event -> {
-            updateStatusForRunning(Integer.parseInt(idText), comboBox.getValue().toString(), controller);
+            updateStatus(comboBox.getValue().toString(), controller);
         });
 
         this.getChildren().addAll(heatNumber, id, teamName, category, comboBox, button);

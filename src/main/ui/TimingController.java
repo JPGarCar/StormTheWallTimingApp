@@ -133,7 +133,6 @@ public class TimingController {
             public void run() {
                 if (run.getCanUndo()) {
                     run.setCanUndo(false);
-                    run.getTeam().markCurrentRun(-1);
 
                     Platform.runLater(() -> addFinishedRun(run));
                     Platform.runLater(() -> removeStoppedRunWithUpdate(run.getRunNumber()));
@@ -167,9 +166,9 @@ public class TimingController {
     }
 
     // EFFECTS: add multiple runs to the running team list, input as an array of teams
-    public void addRunningRunsFromTeams(ArrayList<Team> teams, int heatNumber) throws NoRunFoundException {
-        for (Team team : teams) {
-            addRunningRun(team.getRunByHeatNumber(heatNumber));
+    public void addRunningRunsFromTeams(ArrayList<Run> runs) {
+        for (Run run : runs) {
+            addRunningRun(run);
         }
         uiController.updateRunningRunList();
     }
@@ -186,8 +185,7 @@ public class TimingController {
     }
 
     // EFFECTS: send run back to running run list and remove from stopped list, undo end time too
-    public void undoRunStop(int teamNumber, int heatNumber) {
-        RunNumber runNumber = new RunNumber(teamNumber, heatNumber);
+    public void undoRunStop(RunNumber runNumber) {
         timerMap.get(runNumber).cancel();
         Run run = stoppedRuns.get(runNumber);
         run.setCanUndo(false);
@@ -203,15 +201,6 @@ public class TimingController {
     }
 
     // EFFECTS: ends a run, first with team and heat number, second with runNumber
-    public void endRun(int teamNumber, int heatNumber) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion {
-        RunNumber runNumber = new RunNumber(teamNumber, heatNumber);
-        Run run = currentRuns.get(runNumber);
-        run.calculateEndTime(Calendar.getInstance());
-        stopRun(run);
-
-        removeRunningRunWithUpdate(runNumber);
-        saveData();
-    }
     public void endRun(RunNumber runNumber) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion {
 
         Run run = currentRuns.get(runNumber);
