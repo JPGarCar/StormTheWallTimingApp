@@ -169,8 +169,20 @@ public class MainTimingController {
 
     // EFFECTS: move active runs back to stagedHeat list
     private void returnTeams(int heatNumber) throws NoHeatWithIDException {
+
+        /*
+        // This code does not work, I don't know why! -> there are runs that don't get removed
         for (Run run : controller.getCurrentDay().getHeatByHeatNumber(heatNumber).getRuns().values()) {
             controller.removeRunningTeam(run.getRunNumber());
+        }
+        */
+
+        List<Object> runList = Arrays.asList(controller.getCurrentRuns().values().toArray());
+        for (int i = 0; i < runList.size(); i++) {
+            Run run = (Run) runList.get(i);
+            if (run.getHeat().getHeatNumber() == heatNumber) {
+                controller.removeRunningTeam(run.getRunNumber());
+            }
         }
         updateRunningRunList();
     }

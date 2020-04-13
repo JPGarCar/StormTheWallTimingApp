@@ -27,6 +27,11 @@ public class PersistanceWithJackson {
 
     public static Program toJavaProgram() {
         ObjectMapper mapper = new ObjectMapper();
+
+        SimpleModule simpleModule = new SimpleModule();
+        simpleModule.addKeyDeserializer(RunNumber.class, new RunNumberDes());
+        mapper.registerModule(simpleModule);
+
         Program program = new Program();
         try {
             File json = new File("program.json");

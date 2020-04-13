@@ -72,10 +72,10 @@ public class RunNumber implements Comparable, Serializable {
         }
 
         RunNumber runNumber = (RunNumber) o;
-        if (this.heatNumber > runNumber.getHeatNumber()) {
-            return 1;
-        } else if (this.heatNumber == runNumber.getHeatNumber() && this.teamNumber == runNumber.getTeamNumber()) {
+        if (this.heatNumber == runNumber.getHeatNumber() && this.teamNumber == runNumber.getTeamNumber()) {
             return 0;
+        } else if (this.heatNumber > runNumber.getHeatNumber()) {
+            return 1;
         } else {
             return -1;
         }
