@@ -175,13 +175,6 @@ public class Heat {
         this.dayToRace = day;
     }
 
-    // EFFECTS: return the time to start as a string
-    public String scheduledTimeString() {
-        // used to set the time string to two values
-        DecimalFormat decimalFormat = new DecimalFormat("00");
-        return decimalFormat.format(scheduledTime.get(Calendar.HOUR_OF_DAY)) + ":" + decimalFormat.format(scheduledTime.get(Calendar.MINUTE));
-    }
-
     // EFFECTS: add a run to the heat and add this heat to the run from a team
     public void addRunFromTeam(@NotNull Team team) throws AddTeamException {
         Run run = new Run(this, team);
@@ -254,6 +247,13 @@ public class Heat {
         // used to format the time string to two values
         DecimalFormat formatter = new DecimalFormat("00");
         return formatter.format(startTime.get(Calendar.HOUR_OF_DAY)) + ":" + formatter.format(startTime.get(Calendar.MINUTE));
+    }
+
+    // EFFECTS: return the time to start as a string
+    public String scheduledTimeString() {
+        // used to set the time string to two values
+        DecimalFormat decimalFormat = new DecimalFormat("00");
+        return decimalFormat.format(scheduledTime.get(Calendar.HOUR_OF_DAY)) + ":" + decimalFormat.format(scheduledTime.get(Calendar.MINUTE));
     }
 
 }

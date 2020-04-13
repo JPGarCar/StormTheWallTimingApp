@@ -18,7 +18,7 @@ import ui.widgets.HBoxForStagedTeam;
 import java.io.IOException;
 import java.util.*;
 
-public class MainTimingController {
+public class MainTimingController extends UIController {
 
 // VARIABLES //
 
@@ -31,6 +31,7 @@ public class MainTimingController {
 // CONTROLLER and INITIALIZER //
 
     public MainTimingController(TimingController controller) {
+        super(controller);
         this.controller = controller;
         controller.setUiController(this);
     }
@@ -165,34 +166,6 @@ public class MainTimingController {
             }
         });
         stageHeatNumber.setText(Integer.toString(controller.getCurrentDay().getAtHeat()));
-    }
-
-    // EFFECTS: move active runs back to stagedHeat list
-    private void returnTeams(int heatNumber) throws NoHeatWithIDException {
-
-        /*
-        // This code does not work, I don't know why! -> there are runs that don't get removed
-        for (Run run : controller.getCurrentDay().getHeatByHeatNumber(heatNumber).getRuns().values()) {
-            controller.removeRunningTeam(run.getRunNumber());
-        }
-        */
-
-        List<Object> runList = Arrays.asList(controller.getCurrentRuns().values().toArray());
-        for (int i = 0; i < runList.size(); i++) {
-            Run run = (Run) runList.get(i);
-            if (run.getHeat().getHeatNumber() == heatNumber) {
-                controller.removeRunningTeam(run.getRunNumber());
-            }
-        }
-        updateRunningRunList();
-    }
-
-    // EFFECTS: shows an alert
-    private void showAlert(Alert.AlertType alertType, String message, String header) {
-        Alert alert = new Alert(alertType, message);
-        alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-        alert.setHeaderText(header);
-        alert.show();
     }
 
 // FXML TAGS //
@@ -333,17 +306,13 @@ public class MainTimingController {
         if (undoHeatTimer != null && Calendar.getInstance().getTimeInMillis() - undoHeatTimer.getTimeInMillis() < UNDOHEATAMOUNT ) {
 
             // ensure the user wants to undo the heat
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to undo the " +
-                    "last heat, heat num: " + (controller.getCurrentDay().getAtHeat() - 1));
-            alert.setHeaderText("Are you sure you want to undo?");
-            alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-            alert.showAndWait();
+            Alert alert = showAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to undo the " +
+                    "last heat, heat num: " + (controller.getCurrentDay().getAtHeat() - 1), "Are you sure you want to undo?");
 
             if (alert.getResult() == ButtonType.OK) {
 
                 try {
-                    returnTeams(controller.getCurrentDay().getAtHeat() - 1);
-                    controller.getCurrentDay().undoLastHeatStart();
+                    controller.undoLastHeat();
                 } catch (NoHeatWithIDException | CanNotUndoHeatException e) {
                     showAlert(Alert.AlertType.ERROR, "Please contact an admin if the error persists. Error: " +
                             e.getMessage(), "There has been an error.");
@@ -357,18 +326,10 @@ public class MainTimingController {
         }
     }
 
-    // EFFECTS: go back to the main menu window and close this window, will also safe data
+    // EFFECTS: go back to the main menu window and close this window, will also save data
     @FXML
     private void backToMainMenuButtonAction() {
-        try {
-            controller.saveData();
-            FXMLLoader root = new FXMLLoader(getClass().getResource("MainPage.fxml"));
-            root.setControllerFactory(c -> new MainPageController(controller));
-            runningTeamsList.getScene().setRoot(root.load());
-        } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "Please contact an admin if the problem persists. Error: "
-                    + e.getMessage(), "There has been an error while trying to go back to the main menu.");
-        }
+        backToMainMenu(timeToStartLabel.getScene());
     }
 
     // EFFECTS: skip the staged heat, the heat will just not run
@@ -382,10 +343,7 @@ public class MainTimingController {
         } else {
 
             // alert to confirm the skip heat function
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to skip this heat?");
-            alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-            alert.setHeaderText("Confirm Heat Skip");
-            alert.showAndWait();
+            Alert alert = showAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to skip this heat?", "Confirm Heat Skip");
 
             // only proceed if the alert got an ok
             if (alert.getResult() == ButtonType.OK) {

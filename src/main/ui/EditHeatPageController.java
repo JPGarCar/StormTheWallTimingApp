@@ -17,7 +17,7 @@ import ui.widgets.HBoxForWaitListTeam;
 
 import java.util.ArrayList;
 
-public class EditHeatPageController {
+public class EditHeatPageController extends UIController {
 
 // VARIABLES //
 
@@ -29,6 +29,7 @@ public class EditHeatPageController {
 // CONSTRUCTOR and INITIALIZE //
 
     public EditHeatPageController(@NotNull TimingController controller) {
+        super(controller);
         this.heat = controller.getStagedHeat();
         this.controller = controller;
         controller.setEditHeatController(this);
@@ -81,7 +82,7 @@ public class EditHeatPageController {
 
     // EFFECTS: deletes this page to go back to timer, update staged heat list
     @FXML
-    public void returnToLastPage() {
+    private void returnToLastPage() {
         controller.getUiController().updateStagedHeatTeamList();
         Stage stage = (Stage) teamHeatList.getScene().getWindow();
         stage.close();
@@ -89,16 +90,13 @@ public class EditHeatPageController {
 
     // EFFECTS: action for add team by teamNumber, will add that team to this heat
     @FXML
-    public void addTeamByID() {
+    private void addTeamByID() {
         try {
             controller.getStagedHeat().addRunFromTeam(controller.getProgram().getAllTeams().get(Integer.parseInt(addTeamIDField.getText())));
             setTeamHeatListTeams();
         } catch (AddTeamException e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "The team number: " + addTeamIDField.getText() +
-                    "is not connected to any team. Error: " + e.getMessage());
-            alert.setHeaderText("Could not add the team");
-            alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-            alert.show();
+            showAlert(Alert.AlertType.WARNING, "The team number: " + addTeamIDField.getText() +
+                    "is not connected to any team. Error: " + e.getMessage(), "Could not add the team");
         }
     }
 }

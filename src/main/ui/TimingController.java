@@ -211,6 +211,33 @@ public class TimingController {
         saveData();
     }
 
+    // EFFECTS: undo the last heat
+    public void undoLastHeat() throws NoHeatWithIDException, CanNotUndoHeatException {
+        int lastHeat = currentDay.getAtHeat() - 1;
+        returnRunsDueToUndoHeat(lastHeat);
+
+        currentDay.undoLastHeatStart();
+    }
+
+    // EFFECTS: remove runs from heat because of Undo
+    private void returnRunsDueToUndoHeat(int heatNumber) {
+        /*
+        // This code does not work, I don't know why! -> there are runs that don't get removed
+        for (Run run : controller.getCurrentDay().getHeatByHeatNumber(heatNumber).getRuns().values()) {
+            controller.removeRunningTeam(run.getRunNumber());
+        }
+        */
+
+        List<Object> runList = Arrays.asList(currentRuns.values().toArray());
+        for (int i = 0; i < runList.size(); i++) {
+            Run run = (Run) runList.get(i);
+            if (run.getHeat().getHeatNumber() == heatNumber) {
+                removeRunningTeam(run.getRunNumber());
+            }
+        }
+        uiController.updateRunningRunList();
+    }
+
     // EFFECTS: save the data to json
     public void saveData() {
         PersistanceWithJackson.toJsonController(this);

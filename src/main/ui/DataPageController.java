@@ -9,7 +9,7 @@ import models.exceptions.NoRunFoundException;
 
 import java.io.IOException;
 
-public class DataPageController {
+public class DataPageController extends UIController{
 
 // VARIABLES //
 
@@ -94,6 +94,7 @@ public class DataPageController {
 // CONSTRUCTORS and INITIALIZER //
 
     public DataPageController(TimingController controller) {
+        super(controller);
         this.controller = controller;
     }
 
@@ -124,14 +125,6 @@ public class DataPageController {
     }
 
 // FUNCTIONS //
-
-    // EFFECTS: shows an alert
-    private void showAlert(Alert.AlertType alertType, String message, String header) {
-        Alert alert = new Alert(alertType, message);
-        alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-        alert.setHeaderText(header);
-        alert.show();
-    }
 
     // EFFECTS: adds all the runs from the program
     private void addAllRuns(TreeItem<Object> root) {
@@ -342,15 +335,7 @@ public class DataPageController {
     // EFFECTS: go back to the main menu within same scene
     @FXML
     private void backToMainMenuButtonAction() {
-        try {
-            FXMLLoader root = new FXMLLoader(getClass().getResource("MainPage.fxml"));
-            root.setControllerFactory(c -> new MainPageController(controller));
-            tabePane.getScene().setRoot(root.load());
-            controller.saveData();
-        } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "Please contact an admin if the error persists. Error: "
-                        + e.getMessage(), "There has been an error when moving back to main menu");
-        }
+        backToMainMenu(tabePane.getScene());
     }
 
 

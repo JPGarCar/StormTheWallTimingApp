@@ -16,7 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class DataIOPageController {
+public class DataIOPageController extends UIController {
 
 // VARIABLES //
 
@@ -26,6 +26,7 @@ public class DataIOPageController {
 // CONSTRUCTOR //
 
     public DataIOPageController(@NotNull TimingController controller) {
+        super(controller);
         this.controller = controller;
     }
 
@@ -70,18 +71,22 @@ public class DataIOPageController {
     public void importDataButtonAction() {
         FileInputStream fileInputStream = null;
 
+        // check if a file was selected
+        if (fileToImport == null)
+            showAlert(Alert.AlertType.ERROR, "There is file selected to import.",
+                    "Please select a file first!");
+
         // if there is no controller, so new data, build new controller
-        if (controller.getProgram() == null) {
+        if (controller.getProgram() == null)
             controller.setProgram(new Program());
-        }
+
 
         // try to load the file selected
         try {
              fileInputStream = new FileInputStream(new File(fileToImport));
         } catch (FileNotFoundException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "There was no file provided or the file is corrupted, please select a file and try again.");
-            alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-            alert.show();
+            showAlert(Alert.AlertType.ERROR, "There was no file provided or the file is corrupted, " +
+                            "please select a file and try again.", "There has been an error!");
         }
 
         ExcelInput excelInput = new ExcelInput(fileInputStream, controller);
@@ -94,16 +99,14 @@ public class DataIOPageController {
                 alert.show();
             }
         } catch (InvalidExcelException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "The file you are trying to use has no " +
-                    "column names in the first row. Please look at the Info page for more information. The import did not occur.");
-            alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-            alert.show();
+            showAlert(Alert.AlertType.ERROR, "The file you are trying to use has no " +
+                    "column names in the first row. Please look at the Info page for more information. " +
+                    "The import did not occur.", "There has been an error!");
         }
 
         // inform the user that the import was successful
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Data has been imported successfully from the excel.");
-        alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-        alert.show();
+        showAlert(Alert.AlertType.INFORMATION, "Data has been imported successfully from the excel.",
+                "Action was successful");
     }
 
     // EFFECTS: export the data in this computer to an excel file of given name
@@ -115,18 +118,7 @@ public class DataIOPageController {
     // EFFECTS: return to main menu within same scene
     @FXML
     private void backToMainMenuButtonAction() {
-        try {
-            FXMLLoader root = new FXMLLoader(getClass().getResource("MainPage.fxml"));
-            root.setControllerFactory(c -> new MainPageController(controller));
-            selectFileButton.getScene().setRoot(root.load());
-            controller.saveData();
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "If the error persists please " +
-                    "contact an admin. Error: " + e.getMessage());
-            alert.setHeaderText("There has been an error while trying to go back to main menu");
-            alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-            alert.show();
-        }
+        backToMainMenu(fileNotificationLabel.getScene());
     }
 
     // EFFECTS: grabs the data form the local json save file and import it to the program
@@ -137,9 +129,8 @@ public class DataIOPageController {
         controller.setProgram(PersistanceWithJackson.toJavaProgram());
 
         // inform the user the data import was successful
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Data was successfully imported from the local save.");
-        alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-        alert.show();
+        showAlert(Alert.AlertType.INFORMATION, "Data was successfully imported from the local save.",
+                "Action Was Successful");
     }
 
     @FXML
