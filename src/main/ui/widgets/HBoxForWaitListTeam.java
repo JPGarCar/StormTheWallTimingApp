@@ -8,7 +8,7 @@ import javafx.scene.layout.Priority;
 import models.Run;
 import models.Team;
 import models.exceptions.AddTeamException;
-import ui.TimingController;
+import ui.UIAppLogic;
 
 public class HBoxForWaitListTeam extends CustomHBox {
 
@@ -18,7 +18,7 @@ public class HBoxForWaitListTeam extends CustomHBox {
     Label teamType = new Label();
     Button addTeamButton = new Button();
 
-    public HBoxForWaitListTeam(Run run, TimingController controller){
+    public HBoxForWaitListTeam(Run run, UIAppLogic controller){
         super(HBoxSpacing, run);
 
         Team team = run.getTeam();

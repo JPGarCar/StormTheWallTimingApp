@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import models.Program;
 import models.RunNumber;
-import ui.TimingController;
+import ui.UIAppLogic;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class PersistanceWithJackson {
         return program;
     }
 
-    public static void toJsonController(TimingController controller){
+    public static void toJsonController(UIAppLogic controller){
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 
@@ -54,7 +54,7 @@ public class PersistanceWithJackson {
         }
     }
 
-    public static TimingController toJavaController() {
+    public static UIAppLogic toJavaController() {
         ObjectMapper mapper = new ObjectMapper();
 
         SimpleModule simpleModule = new SimpleModule();
@@ -64,7 +64,7 @@ public class PersistanceWithJackson {
 
         try {
             File json = new File("controller.json");
-            return mapper.readValue(json, TimingController.class);
+            return mapper.readValue(json, UIAppLogic.class);
         } catch (IOException e) {
             e.printStackTrace();
         }

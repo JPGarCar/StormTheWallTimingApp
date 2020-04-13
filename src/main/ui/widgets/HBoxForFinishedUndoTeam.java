@@ -6,7 +6,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import models.Run;
 import models.Team;
-import ui.TimingController;
+import ui.UIAppLogic;
 
 public class HBoxForFinishedUndoTeam extends CustomHBox {
 
@@ -16,7 +16,7 @@ public class HBoxForFinishedUndoTeam extends CustomHBox {
     Label finalTimeLabel = new Label();
     Button undoButton = new Button();
 
-    public HBoxForFinishedUndoTeam(Run run, TimingController controller){
+    public HBoxForFinishedUndoTeam(Run run, UIAppLogic controller){
         super(HBoxSpacing, run);
 
         Team team = run.getTeam();

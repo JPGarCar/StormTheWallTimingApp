@@ -18,19 +18,19 @@ import ui.widgets.HBoxForStagedTeam;
 import java.io.IOException;
 import java.util.*;
 
-public class MainTimingController extends UIController {
+public class TimingPageController extends UIController {
 
 // VARIABLES //
 
     // represents milliseconds to wait before not undoing a heat
     final int UNDOHEATAMOUNT = 20000;
 
-    private TimingController controller;
+    private UIAppLogic controller;
     private Calendar undoHeatTimer;
 
 // CONTROLLER and INITIALIZER //
 
-    public MainTimingController(TimingController controller) {
+    public TimingPageController(UIAppLogic controller) {
         super(controller);
         this.controller = controller;
         controller.setUiController(this);

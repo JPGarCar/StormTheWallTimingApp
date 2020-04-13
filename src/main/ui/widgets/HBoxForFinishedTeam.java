@@ -8,7 +8,7 @@ import javafx.scene.layout.Priority;
 import models.Run;
 import models.Team;
 import models.enums.Sitrep;
-import ui.TimingController;
+import ui.UIAppLogic;
 
 import java.util.Arrays;
 
@@ -20,7 +20,7 @@ public class HBoxForFinishedTeam extends CustomHBox {
     Label finalTime = new Label();
     ComboBox comboBox = new ComboBox();
 
-    public HBoxForFinishedTeam(Run run, TimingController controller){
+    public HBoxForFinishedTeam(Run run, UIAppLogic controller){
         super(HBoxSpacing, run);
 
         Team team = run.getTeam();

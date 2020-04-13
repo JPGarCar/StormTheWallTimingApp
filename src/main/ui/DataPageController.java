@@ -2,18 +2,15 @@ package ui;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import models.*;
 import models.exceptions.NoRunFoundException;
-
-import java.io.IOException;
 
 public class DataPageController extends UIController{
 
 // VARIABLES //
 
-    private TimingController controller;
+    private UIAppLogic controller;
 
 // FXML TAGS //
 
@@ -93,7 +90,7 @@ public class DataPageController extends UIController{
 
 // CONSTRUCTORS and INITIALIZER //
 
-    public DataPageController(TimingController controller) {
+    public DataPageController(UIAppLogic controller) {
         super(controller);
         this.controller = controller;
     }

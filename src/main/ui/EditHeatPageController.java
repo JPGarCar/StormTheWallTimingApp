@@ -10,7 +10,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import models.Heat;
 import models.Run;
-import models.Team;
 import models.exceptions.AddTeamException;
 import ui.widgets.HBoxForEditHeatTeam;
 import ui.widgets.HBoxForWaitListTeam;
@@ -24,11 +23,11 @@ public class EditHeatPageController extends UIController {
     // Represents heat being edited
     private Heat heat;
     // Represents the timingController being used during the life of the program
-    private TimingController controller;
+    private UIAppLogic controller;
 
 // CONSTRUCTOR and INITIALIZE //
 
-    public EditHeatPageController(@NotNull TimingController controller) {
+    public EditHeatPageController(@NotNull UIAppLogic controller) {
         super(controller);
         this.heat = controller.getStagedHeat();
         this.controller = controller;

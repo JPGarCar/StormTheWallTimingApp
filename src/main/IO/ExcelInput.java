@@ -12,7 +12,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import ui.TimingController;
+import ui.UIAppLogic;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Calendar;
@@ -46,7 +46,7 @@ public class ExcelInput {
     private XSSFSheet heatsSheet;
     private XSSFSheet teamsSheet;
     private Map<Integer, Integer> colIndentifiers;
-    private TimingController controller;
+    private UIAppLogic controller;
 
 
     // Represents all the alerts to send because of errors
@@ -54,7 +54,7 @@ public class ExcelInput {
 
 // CONSTRUCTORS //
 
-    public ExcelInput(FileInputStream fileInputStream, TimingController controller) {
+    public ExcelInput(FileInputStream fileInputStream, UIAppLogic controller) {
         this.fileInputStream = fileInputStream;
         this.controller = controller;
         colIndentifiers = new HashMap<>();

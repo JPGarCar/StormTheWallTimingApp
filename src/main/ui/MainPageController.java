@@ -13,9 +13,9 @@ import java.util.ArrayList;
 
 public class MainPageController extends UIController {
 
-    private TimingController controller;
+    private UIAppLogic controller;
 
-    public MainPageController(TimingController controller) {
+    public MainPageController(UIAppLogic controller) {
         super(controller);
         this.controller = controller;
     }
@@ -92,7 +92,7 @@ public class MainPageController extends UIController {
     private void loadNextPage(String pageName) {
         try {
             FXMLLoader root = new FXMLLoader(getClass().getResource(pageName));
-            root.setControllerFactory(c -> new MainTimingController(controller));
+            root.setControllerFactory(c -> new TimingPageController(controller));
             startRaceButton.getScene().setRoot(root.load());
         } catch (IOException e) {
             showAlert(Alert.AlertType.ERROR, "There has been a critical error, please contact admin.",

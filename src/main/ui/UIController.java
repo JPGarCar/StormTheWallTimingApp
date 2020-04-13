@@ -3,19 +3,18 @@ package ui;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
 
 import java.io.IOException;
 
 public class UIController {
 
-    private TimingController controller;
+    private UIAppLogic controller;
 
-    public UIController(TimingController controller) {
+    public UIController(UIAppLogic controller) {
         this.controller = controller;
     }
 
-    public TimingController getController() {
+    public UIAppLogic getController() {
         return controller;
     }
 

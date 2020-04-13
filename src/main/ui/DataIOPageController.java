@@ -3,7 +3,6 @@ package ui;
 import IO.ExcelInput;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import models.Program;
@@ -13,7 +12,6 @@ import persistance.PersistanceWithJackson;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.LinkedList;
 
 public class DataIOPageController extends UIController {
@@ -21,11 +19,11 @@ public class DataIOPageController extends UIController {
 // VARIABLES //
 
     private String fileToImport;
-    private TimingController controller;
+    private UIAppLogic controller;
 
 // CONSTRUCTOR //
 
-    public DataIOPageController(@NotNull TimingController controller) {
+    public DataIOPageController(@NotNull UIAppLogic controller) {
         super(controller);
         this.controller = controller;
     }

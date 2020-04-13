@@ -11,7 +11,7 @@ import models.Run;
 import models.Team;
 import models.enums.Sitrep;
 import models.exceptions.*;
-import ui.TimingController;
+import ui.UIAppLogic;
 
 import java.util.Arrays;
 
@@ -24,7 +24,7 @@ public class HBoxForRunningTeam extends CustomHBox {
     Button button = new Button();
     ComboBox comboBox = new ComboBox();
 
-    public HBoxForRunningTeam(Run run, TimingController controller) {
+    public HBoxForRunningTeam(Run run, UIAppLogic controller) {
         super(HBoxSpacingRunning, run);
 
         Team team = run.getTeam();

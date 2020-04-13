@@ -6,7 +6,7 @@ import javafx.scene.layout.Priority;
 import models.Run;
 import models.Team;
 import models.exceptions.*;
-import ui.TimingController;
+import ui.UIAppLogic;
 
 public class HBoxForEditHeatTeam extends CustomHBox {
 
@@ -23,7 +23,7 @@ public class HBoxForEditHeatTeam extends CustomHBox {
 
 // CONSTRUCTOR //
 
-    public HBoxForEditHeatTeam(Run run, TimingController controller){
+    public HBoxForEditHeatTeam(Run run, UIAppLogic controller){
         super(HBoxSpacing, run);
 
         Team team = run.getTeam();

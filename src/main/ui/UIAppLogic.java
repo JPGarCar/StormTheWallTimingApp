@@ -11,7 +11,7 @@ import persistance.PersistanceWithJackson;
 
 import java.util.*;
 
-public class TimingController {
+public class UIAppLogic {
 
 // VARIABLES //
 
@@ -33,7 +33,7 @@ public class TimingController {
     private Program program;
 
     @JsonIgnore
-    private MainTimingController uiController;
+    private TimingPageController uiController;
 
     @JsonIgnore
     private EditHeatPageController editHeatController;
@@ -46,7 +46,7 @@ public class TimingController {
 // CONSTRUCTORS //
 
     // DUMMY CONSTRUCTOR for Jackson JSON
-    public TimingController() {
+    public UIAppLogic() {
         currentRuns = new TreeMap<>();
         stoppedRuns = new LinkedHashMap<>();
         finishedRuns = new LinkedHashMap<>();
@@ -80,7 +80,7 @@ public class TimingController {
         return finishedRuns;
     }
 
-    public MainTimingController getUiController() {
+    public TimingPageController getUiController() {
         return uiController;
     }
 
@@ -108,7 +108,7 @@ public class TimingController {
         this.finishedRuns = finishedRuns;
     }
 
-    public void setUiController(@NotNull MainTimingController uiController) {
+    public void setUiController(@NotNull TimingPageController uiController) {
         this.uiController = uiController;
     }
 

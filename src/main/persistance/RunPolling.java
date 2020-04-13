@@ -1,12 +1,6 @@
 package persistance;
 
 import models.RunNumber;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.cfg.Configuration;
-import ui.TimingController;
 
 import javax.persistence.*;
 import java.util.ArrayList;
