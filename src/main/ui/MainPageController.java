@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Callback;
 import models.Day;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class MainPageController extends UIController {
         // Choice dialog to choose what day to start
         ChoiceDialog dialog = new ChoiceDialog(dayStringList.get(0), dayStringList);
         dialog.setTitle("Choose day to start");
+        dialog.setHeaderText("Choose day to start");
         dialog.setContentText("Please select what day you want to start timing for.");
         dialog.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         dialog.showAndWait();
@@ -61,12 +63,12 @@ public class MainPageController extends UIController {
         controller.setCurrentDay(controller.getProgram().getProgramDays().get(dialog.getSelectedItem()));
 
 
-        loadNextPage("MainTiming.fxml");
+        loadNextPage("MainTiming.fxml", c -> new TimingPageController(controller));
     }
 
     @FXML
     private void ioDataButtonAction() {
-        loadNextPage("dataIOPage.fxml");
+        loadNextPage("dataIOPage.fxml", c -> new DataIOPageController(controller));
     }
 
     @FXML
@@ -74,7 +76,7 @@ public class MainPageController extends UIController {
         if (checkData())
             return;
 
-        loadNextPage("DataPage.fxml");
+        loadNextPage("DataPage.fxml", c -> new DataPageController(controller));
     }
 
     // EFFECTS: if there is no data sends a warning to the user, and returns true to return
@@ -89,14 +91,15 @@ public class MainPageController extends UIController {
     }
 
     // EFFECTS: do all the FXMLLoader stuff
-    private void loadNextPage(String pageName) {
+    private void loadNextPage(String pageName, Callback<Class<?>, Object> fun ) {
         try {
             FXMLLoader root = new FXMLLoader(getClass().getResource(pageName));
-            root.setControllerFactory(c -> new TimingPageController(controller));
+            root.setControllerFactory(fun);
             startRaceButton.getScene().setRoot(root.load());
         } catch (IOException e) {
             showAlert(Alert.AlertType.ERROR, "There has been a critical error, please contact admin.",
                     "Critical Error");
+            e.printStackTrace();
         }
     }
 

@@ -7,18 +7,26 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import models.Run;
 import models.Team;
-import models.exceptions.AddTeamException;
+import models.exceptions.AddRunException;
 import ui.UIAppLogic;
 
-public class HBoxForWaitListTeam extends CustomHBox {
+/**
+ * This HBox is specific to the wait list UI list in the edit heat page. It lets the user add the Run to the Heat
+ * being edited.
+ * Data shown:
+ * - Team name
+ * - Team number
+ * - Team pool
+ */
+public class HBoxForWaitListRun extends CustomHBox {
 
     private static final double HBoxSpacing = 10;
     Label teamName = new Label();
     Label id = new Label();
-    Label teamType = new Label();
+    Label teamPool = new Label();
     Button addTeamButton = new Button();
 
-    public HBoxForWaitListTeam(Run run, UIAppLogic controller){
+    public HBoxForWaitListRun(Run run, UIAppLogic controller){
         super(HBoxSpacing, run);
 
         Team team = run.getTeam();
@@ -30,7 +38,7 @@ public class HBoxForWaitListTeam extends CustomHBox {
         this.teamName.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(this.teamName, Priority.ALWAYS);
 
-        this.teamType.setText(team.getPoolName());
+        this.teamPool.setText(team.getPoolName());
 
         addTeamButton.setText("Add Team");
         addTeamButton.setOnAction(event -> {
@@ -39,15 +47,13 @@ public class HBoxForWaitListTeam extends CustomHBox {
                 controller.getProgram().removeRunFromWaitList(run.getRunNumber());
                 controller.getEditHeatController().setTeamHeatListTeams();
                 controller.getEditHeatController().setWaitListTeams();
-            } catch (AddTeamException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "If the error persists please " +
-                        "contact an admin. Error: " + e.getMessage());
-                alert.setHeaderText("There has been an error while trying to add wait list team to heat");
-                alert.getDialogPane().getStylesheets().add(controller.getClass().getResource("application.css").toExternalForm());
-                alert.show();
+            } catch (AddRunException e) {
+                showAlert(Alert.AlertType.ERROR, "If the error persists please " +
+                        "contact an admin. Error: " + e.getMessage(),
+                        "There has been an error while trying to add wait list team to heat");
             }
         });
 
-        this.getChildren().addAll(id, this.teamName, this.teamType, addTeamButton);
+        this.getChildren().addAll(id, this.teamName, this.teamPool, addTeamButton);
     }
 }

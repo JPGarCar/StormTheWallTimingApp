@@ -169,50 +169,69 @@ public class Heat {
         }
         try {
             day.addHeat(this);
-        } catch (AddHeatException e) {
+        } catch (AddRunException e) {
             // nothing because we expect this due to one to one connection
         }
         this.dayToRace = day;
     }
 
     // EFFECTS: add a run to the heat and add this heat to the run from a team
-    public void addRunFromTeam(@NotNull Team team) throws AddTeamException {
+    public void addRunFromTeam(@NotNull Team team) throws AddRunException {
         Run run = new Run(this, team);
 
         if (!runs.containsKey(run.getRunNumber())) {
             runs.put(run.getRunNumber(), run);
             try {
                 run.getTeam().addRun(run);
-            } catch (AddHeatException e) {
+            } catch (AddRunException e) {
                 // we expect this
             }
         } else {
-            throw new AddTeamException("Heat affected: " + heatNumber + ". RunNumber that tried to get added: " + run.getRunNumber());
+            throw new AddRunException("Heat affected: " + heatNumber + ". RunNumber that tried to get added: " + run.getRunNumber());
         }
     }
 
-    //EFFECTS: adds a run to the run list
-    public void addRun(Run run) throws AddTeamException {
+    /**
+     * Associate a Run to this Heat by adding it to the runs Map with the Run's RunNumber as a key and setting
+     * the Run's heat variable to point to this Heat.
+     *
+     * @param run   Run to be associated to this Heat.
+     * @throws AddRunException  If this Heat is already associated to a Run with the same RunNumber.
+     */
+    public void addRun(Run run) throws AddRunException {
         if (!runs.containsKey(run.getRunNumber())) {
             runs.put(run.getRunNumber(), run);
+            run.setHeat(this);
         } else {
-            throw new AddTeamException("Heat affected: " + heatNumber + ". RunNumber that tried to get added: " + run.getRunNumber()); // TODO
+            throw new AddRunException("Heat affected: " + heatNumber + ". RunNumber that tried to get added: " + run.getRunNumber()); // TODO
         }
     }
 
-    // EFFECTS: remove a run from this heat and this heat from the run by RunNumber
-    public Run removeRun(@NotNull RunNumber runNumber) throws NoTeamException {
+    /**
+     * Disassociate a Run from this Heat by searching for the Run in the runs Map with the linked RunNumber. It will
+     * remove the Run from the runs list and set the Run's heat to null.
+     *
+     * @param runNumber RunNumber to be used to find the Run to be disassociated.
+     * @return  The Run that was disassociated.
+     * @throws CriticalErrorException  If no Run is disassociated, aka no Run is found with the RunNumber imputed.
+     */
+    public Run removeRun(@NotNull RunNumber runNumber) throws CriticalErrorException {
         if (runs.containsKey(runNumber)) {
             Run run = runs.remove(runNumber);
             run.setHeat(null);
             return run;
         } else {
-            throw new NoTeamException("Could not remove a run. Heat affected: " + heatNumber +
+            throw new CriticalErrorException("Could not remove a run. Heat affected: " + heatNumber +
                     ". RunNumber that go tried to remove: " + runNumber);
         }
     }
 
-    // EFFECTS: restart the heat by deleting start time and changing hasStarted
+    /**
+     * Used when the user wants to Undo the start of this Heat. It will restart the Heat by setting the startTime to
+     * null and hasStated to false.
+     *
+     * @throws CanNotUndoHeatException  if the Heat has not started yet.
+     */
     public void undoHeatStart() throws CanNotUndoHeatException {
         if (hasStarted) {
             hasStarted = false;
@@ -223,7 +242,7 @@ public class Heat {
     }
 
     // EFFECTS: return only Run without a DNS, if have DNS endTime == startTime for totalTime of 0
-    public ArrayList<Run> listOfRunsWithoutDNS() throws NoHeatsException {
+    public ArrayList<Run> listOfRunsWithoutDNS() {
         ArrayList<Run> runnableTeams = new ArrayList<>();
         for (Run run : runs.values()) {
             if (run.getSitrep() != Sitrep.DNS) {
@@ -231,7 +250,7 @@ public class Heat {
             } else {
                 try {
                     run.calculateEndTime(startTime);
-                } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
+                } catch (CriticalErrorException criticalErrorException) {
                     // Nothing to be done as this is technically impossible
                 }
             }

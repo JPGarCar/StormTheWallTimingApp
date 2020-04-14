@@ -18,11 +18,23 @@ public class UIController {
         return controller;
     }
 
-    // EFFECTS: shows an alert
+    /**
+     * Helper function to show an alert to the user with the correct CSS file.
+     *
+     * <p>Depending on the type of Alert, the Alert will be shown or will be shown and the program will wait for
+     * an action. At the moment only the AlertType.CONFIRMATION type of Alert will show and wait the Alert. All
+     * other Alert will just show without a wait.</p>
+     *
+     * @param alertType The type of alert to be shown.
+     * @param message   The message to be shown in the alert.
+     * @param header    The title of the alert.
+     * @return  The Alert to be shown in case its needed to know when the OK button is pushed.
+     */
     protected Alert showAlert(Alert.AlertType alertType, String message, String header) {
         Alert alert = new Alert(alertType, message);
         alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         alert.setHeaderText(header);
+        alert.setTitle(header);
 
         if (alertType.equals(Alert.AlertType.CONFIRMATION))
             alert.showAndWait();

@@ -12,13 +12,19 @@ import ui.UIAppLogic;
 
 import java.util.Arrays;
 
-public class HBoxForStagedTeam extends CustomHBox {
+/**
+ * This HBox is specific to the staged Heat Run UI list. It lets change the status of a Run.
+ * Data shown:
+ * - Team name
+ * - Team number
+ */
+public class HBoxForStagedRun extends CustomHBox {
     private static final double HBoxSpacing = 12;
     Label teamNameLabel = new Label();
     Label id = new Label();
     ComboBox comboBox = new ComboBox();
 
-    public HBoxForStagedTeam(Run run, UIAppLogic controller) {
+    public HBoxForStagedRun(Run run, UIAppLogic controller) {
         super(HBoxSpacing, run);
 
         Team team = run.getTeam();
@@ -35,7 +41,7 @@ public class HBoxForStagedTeam extends CustomHBox {
         comboBox.setItems(FXCollections.observableList(Arrays.asList(Sitrep.values())));
         comboBox.setValue(run.getSitrep().name());
         comboBox.setOnAction(event -> {
-            updateStatus(comboBox.getValue().toString(), controller);
+            updateStatus(comboBox.getValue().toString());
         });
 
         this.getChildren().addAll(id, teamNameLabel, comboBox);

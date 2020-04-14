@@ -8,7 +8,14 @@ import models.*;
 import models.exceptions.*;
 import persistance.PersistanceWithJackson;
 
-
+/**
+ *
+ *
+ *
+ *
+ *
+ * @author Juan Pablo Garcia
+ */
 import java.util.*;
 
 public class UIAppLogic {
@@ -224,12 +231,14 @@ public class UIAppLogic {
 
     /**
      * Will undo a paused Run. This will move it back to the activeRuns list and remove it from the pausedRuns list.
-     * This will also set the Run available to undo and remove the timer associated to this run from the timerMap.
+     * This will also set the Run available to undo, and cancel and remove the timer associated to
+     * this run from the timerMap.
      *
      * @param runNumber to be used to undo the Run associated to this RunNumber.
      */
     public void undoPausedRun(RunNumber runNumber) {
         timerMap.get(runNumber).cancel();
+        timerMap.remove(runNumber);
         Run run = pausedRuns.get(runNumber);
         run.setCanUndo(false);
 
@@ -238,7 +247,7 @@ public class UIAppLogic {
     }
 
     /**
-     * Add a Run tot he finishedRuns list and update the UI finishedRuns list.
+     * Add a Run to the finishedRuns list and update the UI finishedRuns list.
      *
      * @param run   to be added to the finishedRuns list.
      */
@@ -252,12 +261,11 @@ public class UIAppLogic {
      * also remove the Run from the activeRuns list.
      *
      * @param runNumber to be used to end the Run associated.
-     * @throws NoHeatsException from calculateEndTime
-     * @throws CouldNotCalculateFinalTimeExcpetion  from calculateEndTime
+     * @throws CriticalErrorException  from calculateEndTime
      * @helper pauseRunEndRunHelper()
      * @savesData
      */
-    public void endRun(RunNumber runNumber) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion {
+    public void endRun(RunNumber runNumber) throws CriticalErrorException {
 
         Run run = activeRuns.get(runNumber);
         run.calculateEndTime(Calendar.getInstance());
@@ -273,7 +281,8 @@ public class UIAppLogic {
      *
      * <p>The Timer is used to know for how long the run will be kept in the pausedRun list,
      * it is controlled by the final variable RUNUNDODELAYTIME. Once the timer ends, the run is
-     * moved to the finishedRuns list, removed from the pausedRun list and set to notUndo.</p>
+     * moved to the finishedRuns list, removed from the pausedRun list and set to notUndo. We also
+     * cancel and remove the Timer from the timerMap Map.</p>
      *
      * @param run   run to be paused.
      */
@@ -292,6 +301,7 @@ public class UIAppLogic {
                                 Platform.runLater(() -> addFinishedRun(run));
                                 Platform.runLater(() -> removePausedRunWithUpdate(run.getRunNumber()));
                                 t.cancel();
+                                timerMap.remove(run.getRunNumber());
                             }
                         }
                     },
@@ -302,11 +312,11 @@ public class UIAppLogic {
      * Undo the previous heat. Calls returnRunsDueToUndoHeat(int) to move Run from active to staged. Will
      * also call the currentDay undoLastHeatStart() function.
      *
-     * @throws NoHeatWithIDException  from undoLastHeatStart
+     * @throws CriticalErrorException  from undoLastHeatStart
      * @throws CanNotUndoHeatException  from undoLastHeatStart
      * @helper returnRunsDueToUndoHeat()
      */
-    public void undoLastHeat() throws NoHeatWithIDException, CanNotUndoHeatException {
+    public void undoLastHeat() throws CriticalErrorException, CanNotUndoHeatException {
         // grab the previous heat -> assumes heat are constant
         int lastHeat = currentDay.getAtHeat() - 1;
 

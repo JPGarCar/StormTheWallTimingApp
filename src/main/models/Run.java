@@ -5,9 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sun.istack.internal.NotNull;
 import models.enums.Sitrep;
-import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
-import models.exceptions.NoHeatsException;
-import models.exceptions.NoTeamException;
+import models.exceptions.AddRunException;
+import models.exceptions.CriticalErrorException;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -153,33 +152,56 @@ public class Run {
 
 // FUNCTIONS //
 
-    // EFFECTS: constructs a FinalTime with the heat's start and input end time and sets canUndo and isDone to true
-    public void calculateEndTime(@NotNull Calendar endTime) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion {
+    /**
+     * Will calculate the final time the Team did in this Run. Called when the Team finishes the race for this Run.
+     * Will set this Run to be undo and set it as done. It will then create a FinalTime with the associated Heat's
+     * start time and the imputed end time.
+     *
+     * @param endTime   Calendar that represents the real time the Team finished this Run. To be used to calculate the
+     *                  final time of this Run.
+     * @throws CriticalErrorException   if the Heat associated to this Run is null.
+     */
+    public void calculateEndTime(@NotNull Calendar endTime) throws CriticalErrorException {
         canUndo = true;
         isDone = true;
 
         if (heat == null) {
-            throw new NoHeatsException("Error while trying to calculate end time. Team affected: " +
-                    team.getTeamNumber() + "Heat that was not found: " + heat.getHeatNumber());
+            throw new CriticalErrorException("Error while trying to calculate end time. Run affected: " +
+                    runNumber + ". The heat variable is null.");
         }
 
         finalTime = new FinalTime(heat.getStartTime(), endTime);
     }
 
-    //EFFECTS: delete this run by nulling all associations and deleting itself from heat and team
-    public void selfDelete() {
+    /**
+     * Will disassociate this Run from both its Team and Heat, therefore it will set all connection to null so that
+     * java can recycle this object as it is not needed any more.
+     *
+     * @throws CriticalErrorException   from removeRun() function from Heat.
+     */
+    public void selfDelete() throws CriticalErrorException {
         team.removeRun(runNumber);
         team = null;
-        try {
-            heat.removeRun(runNumber);
-        } catch (NoTeamException e) {
-            // this should not happen TODO
-        }
+
+        heat.removeRun(runNumber);
+
         heat = null;
         finalTime = null;
         sitrep = null;
         runNumber = null;
+    }
 
+    /**
+     * Will move this Run from its previous Heat to the new Heat imputed. Will let the Heat classes do all the
+     * job for us.
+     *
+     * @param newHeat Heat to move the Run to.
+     * @throws CriticalErrorException   from removeRun().
+     * @throws AddRunException from addRun().
+     */
+    public void moveRun(Heat newHeat) throws CriticalErrorException, AddRunException {
+        heat.removeRun(runNumber);
+        newHeat.addRun(this);
     }
 
 }

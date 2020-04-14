@@ -118,7 +118,7 @@ public class Day {
     }
 
     // EFFECTS: add a heat to the list of heats
-    public void addHeat(@NotNull Heat heat) throws AddHeatException {
+    public void addHeat(@NotNull Heat heat) throws AddRunException {
         if (!heats.containsKey(heat.getHeatNumber())) {
             heats.put(heat.getHeatNumber(), heat);
             heat.setDayToRace(this);
@@ -131,29 +131,45 @@ public class Day {
     }
 
     // EFFECTS: adds all the heats to this day
-    public void addHeats(@NotNull ArrayList<Heat> heats) throws AddHeatException {
+    public void addHeats(@NotNull ArrayList<Heat> heats) throws AddRunException {
         for (Heat heat : heats) {
             addHeat(heat);
         }
     }
 
-    // EFFECTS: returns heat with specific heat number
-    public Heat getHeatByHeatNumber(@NotNull int heatNumber) throws NoHeatWithIDException {
+    /**
+     * Will search the Day's heats Map and return the Heat linked to the imputed key. If the imputed key is not in
+     * the Map then an exception is thrown.
+     *
+     * @param heatNumber    int to be used as key for the heats Map that is linked to a Heat.
+     * @return  The Heat linked to the imputed key.
+     * @throws CriticalErrorException    if the imputed key is not in the Heats Map, aka the Heat we are looking for
+     *                                  does not exist.
+     */
+    public Heat getHeatByHeatNumber(@NotNull int heatNumber) throws CriticalErrorException {
         Heat heat = heats.get(heatNumber);
         if (heat == null) {
-            throw new NoHeatWithIDException("Heat number used: " + heatNumber + ". Day affected: " + dayToRun);
+            throw new CriticalErrorException(" We could not find a heat with heat number: " + heatNumber
+                    + " in the Day: " + dayToRun);
         }
         return heat;
     }
 
     // EFFECTS: will delete start time for teams that heat just started, set heat to not started
-    public void undoLastHeatStart() throws NoHeatWithIDException, CanNotUndoHeatException {
+    public void undoLastHeatStart() throws CriticalErrorException, CanNotUndoHeatException {
         getHeatByHeatNumber(atHeat - 1).undoHeatStart();
         atHeat --;
     }
 
-    // EFFECTS: return a heat by its start time or a noHeatWithStatTimeException
-    public Heat getHeatByStartTime(Calendar calendar) throws NoHeatWithStartTimeException {
+    /**
+     * Will search the heats Map to find a Heat that has the startTime imputed. For the startTime to be the same
+     * we look at the HOUR_OF_DAY and MINUTE Calendar properties to be the same.
+     *
+     * @param calendar  Calendar to be used to search for the Heat.
+     * @return  The Heat with its startTime equal to the imputed Calendar.
+     * @throws ErrorException If there is no Heat with the searched start time.
+     */
+    public Heat getHeatByStartTime(Calendar calendar) throws ErrorException {
         for (Heat heat : heats.values()) {
             if (heat.getScheduledTime().get(Calendar.HOUR_OF_DAY) == calendar.get(Calendar.HOUR_OF_DAY) &&
             heat.getScheduledTime().get(Calendar.MINUTE) == calendar.get(Calendar.MINUTE)) {
@@ -163,8 +179,10 @@ public class Day {
 
         // Used to format the time strings to two digits
         DecimalFormat decimalFormat = new DecimalFormat("00");
-        throw new NoHeatWithStartTimeException("Day affected: " + dayToRun + ". Heat that could not find: " +
-                decimalFormat.format(calendar.get(Calendar.HOUR_OF_DAY)) + ":" + decimalFormat.format(calendar.get(Calendar.MINUTE)));
+        throw new ErrorException(" We could not find a heat with the start time: " +
+                decimalFormat.format(calendar.get(Calendar.HOUR_OF_DAY)) + ":" +
+                decimalFormat.format(calendar.get(Calendar.MINUTE)) +
+                ". Day affected: " + dayToRun);
     }
 
     // EFFECTS: remove a heat from the heats TreeMap

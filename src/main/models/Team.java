@@ -126,57 +126,95 @@ public class Team {
 
 // FUNCTIONS //
 
-    // EFFECTS: add run to this team and to the heat
-    public void addRunFromHeat(Heat heat) throws AddHeatException {
+    /**
+     * Associates a Team to a Heat by creating a Run and adding it to the runs list.
+     *
+     * <p>Due to the many to many connection this function also calls the Heat addRun() function to add the
+     * created Run that associates this team with the Heat.</p>
+     *
+     * @param heat  to be associated to this Team with a Run
+     * @throws AddRunException if this team is already associated with the heat. A Heat can not have a
+     * Team associated twice.
+     */
+    public void addRunFromHeat(Heat heat) throws AddRunException {
         Run run = new Run(heat, this);
 
         if (!runs.containsKey(run.getRunNumber())) {
             runs.put(run.getRunNumber(), run);
             try {
                 heat.addRun(run);
-            } catch (AddTeamException e) {
+            } catch (AddRunException e) {
                 // do nothing as we expect this because of the many to many connection
             }
         }
         else {
-            throw new AddHeatException("Team affected: " + teamName + ", with team number: " + teamNumber +
-                    ". Could not be added to run number: " + run.getRunNumber() + ".");
+            throw new AddRunException("Team affected: " + teamName + ", with team number: " + teamNumber +
+                    ". Could not add the team to the heat: " + heat.getHeatNumber() + ".");
         }
     }
 
-    //EFFECTS: adds a run to the run list
-    public void addRun(Run run) throws AddHeatException {
+    /**
+     * Associate this Team to a Heat with an already crated Run. Assumes the Run to be already associated with a Heat.
+     *
+     * TODO: this does not check if the Heat connected to the Run has already been associated to this Team with a different Run
+     * TODO: we need to check that some way. Probably add functionality to the RunNumber class.
+     *
+     * @param run   to be used to associate this Team with the Heat connected to the Run.
+     * @throws AddRunException if this Team is already connected to this Run. A Team can not have duplicate Run(s).
+     */
+    public void addRun(Run run) throws AddRunException {
         if (!runs.containsKey(run.getRunNumber())) {
             runs.put(run.getRunNumber(), run);
         } else {
-            throw new AddHeatException("Team affected: " + teamName + ", with team number: " + teamNumber +
-                    ". Could not be added to run number: " + run.getRunNumber() + "."); // TODO
+            throw new AddRunException("Team affected: " + teamName + ", with team number: " + teamNumber +
+                    ". Could not add the run: " + run.getRunNumber() +
+                    " because it is already connected to this Team.");
         }
     }
 
-    // EFFECTS: remove heat from this team thus delete the run
-    public void deleteRun(RunNumber runNumber) throws NoHeatsException {
+    /**
+     * Will disassociate this team from a Run. Because a Run can not exist without a Team, the Run will call the
+     * selfDelete() function to disappear. It will also remove the Run from the runs Map.
+     *
+     * @param runNumber RunNumber linked to the Run to be disassociated from this Team.
+     * @throws CriticalErrorException if the RunNumber is not found in the runs list.
+     */
+    public void deleteRun(RunNumber runNumber) throws CriticalErrorException {
         if (runs.containsKey(runNumber)) {
             runs.get(runNumber).selfDelete();
         } else {
-            throw new NoHeatsException("Error while trying to remove run from team. Team affected: " + teamNumber +
+            throw new CriticalErrorException("Error while trying to remove run from team. Team affected: " + teamNumber +
                     ". Run that could not be removed: " + runNumber);
         }
     }
 
-    // EFFECTS: remove run from the list
+    /**
+     * Disassociate a Run from this Team by removing the Run from the runs list.
+     *
+     * @param runNumber RunNumber linked to the Run to be disassociated.
+     */
     public void removeRun(RunNumber runNumber) {
         runs.remove(runNumber);
     }
 
-    // EFFECTS: get teamHeat by its heat number from remainingHeats
-    public Run getRunByHeatNumber(int heatNumber) throws NoRunFoundException {
+    /**
+     * Will search through all the Run(s) in runs map find a Run with the imputed Heat number. If no Run is found with
+     * the imputed Heat number then an exception is thrown.
+     *
+     * TODO: make this better by doing a RunNumber with data and using that to search.
+     *
+     * @param heatNumber    int to be used to find a Run associated to that Heat.
+     * @return  The Run in the runs Map that has a Heat associated with the input Heat number.
+     * @throws CriticalErrorException  if no Run is found in the Map with an associated Heat with the imputed Heat number.
+     */
+    public Run getRunByHeatNumber(int heatNumber) throws CriticalErrorException {
         for(Run run : runs.values()) {
             if (run.getRunNumber().getHeatNumber() == heatNumber) {
                 return run;
             }
         }
-        throw new NoRunFoundException("Affected team: " + teamNumber + "Searching for run with heat: " + heatNumber);
+        throw new CriticalErrorException("We could not find a Run with the Heat number: " + heatNumber +
+                " in the Team: " + teamNumber + ".");
     }
 
 }

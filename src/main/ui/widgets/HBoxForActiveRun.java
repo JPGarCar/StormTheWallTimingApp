@@ -15,7 +15,16 @@ import ui.UIAppLogic;
 
 import java.util.Arrays;
 
-public class HBoxForRunningTeam extends CustomHBox {
+/**
+ * This HBox is specific for the active Run UI list. This HBox lets change the status of the Run and pause the Run to
+ * then finish the Run.
+ * Data shown:
+ * - Team name
+ * - Team number
+ * - Heat number
+ * - Heat category
+ */
+public class HBoxForActiveRun extends CustomHBox {
     private static final double HBoxSpacingRunning = 20;
     Label teamName = new Label();
     Label id = new Label();
@@ -24,7 +33,7 @@ public class HBoxForRunningTeam extends CustomHBox {
     Button button = new Button();
     ComboBox comboBox = new ComboBox();
 
-    public HBoxForRunningTeam(Run run, UIAppLogic controller) {
+    public HBoxForActiveRun(Run run, UIAppLogic controller) {
         super(HBoxSpacingRunning, run);
 
         Team team = run.getTeam();
@@ -49,22 +58,21 @@ public class HBoxForRunningTeam extends CustomHBox {
         button.setText("Finish");
         button.setOnAction(event -> {
             try {
-                endTeam(controller);
-            } catch (NoHeatsException | CouldNotCalculateFinalTimeExcpetion e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "If the error persists please " +
-                        "contact an admin. Error: " + e.getMessage());
-                alert.setHeaderText("There has been an error while trying to finish a team");
-                alert.getDialogPane().getStylesheets().add(controller.getClass().getResource("application.css").toExternalForm());
-                alert.show();
+                pauseRun(controller);
+            } catch (CriticalErrorException e) {
+                showAlert(Alert.AlertType.ERROR, "If the error persists please " +
+                        "contact an admin. Error: " + e.getMessage(),
+                        "There has been an error while trying to finish a team");
             }
         });
 
         comboBox.setItems(FXCollections.observableList(Arrays.asList(Sitrep.values())));
         comboBox.setValue(run.getSitrep().name());
         comboBox.setOnAction(event -> {
-            updateStatus(comboBox.getValue().toString(), controller);
+            updateStatus(comboBox.getValue().toString());
         });
 
         this.getChildren().addAll(heatNumber, id, teamName, category, comboBox, button);
     }
+
 }

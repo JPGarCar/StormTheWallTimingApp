@@ -10,9 +10,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import models.Heat;
 import models.Run;
-import models.exceptions.AddTeamException;
-import ui.widgets.HBoxForEditHeatTeam;
-import ui.widgets.HBoxForWaitListTeam;
+import models.exceptions.AddRunException;
+import ui.widgets.HBoxForEditHeatRun;
+import ui.widgets.HBoxForWaitListRun;
 
 import java.util.ArrayList;
 
@@ -45,28 +45,28 @@ public class EditHeatPageController extends UIController {
 // FUNCTIONS //
 
     public void setTeamHeatListTeams() {
-        ArrayList<HBoxForEditHeatTeam> hBoxForEditHeatTeams = new ArrayList<>();
+        ArrayList<HBoxForEditHeatRun> hBoxForEditHeatRuns = new ArrayList<>();
         for (Run run : heat.getRuns().values()) {
-            hBoxForEditHeatTeams.add(new HBoxForEditHeatTeam(run, controller));
+            hBoxForEditHeatRuns.add(new HBoxForEditHeatRun(run, controller));
         }
-        teamHeatList.setItems(FXCollections.observableList(hBoxForEditHeatTeams));
+        teamHeatList.setItems(FXCollections.observableList(hBoxForEditHeatRuns));
     }
 
     public void setWaitListTeams() {
-        ArrayList<HBoxForWaitListTeam> hBoxForWaitListTeams = new ArrayList<>();
+        ArrayList<HBoxForWaitListRun> hBoxForWaitListRuns = new ArrayList<>();
         for (Run run : controller.getProgram().getWaitList().values()) {
-            hBoxForWaitListTeams.add(new HBoxForWaitListTeam(run, controller));
+            hBoxForWaitListRuns.add(new HBoxForWaitListRun(run, controller));
         }
-        availableTeamList.setItems(FXCollections.observableList(hBoxForWaitListTeams));
+        availableTeamList.setItems(FXCollections.observableList(hBoxForWaitListRuns));
     }
 
 // FXML TAGS //
 
     @FXML
-    private ListView<HBoxForWaitListTeam> availableTeamList;
+    private ListView<HBoxForWaitListRun> availableTeamList;
 
     @FXML
-    private ListView<HBoxForEditHeatTeam> teamHeatList;
+    private ListView<HBoxForEditHeatRun> teamHeatList;
 
     @FXML
     private TextField addTeamIDField;
@@ -93,7 +93,7 @@ public class EditHeatPageController extends UIController {
         try {
             controller.getStagedHeat().addRunFromTeam(controller.getProgram().getAllTeams().get(Integer.parseInt(addTeamIDField.getText())));
             setTeamHeatListTeams();
-        } catch (AddTeamException e) {
+        } catch (AddRunException e) {
             showAlert(Alert.AlertType.WARNING, "The team number: " + addTeamIDField.getText() +
                     "is not connected to any team. Error: " + e.getMessage(), "Could not add the team");
         }

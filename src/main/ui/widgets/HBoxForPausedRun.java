@@ -8,7 +8,14 @@ import models.Run;
 import models.Team;
 import ui.UIAppLogic;
 
-public class HBoxForFinishedUndoTeam extends CustomHBox {
+/**
+ * This HBox is specific to the paused Run UI list. This HBox lets Run(s) to be undo back to the active list.
+ * Data shown:
+ * - Team name
+ * - Team number
+ * - Team final time
+ */
+public class HBoxForPausedRun extends CustomHBox {
 
     private static final double HBoxSpacing = 10;
     Label teamName = new Label();
@@ -16,7 +23,7 @@ public class HBoxForFinishedUndoTeam extends CustomHBox {
     Label finalTimeLabel = new Label();
     Button undoButton = new Button();
 
-    public HBoxForFinishedUndoTeam(Run run, UIAppLogic controller){
+    public HBoxForPausedRun(Run run, UIAppLogic controller){
         super(HBoxSpacing, run);
 
         Team team = run.getTeam();

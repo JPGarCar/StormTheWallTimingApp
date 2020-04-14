@@ -1,7 +1,7 @@
 package models;
 
 import com.sun.istack.internal.NotNull;
-import models.exceptions.CouldNotCalculateFinalTimeExcpetion;
+import models.exceptions.CriticalErrorException;
 
 import java.util.Calendar;
 
@@ -42,7 +42,7 @@ public class FinalTime {
     public FinalTime() {}
 
     // CONSTRUCTOR
-    public FinalTime(@NotNull Calendar startTime, @NotNull Calendar stopTime) throws CouldNotCalculateFinalTimeExcpetion {
+    public FinalTime(@NotNull Calendar startTime, @NotNull Calendar stopTime) throws CriticalErrorException {
         this.startTime = startTime;
         this.stopTime = stopTime;
         calculate();
@@ -107,10 +107,17 @@ public class FinalTime {
         this.stopTime = stopTime;
     }
 
-    // EFFECTS: public function to call calculateSeconds and calculateFinalTime
-    public void calculate() throws CouldNotCalculateFinalTimeExcpetion {
+    /**
+     * Public function to calculate the final time of a Run. After this we can call the toString method and get the
+     * correct final time of a Run.
+     *
+     * @throws CriticalErrorException   if startTime or stopTime are null.
+     * @helper calculateFinalTime()
+     */
+    public void calculate() throws CriticalErrorException {
         if (startTime == null || stopTime == null) {
-            throw new CouldNotCalculateFinalTimeExcpetion("This is because the startTime or the endTime is null.");
+            throw new CriticalErrorException("We could not calculate the final time of a team because the heat" +
+                    " never started or other problems inside the FinalTime class.");
         }
         calculateFinalTime();
     }

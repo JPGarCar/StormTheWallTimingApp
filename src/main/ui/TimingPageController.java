@@ -46,25 +46,25 @@ public class TimingPageController extends UIController {
 
     // EFFECTS: set running run list to the controller's running run list
     public void updateActiveRunList() {
-        ArrayList<HBoxForRunningTeam> hBoxForRunningTeams = new ArrayList<>();
+        ArrayList<HBoxForActiveRun> hBoxForActiveRuns = new ArrayList<>();
         for (Run run : controller.getActiveRuns().values()) {
-            HBoxForRunningTeam hBox = new HBoxForRunningTeam(run, controller);
+            HBoxForActiveRun hBox = new HBoxForActiveRun(run, controller);
             hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
-            hBoxForRunningTeams.add(hBox);
+            hBoxForActiveRuns.add(hBox);
         }
-        runningTeamsList.setItems(FXCollections.observableList(hBoxForRunningTeams));
+        runningTeamsList.setItems(FXCollections.observableList(hBoxForActiveRuns));
     }
 
     // EFFECTS: add a run to the running run list, first is private, second and third are the public ones to use
     public void addToActiveRunList(Run run, boolean top) {
-        ArrayList<HBoxForRunningTeam> hBoxForRunningTeams = new ArrayList<>();
-        HBoxForRunningTeam hBox = new HBoxForRunningTeam(run, controller);
+        ArrayList<HBoxForActiveRun> hBoxForActiveRuns = new ArrayList<>();
+        HBoxForActiveRun hBox = new HBoxForActiveRun(run, controller);
         hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
-        hBoxForRunningTeams.add(hBox);
+        hBoxForActiveRuns.add(hBox);
         if (top) {
-            runningTeamsList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForRunningTeams), runningTeamsList.getItems()));
+            runningTeamsList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForActiveRuns), runningTeamsList.getItems()));
         } else {
-            runningTeamsList.setItems(FXCollections.concat(runningTeamsList.getItems(), FXCollections.observableList(hBoxForRunningTeams)));
+            runningTeamsList.setItems(FXCollections.concat(runningTeamsList.getItems(), FXCollections.observableList(hBoxForActiveRuns)));
         }
     }
     public void addToActiveRunListToBottom(@NotNull Run run) {
@@ -76,25 +76,25 @@ public class TimingPageController extends UIController {
 
     // EFFECTS: set the UI paused list with the paused Run list
     public void updatePausedRunList() {
-        ArrayList<HBoxForFinishedUndoTeam> hBoxForFinishedUndoTeams = new ArrayList<>();
+        ArrayList<HBoxForPausedRun> hBoxForPausedRuns = new ArrayList<>();
         for (Run run : controller.getPausedRuns().values()) {
-            HBoxForFinishedUndoTeam hBox = new HBoxForFinishedUndoTeam(run, controller);
+            HBoxForPausedRun hBox = new HBoxForPausedRun(run, controller);
             hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
-            hBoxForFinishedUndoTeams.add(hBox);
+            hBoxForPausedRuns.add(hBox);
         }
-        undoFinishedTeamList.setItems(FXCollections.observableList(hBoxForFinishedUndoTeams));
+        undoFinishedTeamList.setItems(FXCollections.observableList(hBoxForPausedRuns));
     }
 
     // EFFECTS: add a Run to the paused Run list, first is private, second and third are the public ones to use
     private void addToPausedRunList(Run run, boolean top) {
-        ArrayList<HBoxForFinishedUndoTeam> hBoxForFinishedUndoTeams = new ArrayList<>();
-        HBoxForFinishedUndoTeam hBox = new HBoxForFinishedUndoTeam(run, controller);
+        ArrayList<HBoxForPausedRun> hBoxForPausedRuns = new ArrayList<>();
+        HBoxForPausedRun hBox = new HBoxForPausedRun(run, controller);
         hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
-        hBoxForFinishedUndoTeams.add(hBox);
+        hBoxForPausedRuns.add(hBox);
         if (top) {
-            undoFinishedTeamList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForFinishedUndoTeams), undoFinishedTeamList.getItems()));
+            undoFinishedTeamList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForPausedRuns), undoFinishedTeamList.getItems()));
         } else {
-            undoFinishedTeamList.setItems(FXCollections.concat(undoFinishedTeamList.getItems(), FXCollections.observableList(hBoxForFinishedUndoTeams)));
+            undoFinishedTeamList.setItems(FXCollections.concat(undoFinishedTeamList.getItems(), FXCollections.observableList(hBoxForPausedRuns)));
         }
     }
     public void addToPausedRunListToTop(@NotNull Run run) {
@@ -107,26 +107,26 @@ public class TimingPageController extends UIController {
 
     // EFFECTS: set the list of finished Runs to all those in the controller´s final Runs list
     public void updateFinishedRunList() {
-        ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
+        ArrayList<HBoxForFinishedRun> hBoxForFinishedRuns = new ArrayList<>();
         for (Run run : controller.getFinishedRuns().values()) {
-            HBoxForFinishedTeam hBox =  new HBoxForFinishedTeam(run, controller);
+            HBoxForFinishedRun hBox =  new HBoxForFinishedRun(run, controller);
             hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
-            hBoxForFinishedTeams.add(hBox);
+            hBoxForFinishedRuns.add(hBox);
         }
 
-        finishedTeamsList.setItems(FXCollections.observableList(hBoxForFinishedTeams));
+        finishedTeamsList.setItems(FXCollections.observableList(hBoxForFinishedRuns));
     }
 
     // EFFECTS: add a Run to the finished Run list, first is private, second and third are the public ones to use
     private void addToFinishedRunList(@NotNull Run run, boolean top) {
-        ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
-        HBoxForFinishedTeam hBox = new HBoxForFinishedTeam(run, controller);
+        ArrayList<HBoxForFinishedRun> hBoxForFinishedRuns = new ArrayList<>();
+        HBoxForFinishedRun hBox = new HBoxForFinishedRun(run, controller);
         hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
-        hBoxForFinishedTeams.add(hBox);
+        hBoxForFinishedRuns.add(hBox);
         if (top) {
-            finishedTeamsList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForFinishedTeams), finishedTeamsList.getItems()));
+            finishedTeamsList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForFinishedRuns), finishedTeamsList.getItems()));
         } else {
-            finishedTeamsList.setItems(FXCollections.concat(finishedTeamsList.getItems(), FXCollections.observableList(hBoxForFinishedTeams)));
+            finishedTeamsList.setItems(FXCollections.concat(finishedTeamsList.getItems(), FXCollections.observableList(hBoxForFinishedRuns)));
         }
     }
     public void addToFinishedRunListToTop(@NotNull Run run) {
@@ -138,11 +138,11 @@ public class TimingPageController extends UIController {
 
     // EFFECTS: set the UI staged Heat Run list to the Runs of the staged heat
     public void updateStagedHeatRunList() {
-        ArrayList<HBoxForStagedTeam> list = new ArrayList<>();
+        ArrayList<HBoxForStagedRun> list = new ArrayList<>();
         for (Run run : controller.getStagedHeat().getRuns().values()) {
-            HBoxForStagedTeam hBoxForStagedTeam = new HBoxForStagedTeam(run, controller);
-            hBoxForStagedTeam.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
-            list.add(hBoxForStagedTeam);
+            HBoxForStagedRun hBoxForStagedRun = new HBoxForStagedRun(run, controller);
+            hBoxForStagedRun.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
+            list.add(hBoxForStagedRun);
         }
 
         stageHeatTeamList.setItems(FXCollections.observableList(list));
@@ -168,16 +168,16 @@ public class TimingPageController extends UIController {
 // FXML TAGS //
 
     @FXML
-    private ListView<HBoxForRunningTeam> runningTeamsList;
+    private ListView<HBoxForActiveRun> runningTeamsList;
 
     @FXML
     private TextField stageHeatNumber;
 
     @FXML
-    private ListView<HBoxForFinishedTeam> finishedTeamsList;
+    private ListView<HBoxForFinishedRun> finishedTeamsList;
 
     @FXML
-    private ListView<HBoxForStagedTeam> stageHeatTeamList;
+    private ListView<HBoxForStagedRun> stageHeatTeamList;
 
     @FXML
     private TextField stopTeamNumber;
@@ -189,7 +189,7 @@ public class TimingPageController extends UIController {
     private Label categoryLabel;
 
     @FXML
-    private ListView<HBoxForFinishedUndoTeam> undoFinishedTeamList;
+    private ListView<HBoxForPausedRun> undoFinishedTeamList;
 
 // FXML FUNCTIONS //
 
@@ -208,7 +208,7 @@ public class TimingPageController extends UIController {
                 categoryLabel.setText(stagedHeat.getCategory());
             }
 
-        } catch (NoHeatWithIDException e) {
+        } catch (CriticalErrorException e) {
             showAlert(Alert.AlertType.ERROR, e.getMessage(), "The following error while staging the heat has come up." );
             stageHeatNumber.setText(Integer.toString(controller.getCurrentDay().getAtHeat()));
         }
@@ -224,13 +224,7 @@ public class TimingPageController extends UIController {
             stagedHeat.markStartTime(Calendar.getInstance());
 
             // try to add all the Runs from the heat
-            try {
-                controller.addActiveRunsFromRunList(stagedHeat.listOfRunsWithoutDNS());
-            } catch (NoHeatsException e) {
-                showAlert(Alert.AlertType.WARNING, "The heat started properly, however, " +
-                        "the following error came up. " + e.getMessage(),
-                        "There has been an error while starting the heat.");
-            }
+            controller.addActiveRunsFromRunList(stagedHeat.listOfRunsWithoutDNS());
 
             // update controller next heat, staged heat list, and text fields
             controller.goToNextHeat();
@@ -262,7 +256,7 @@ public class TimingPageController extends UIController {
                         return;
                     }
                 }
-            } catch (NoHeatsException | CouldNotCalculateFinalTimeExcpetion e) {
+            } catch (CriticalErrorException e) {
                 showAlert(Alert.AlertType.WARNING, "The heat started properly, however, " +
                                 "the following error came up. " + e.getMessage(),
                         "There has been an error while ending the team.");
@@ -310,7 +304,7 @@ public class TimingPageController extends UIController {
 
                 try {
                     controller.undoLastHeat();
-                } catch (NoHeatWithIDException | CanNotUndoHeatException e) {
+                } catch (CriticalErrorException |CanNotUndoHeatException e) {
                     showAlert(Alert.AlertType.ERROR, "Please contact an admin if the error persists. Error: " +
                             e.getMessage(), "There has been an error.");
                 }

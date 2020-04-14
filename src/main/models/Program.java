@@ -1,7 +1,7 @@
 package models;
 
 import com.sun.istack.internal.NotNull;
-import models.exceptions.NoDayException;
+import models.exceptions.ErrorException;
 
 import java.util.*;
 
@@ -115,12 +115,19 @@ public class Program {
         }
     }
 
-    // EFFECTS: returns a program day or throws exception
-    public Day getProgramDay(String programDay) throws NoDayException {
+    /**
+     * Will return the Day from the programDays Map with the key imputed as a parameter. If there is no Day linked to
+     * the key imputed, then an exception is thrown.
+     *
+     * @param programDay    String to be used to search for the Day, this string should be a key in the progarmDays Map.
+     * @return  The Day linked to the imputed String.
+     * @throws ErrorException   If the imputed String is not a key in the programDays Map.
+     */
+    public Day getProgramDay(String programDay) throws ErrorException {
         if (programDays.get(programDay) != null) {
             return programDays.get(programDay);
         } else {
-            throw new NoDayException("Dey not found: " + programDay);
+            throw new ErrorException("We could not find the day specified: " + programDay + " in the program.");
         }
     }
 

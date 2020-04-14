@@ -12,7 +12,14 @@ import ui.UIAppLogic;
 
 import java.util.Arrays;
 
-public class HBoxForFinishedTeam extends CustomHBox {
+/**
+ * This HBox is specific to the UI finished list in the timer page. This HBox can change the status of Run(s).
+ * Data shown:
+ * - Team name
+ * - Team number
+ * - Run final time
+ */
+public class HBoxForFinishedRun extends CustomHBox {
 
     private static final double HBoxSpacing = 10;
     Label teamName = new Label();
@@ -20,7 +27,7 @@ public class HBoxForFinishedTeam extends CustomHBox {
     Label finalTime = new Label();
     ComboBox comboBox = new ComboBox();
 
-    public HBoxForFinishedTeam(Run run, UIAppLogic controller){
+    public HBoxForFinishedRun(Run run, UIAppLogic controller){
         super(HBoxSpacing, run);
 
         Team team = run.getTeam();
@@ -38,7 +45,7 @@ public class HBoxForFinishedTeam extends CustomHBox {
         comboBox.setItems(FXCollections.observableList(Arrays.asList(Sitrep.values())));
         comboBox.setValue(run.getSitrep().name());
         comboBox.setOnAction(event -> {
-            super.updateStatus(comboBox.getValue().toString(), controller);
+            super.updateStatus(comboBox.getValue().toString());
         });
 
         this.getChildren().addAll(id, this.teamName, comboBox, this.finalTime);

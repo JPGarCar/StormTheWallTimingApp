@@ -4,7 +4,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import models.*;
-import models.exceptions.NoRunFoundException;
+import models.exceptions.CriticalErrorException;
 
 public class DataPageController extends UIController{
 
@@ -208,7 +208,7 @@ public class DataPageController extends UIController{
                         return new SimpleStringProperty("Has not run yet.");
                     }
 
-                } catch (NoRunFoundException e) {
+                } catch (CriticalErrorException e) {
                     showAlert(Alert.AlertType.ERROR, "If the error persists please contact an admin. Error: "
                                 + e.getMessage(), "There has been an error at actualStartTimeHeatCol cell value factory.");
                     return new SimpleStringProperty("");
@@ -243,7 +243,7 @@ public class DataPageController extends UIController{
                 Team team = ((Team) param.getValue().getValue());
                 try {
                     return new SimpleStringProperty(team.getRunByHeatNumber(heat.getHeatNumber()).getSitrep().name());
-                } catch (NoRunFoundException e) {
+                } catch (CriticalErrorException e) {
                     showAlert(Alert.AlertType.ERROR, "If the error persists please contact an admin. Error: "
                             + e.getMessage(), "There has been an error at teamTypeHeatCol cell value factory.");
                     return new SimpleStringProperty("");
@@ -316,7 +316,7 @@ public class DataPageController extends UIController{
                     } else {
                         return new SimpleStringProperty("Has not run yet.");
                     }
-                } catch (NoRunFoundException e) {
+                } catch (CriticalErrorException e) {
                     showAlert(Alert.AlertType.ERROR, "If the error persists please contact an admin. Error: "
                             + e.getMessage(), "There has been an error at teamNameTeamCol cell value factory.");
                     return new SimpleStringProperty("");
