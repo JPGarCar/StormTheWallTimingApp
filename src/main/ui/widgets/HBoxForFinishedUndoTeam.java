@@ -30,7 +30,7 @@ public class HBoxForFinishedUndoTeam extends CustomHBox {
 
         undoButton.setText("Undo");
         undoButton.setOnAction(event -> {
-            controller.undoRunStop(run.getRunNumber());
+            controller.undoPausedRun(run.getRunNumber());
         });
 
         finalTimeLabel.setText(run.getFinalTime().toString());

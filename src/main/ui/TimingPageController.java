@@ -10,10 +10,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import models.*;
 import models.exceptions.*;
-import ui.widgets.HBoxForFinishedTeam;
-import ui.widgets.HBoxForFinishedUndoTeam;
-import ui.widgets.HBoxForRunningTeam;
-import ui.widgets.HBoxForStagedTeam;
+import ui.widgets.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -39,8 +36,8 @@ public class TimingPageController extends UIController {
     @FXML
     protected void initialize() {
         updateFinishedRunList();
-        updateStoppedRunList();
-        updateRunningRunList();
+        updatePausedRunList();
+        updateActiveRunList();
 
         initStuff();
     }
@@ -48,9 +45,9 @@ public class TimingPageController extends UIController {
 // FUNCTIONS //
 
     // EFFECTS: set running run list to the controller's running run list
-    public void updateRunningRunList() {
+    public void updateActiveRunList() {
         ArrayList<HBoxForRunningTeam> hBoxForRunningTeams = new ArrayList<>();
-        for (Run run : controller.getCurrentRuns().values()) {
+        for (Run run : controller.getActiveRuns().values()) {
             HBoxForRunningTeam hBox = new HBoxForRunningTeam(run, controller);
             hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
             hBoxForRunningTeams.add(hBox);
@@ -59,7 +56,7 @@ public class TimingPageController extends UIController {
     }
 
     // EFFECTS: add a run to the running run list, first is private, second and third are the public ones to use
-    public void addToRunningRunList(Run run, boolean top) {
+    public void addToActiveRunList(Run run, boolean top) {
         ArrayList<HBoxForRunningTeam> hBoxForRunningTeams = new ArrayList<>();
         HBoxForRunningTeam hBox = new HBoxForRunningTeam(run, controller);
         hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
@@ -70,17 +67,17 @@ public class TimingPageController extends UIController {
             runningTeamsList.setItems(FXCollections.concat(runningTeamsList.getItems(), FXCollections.observableList(hBoxForRunningTeams)));
         }
     }
-    public void addToRunningRunListToBottom(@NotNull Run run) {
-        addToRunningRunList(run, false);
+    public void addToActiveRunListToBottom(@NotNull Run run) {
+        addToActiveRunList(run, false);
     }
-    public void addToRunningRunListToTop(@NotNull Run run) {
-        addToRunningRunList(run, true);
+    public void addToActiveRunListToTop(@NotNull Run run) {
+        addToActiveRunList(run, true);
     }
 
-    // EFFECTS: set finished but possible undo team list to the controller's finished team list
-    public void updateStoppedRunList() {
+    // EFFECTS: set the UI paused list with the paused Run list
+    public void updatePausedRunList() {
         ArrayList<HBoxForFinishedUndoTeam> hBoxForFinishedUndoTeams = new ArrayList<>();
-        for (Run run : controller.getStoppedRuns().values()) {
+        for (Run run : controller.getPausedRuns().values()) {
             HBoxForFinishedUndoTeam hBox = new HBoxForFinishedUndoTeam(run, controller);
             hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
             hBoxForFinishedUndoTeams.add(hBox);
@@ -88,8 +85,8 @@ public class TimingPageController extends UIController {
         undoFinishedTeamList.setItems(FXCollections.observableList(hBoxForFinishedUndoTeams));
     }
 
-    // EFFECTS: add a team to the finished team list, first is private, second and third are the public ones to use
-    private void addToStoppedRunList(Run run, boolean top) {
+    // EFFECTS: add a Run to the paused Run list, first is private, second and third are the public ones to use
+    private void addToPausedRunList(Run run, boolean top) {
         ArrayList<HBoxForFinishedUndoTeam> hBoxForFinishedUndoTeams = new ArrayList<>();
         HBoxForFinishedUndoTeam hBox = new HBoxForFinishedUndoTeam(run, controller);
         hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
@@ -100,15 +97,15 @@ public class TimingPageController extends UIController {
             undoFinishedTeamList.setItems(FXCollections.concat(undoFinishedTeamList.getItems(), FXCollections.observableList(hBoxForFinishedUndoTeams)));
         }
     }
-    public void addToStoppedRunListToTop(@NotNull Run run) {
-        addToStoppedRunList(run, true);
+    public void addToPausedRunListToTop(@NotNull Run run) {
+        addToPausedRunList(run, true);
     }
-    public void addToStoppedRunListToBottom(@NotNull Run run) {
-        addToStoppedRunList(run, false);
+    public void addToPausedRunListToBottom(@NotNull Run run) {
+        addToPausedRunList(run, false);
     }
 
 
-    // EFFECTS: set the list of final finished teams to all those in the controller´s final finished teams list
+    // EFFECTS: set the list of finished Runs to all those in the controller´s final Runs list
     public void updateFinishedRunList() {
         ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
         for (Run run : controller.getFinishedRuns().values()) {
@@ -120,7 +117,7 @@ public class TimingPageController extends UIController {
         finishedTeamsList.setItems(FXCollections.observableList(hBoxForFinishedTeams));
     }
 
-    // EFFECTS: add a team to the final finished team list, first is private, second and third are the public ones to use
+    // EFFECTS: add a Run to the finished Run list, first is private, second and third are the public ones to use
     private void addToFinishedRunList(@NotNull Run run, boolean top) {
         ArrayList<HBoxForFinishedTeam> hBoxForFinishedTeams = new ArrayList<>();
         HBoxForFinishedTeam hBox = new HBoxForFinishedTeam(run, controller);
@@ -139,8 +136,8 @@ public class TimingPageController extends UIController {
         addToFinishedRunList(run, false);
     }
 
-    // EFFECTS: set the list for teams in the staged list from the controller's staged heat heat
-    public void updateStagedHeatTeamList() {
+    // EFFECTS: set the UI staged Heat Run list to the Runs of the staged heat
+    public void updateStagedHeatRunList() {
         ArrayList<HBoxForStagedTeam> list = new ArrayList<>();
         for (Run run : controller.getStagedHeat().getRuns().values()) {
             HBoxForStagedTeam hBoxForStagedTeam = new HBoxForStagedTeam(run, controller);
@@ -206,7 +203,7 @@ public class TimingPageController extends UIController {
 
             // make sure the heat has not run yet
             if (!stagedHeat.isHasStarted()) {
-                updateStagedHeatTeamList();
+                updateStagedHeatRunList();
                 timeToStartLabel.setText(stagedHeat.scheduledTimeString());
                 categoryLabel.setText(stagedHeat.getCategory());
             }
@@ -226,9 +223,9 @@ public class TimingPageController extends UIController {
         if (stagedHeat != null) {
             stagedHeat.markStartTime(Calendar.getInstance());
 
-            // try to add a run from every team in the heat
+            // try to add all the Runs from the heat
             try {
-                controller.addRunningRunsFromTeams(stagedHeat.listOfRunsWithoutDNS());
+                controller.addActiveRunsFromRunList(stagedHeat.listOfRunsWithoutDNS());
             } catch (NoHeatsException e) {
                 showAlert(Alert.AlertType.WARNING, "The heat started properly, however, " +
                         "the following error came up. " + e.getMessage(),
@@ -257,7 +254,7 @@ public class TimingPageController extends UIController {
     private void endTeamButtonAction() {
         if (!stopTeamNumber.getText().equals("")) {
             try {
-                for (Run run : controller.getCurrentRuns().values()) {
+                for (Run run : controller.getActiveRuns().values()) {
                     if (run.getTeam().getTeamNumber() == Integer.parseInt(stopTeamNumber.getText())) {
                         controller.endRun(run.getRunNumber());
                         stopTeamNumber.setText("");

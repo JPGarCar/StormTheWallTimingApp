@@ -82,7 +82,7 @@ public class EditHeatPageController extends UIController {
     // EFFECTS: deletes this page to go back to timer, update staged heat list
     @FXML
     private void returnToLastPage() {
-        controller.getUiController().updateStagedHeatTeamList();
+        controller.getUiController().updateStagedHeatRunList();
         Stage stage = (Stage) teamHeatList.getScene().getWindow();
         stage.close();
     }

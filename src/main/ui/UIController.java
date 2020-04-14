@@ -32,7 +32,7 @@ public class UIController {
         return alert;
     }
 
-    // EFFECTS: go back to main menu, uses a label to get scene
+    // EFFECTS: go back to main menu, requires a scene
     protected void backToMainMenu(Scene scene) {
         try {
             controller.saveData();

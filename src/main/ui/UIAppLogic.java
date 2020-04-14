@@ -15,46 +15,75 @@ public class UIAppLogic {
 
 // VARIABLES //
 
+    /**
+     * Amount of seconds for Run to be paused.
+     */
     final int RUNUNDODELAYTIME = 20000;
 
-    // Contains the current staged heat
+    /**
+     * The current staged heat if any, null otherwise.
+     */
     private Heat stagedHeat;
 
-    // Contains all the runs currently running
-    private Map<RunNumber, Run> currentRuns;
+    /**
+     * Map of Run with RunNumber keys. Holds the Run(s) that are currently active, aka the Heat(s) associated to the
+     * Run(s) have started.
+     */
+    private Map<RunNumber, Run> activeRuns;
 
-    // Contains all the runs that have stopped and can be undo
-    private Map<RunNumber, Run> stoppedRuns;
+    /**
+     * Map of Run with RunNumber keys. Holds the Run(s) that are paused, aka the team ended the race but the Run
+     * can still be undo back to active.
+     */
+    private Map<RunNumber, Run> pausedRuns;
 
-    // Contains all the runs that have finished
+    /**
+     * Map of Run with RunNumber keys. Holds the Run(s) that are finished, aka the team ended the race and the pause
+     * timer associated to the Run has ended and so the Run can't be undo back to active.
+     */
     private Map<RunNumber, Run> finishedRuns;
 
+    /**
+     * The Program that holds all the days and race data.
+     */
     @JsonIgnore
     private Program program;
 
+    /**
+     * The TimingPageController to be used to update the UI.
+     */
     @JsonIgnore
     private TimingPageController uiController;
 
+    /**
+     * The EditHeatPageController to be used to update the UI and to have a connection to all CustomHBox(s).
+     */
     @JsonIgnore
     private EditHeatPageController editHeatController;
 
+    /**
+     * Connection to the Day being used by the timer, aka the Day the race is in.
+     */
     @JsonIgnore
     private Day currentDay;
 
+    /**
+     * Map of Timer with RunNumber keys. Holds all the Timer(s) used to control paused Run(s).
+     */
     private Map<RunNumber, Timer> timerMap;
 
 // CONSTRUCTORS //
 
     // DUMMY CONSTRUCTOR for Jackson JSON
     public UIAppLogic() {
-        currentRuns = new TreeMap<>();
-        stoppedRuns = new LinkedHashMap<>();
+        activeRuns = new TreeMap<>();
+        pausedRuns = new LinkedHashMap<>();
         finishedRuns = new LinkedHashMap<>();
         timerMap = new HashMap<>();
     }
 
-// GETTERS AND SETTERS, used by Jackson JSON //
 
+// GETTERS AND SETTERS, used by Jackson JSON //
 
     public Day getCurrentDay() {
         return currentDay;
@@ -64,12 +93,12 @@ public class UIAppLogic {
         return program;
     }
 
-    public Map<RunNumber, Run> getStoppedRuns() {
-        return stoppedRuns;
+    public Map<RunNumber, Run> getPausedRuns() {
+        return pausedRuns;
     }
 
-    public Map<RunNumber, Run> getCurrentRuns() {
-        return currentRuns;
+    public Map<RunNumber, Run> getActiveRuns() {
+        return activeRuns;
     }
 
     public Heat getStagedHeat() {
@@ -92,12 +121,12 @@ public class UIAppLogic {
         this.program = program;
     }
 
-    public void setCurrentRuns(Map<RunNumber, Run> currentRuns) {
-        this.currentRuns = currentRuns;
+    public void setActiveRuns(Map<RunNumber, Run> activeRuns) {
+        this.activeRuns = activeRuns;
     }
 
-    public void setStoppedRuns(Map<RunNumber, Run> stoppedRuns) {
-        this.stoppedRuns = stoppedRuns;
+    public void setPausedRuns(Map<RunNumber, Run> pausedRuns) {
+        this.pausedRuns = pausedRuns;
     }
 
     public void setStagedHeat(Heat stagedHeat) {
@@ -122,104 +151,175 @@ public class UIAppLogic {
 
 // FUNCTIONS //
 
-    // EFFECTS: add a run to the stopped run list, included the task to move to finished
-    private void stopRun(@NotNull Run run) {
-        stoppedRuns.put(run.getRunNumber(), run);
-        uiController.updateStoppedRunList();
-        Timer t = new Timer();
-        timerMap.put(run.getRunNumber(), t);
-        t.schedule( new TimerTask() {
-            @Override
-            public void run() {
-                if (run.getCanUndo()) {
-                    run.setCanUndo(false);
-
-                    Platform.runLater(() -> addFinishedRun(run));
-                    Platform.runLater(() -> removeStoppedRunWithUpdate(run.getRunNumber()));
-                    t.cancel();
-                }
-            }
-        },
-        RUNUNDODELAYTIME);
+    /**
+     * Remove a Run from the activeRun list. Uses the RunNumber associated to the Run to remove it from the list.
+     *
+     * @param runNumber from the run to be removed from activeRuns list.
+     */
+    public void removeActiveRun(RunNumber runNumber) {
+        activeRuns.remove(runNumber);
     }
 
-    // EFFECTS: remove a run from the running run list
-    public void removeRunningTeam(RunNumber runNumber) {
-        currentRuns.remove(runNumber);
+    /**
+     * Remove a Run from the activeRun list and updates the UI activeRuns list. Uses the RunNumber from the Run
+     * to remove it form the list.
+     *
+     * @param runNumber from the run to be removed from activeRuns list.
+     */
+    public void removeActiveRunWithUpdate(RunNumber runNumber) {
+        removeActiveRun(runNumber);
+        uiController.updateActiveRunList();
     }
 
-    // EFFECTS: remove a run from the running run list and update the ui running run list
-    public void removeRunningRunWithUpdate(RunNumber runNumber) {
-        removeRunningTeam(runNumber);
-        uiController.updateRunningRunList();
+    /**
+     * Add a Run to the activeRuns list.
+     *
+     * @param run   to be added to the activeRuns list.
+     */
+    public void addActiveRun(Run run) {
+        activeRuns.put(run.getRunNumber(), run);
     }
 
-    // EFFECTS: add a run to the running run list
-    public void addRunningRun(Run run) {
-        currentRuns.put(run.getRunNumber(), run);
+    /**
+     * Add a Run to the activeRuns list and updates the UI activeRuns list.
+     *
+     * @param run   to be added to the activeRuns list.
+     */
+    public void addActiveRunWithUpdate(Run run) {
+        addActiveRun(run);
+        uiController.addToActiveRunListToTop(run);
     }
 
-    // EFFECTS: add a run to the running run list and update the ui running run list
-    public void addRunningRunWithUpdate(Run run) {
-        addRunningRun(run);
-        uiController.addToRunningRunListToTop(run);
-    }
-
-    // EFFECTS: add multiple runs to the running team list, input as an array of teams
-    public void addRunningRunsFromTeams(ArrayList<Run> runs) {
+    /**
+     * Add multiple Runs to the activeRuns list. After all the additions it will update the UI activeRuns list.
+     *
+     * @param runs  ArrayList of Run that will get added to the activeRuns list.
+     */
+    public void addActiveRunsFromRunList(ArrayList<Run> runs) {
         for (Run run : runs) {
-            addRunningRun(run);
+            addActiveRun(run);
         }
-        uiController.updateRunningRunList();
+        uiController.updateActiveRunList();
     }
 
-    // EFFECTS: remove a run from the stopped run list
-    public void removeStoppedRun(RunNumber runNumber) {
-        stoppedRuns.remove(runNumber);
+    /**
+     * Remove a Run from the pausedRuns list. It uses the RunNumber associated to the Run to remove the Run.
+     *
+     * @param runNumber to be used to remove the Run from the pausedRuns list.
+     */
+    public void removePausedRun(RunNumber runNumber) {
+        pausedRuns.remove(runNumber);
     }
 
-    // EFFECTS: remove a run from the stopped run list and update ui stopped run list
-    public void removeStoppedRunWithUpdate(RunNumber runNumber) {
-        removeStoppedRun(runNumber);
-        uiController.updateStoppedRunList();
+    /**
+     * Remove a Run from the pausedRuns list and update the UI pausedRuns list. It uses the RunNumber associated
+     * to the Run to remove it.
+     *
+     * @param runNumber to be used to remove the Run from the pausedRuns list.
+     */
+    public void removePausedRunWithUpdate(RunNumber runNumber) {
+        removePausedRun(runNumber);
+        uiController.updatePausedRunList();
     }
 
-    // EFFECTS: send run back to running run list and remove from stopped list, undo end time too
-    public void undoRunStop(RunNumber runNumber) {
+    /**
+     * Will undo a paused Run. This will move it back to the activeRuns list and remove it from the pausedRuns list.
+     * This will also set the Run available to undo and remove the timer associated to this run from the timerMap.
+     *
+     * @param runNumber to be used to undo the Run associated to this RunNumber.
+     */
+    public void undoPausedRun(RunNumber runNumber) {
         timerMap.get(runNumber).cancel();
-        Run run = stoppedRuns.get(runNumber);
+        Run run = pausedRuns.get(runNumber);
         run.setCanUndo(false);
 
-        removeStoppedRunWithUpdate(runNumber);
-        addRunningRunWithUpdate(run);
+        removePausedRunWithUpdate(runNumber);
+        addActiveRunWithUpdate(run);
     }
 
-    // EFFECTS: add a run to the finished run list and update ui finished run list
+    /**
+     * Add a Run tot he finishedRuns list and update the UI finishedRuns list.
+     *
+     * @param run   to be added to the finishedRuns list.
+     */
     public void addFinishedRun(Run run) {
         finishedRuns.put(run.getRunNumber(), run);
         uiController.addToFinishedRunListToTop(run);
     }
 
-    // EFFECTS: ends a run, first with team and heat number, second with runNumber
+    /**
+     * End a Run. Grabs the Run associated to the RunNumber from activeRuns and calls pauseRun(Run). This will
+     * also remove the Run from the activeRuns list.
+     *
+     * @param runNumber to be used to end the Run associated.
+     * @throws NoHeatsException from calculateEndTime
+     * @throws CouldNotCalculateFinalTimeExcpetion  from calculateEndTime
+     * @helper pauseRunEndRunHelper()
+     * @savesData
+     */
     public void endRun(RunNumber runNumber) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion {
 
-        Run run = currentRuns.get(runNumber);
+        Run run = activeRuns.get(runNumber);
         run.calculateEndTime(Calendar.getInstance());
-        stopRun(run);
+        pauseRunEndRunHelper(run);
 
-        removeRunningRunWithUpdate(runNumber);
+        removeActiveRunWithUpdate(runNumber);
         saveData();
     }
 
-    // EFFECTS: undo the last heat
-    public void undoLastHeat() throws NoHeatWithIDException, CanNotUndoHeatException {
-        int lastHeat = currentDay.getAtHeat() - 1;
-        returnRunsDueToUndoHeat(lastHeat);
+    /**
+     * Will pause a run by adding the run to the pausedRuns map, will also update UI list and
+     * add a Timer to the timerMap map.
+     *
+     * <p>The Timer is used to know for how long the run will be kept in the pausedRun list,
+     * it is controlled by the final variable RUNUNDODELAYTIME. Once the timer ends, the run is
+     * moved to the finishedRuns list, removed from the pausedRun list and set to notUndo.</p>
+     *
+     * @param run   run to be paused.
+     */
+    private void pauseRunEndRunHelper(@NotNull Run run) {
+        pausedRuns.put(run.getRunNumber(), run);
+        uiController.updatePausedRunList();
 
+        Timer t = new Timer();
+        timerMap.put(run.getRunNumber(), t);
+        t.schedule( new TimerTask() {
+                        @Override
+                        public void run() {
+                            if (run.getCanUndo()) {
+                                run.setCanUndo(false);
+
+                                Platform.runLater(() -> addFinishedRun(run));
+                                Platform.runLater(() -> removePausedRunWithUpdate(run.getRunNumber()));
+                                t.cancel();
+                            }
+                        }
+                    },
+                RUNUNDODELAYTIME);
+    }
+
+    /**
+     * Undo the previous heat. Calls returnRunsDueToUndoHeat(int) to move Run from active to staged. Will
+     * also call the currentDay undoLastHeatStart() function.
+     *
+     * @throws NoHeatWithIDException  from undoLastHeatStart
+     * @throws CanNotUndoHeatException  from undoLastHeatStart
+     * @helper returnRunsDueToUndoHeat()
+     */
+    public void undoLastHeat() throws NoHeatWithIDException, CanNotUndoHeatException {
+        // grab the previous heat -> assumes heat are constant
+        int lastHeat = currentDay.getAtHeat() - 1;
+
+        returnRunsDueToUndoHeat(lastHeat);
         currentDay.undoLastHeatStart();
     }
 
-    // EFFECTS: remove runs from heat because of Undo
+    /**
+     * Will remove the Run(s) associated to the heat from the activeRuns list. After all the removes, the
+     * UI activeRuns list gets updated.
+     *
+     * @param heatNumber    to be used to select the heat from which to get Run(s) to remove.
+     */
     private void returnRunsDueToUndoHeat(int heatNumber) {
         /*
         // This code does not work, I don't know why! -> there are runs that don't get removed
@@ -228,23 +328,27 @@ public class UIAppLogic {
         }
         */
 
-        List<Object> runList = Arrays.asList(currentRuns.values().toArray());
+        List<Object> runList = Arrays.asList(activeRuns.values().toArray());
         for (int i = 0; i < runList.size(); i++) {
             Run run = (Run) runList.get(i);
             if (run.getHeat().getHeatNumber() == heatNumber) {
-                removeRunningTeam(run.getRunNumber());
+                removeActiveRun(run.getRunNumber());
             }
         }
-        uiController.updateRunningRunList();
+        uiController.updateActiveRunList();
     }
 
-    // EFFECTS: save the data to json
+    /**
+     * Save the program data by using JSON files. Will save both this controller and the Program.
+     */
     public void saveData() {
         PersistanceWithJackson.toJsonController(this);
         PersistanceWithJackson.toJsonProgram(program);
     }
 
-    // EFFECTS: goes to next heat and does db update
+    /**
+     * Will call the currentDay goToNextHeat() function to move to the next heat.
+     */
     public void goToNextHeat() {
         getCurrentDay().goToNextHeat();
     }
