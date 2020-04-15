@@ -5,34 +5,42 @@ import models.exceptions.CriticalErrorException;
 
 import java.util.Calendar;
 
-/*
-    This class is used to calculate the total time it took a team to finish
-    Purpose: Calculate the total time it took a team to finish using start and end time Calendars
-    Contains:
-    - The difference between start and stop times in milliseconds - long
-    - The actual minutes, seconds and milliseconds it took the team to finish - int x3
-    - The start and stop time of the team - Calendar x2
-
-    Usage:
-    -
-
-    Persistence:
-    - No persistence of this class, the data is embedded in the Run class
+/**
+ * This class is used to calculate the total time it took a team to finish
+ *
+ * Purpose: Calculate the total time it took a team to finish using start and end time Calendars
+ *
+ * Contains:
+ *   - The difference between start and stop times in milliseconds - long
+ *   - The actual minutes, seconds and milliseconds it took the team to finish - int x3
+ *   - The start and stop time of the team - Calendar x2
+ *
+ *   Usage:
+ *   - calculate the time it took a team to finish a Run, aka final time
+ *   - display the final time in minutes, seconds, and milliseconds, all as a string
+ *
+ * Persistence:
+ *   - No persistence of this class, the data is embedded in the Run class
  */
-
 public class FinalTime {
 
 // VARIABLES //
 
-    // Represents the millisecond difference between the start and stop time
+    /**
+     * Represents the millisecond difference between the start and stop time
+     */
     private long millisecondOfSet;
 
-    // Represents the minutes, seconds and milliseconds it took the team to finish
+    /**
+     * Represents the minutes, seconds and milliseconds it took the team to finish
+     */
     private int minutes;
     private int seconds;
     private int milliseconds;
 
-    // Represents the start and stop times as calendars
+    /**
+     * The Heat's start time and the Run's stop time as Calendars, kept for future reference and for log purposes.
+     */
     private Calendar startTime;
     private Calendar stopTime;
 
@@ -100,13 +108,6 @@ public class FinalTime {
 
 // FUNCTIONS //
 
-    // MODIFIES: startTime, stopTime
-    // EFFECTS: add a new start and stop time
-    public void addTimes(@NotNull Calendar startTime, @NotNull Calendar stopTime) {
-        this.startTime = startTime;
-        this.stopTime = stopTime;
-    }
-
     /**
      * Public function to calculate the final time of a Run. After this we can call the toString method and get the
      * correct final time of a Run.
@@ -122,17 +123,10 @@ public class FinalTime {
         calculateFinalTime();
     }
 
-    // MODIFIES: millisecondOfSet
-    // EFFECTS : will calculate the time difference between the start and stop time
-    // EXPECTS : start time should be before the stop time in terms of real time
-    private void calculateSeconds() {
-        long milliStart = startTime.getTimeInMillis();
-        long milliEnd = stopTime.getTimeInMillis();
-        millisecondOfSet = milliEnd - milliStart;
-    }
-
-    // MODIFIES: seconds, minutes, milliseconds
-    // EFFECTS: will calculate the seconds, minutes and milliseconds of the final time
+    /**
+     * will calculate the seconds, minutes and milliseconds that took the team to finish the Run.
+     * @helper calculateSeconds()
+     */
     private void calculateFinalTime() {
         calculateSeconds();
         seconds = (int) (millisecondOfSet / 1000);
@@ -140,6 +134,18 @@ public class FinalTime {
         seconds = seconds % 60;
         milliseconds = (int) (millisecondOfSet % 1000);
     }
+
+    /**
+     * Will calculate the time difference between the start and stop time. Expects the startTime to be a time
+     * before the endTime in terms of real time.
+     */
+    private void calculateSeconds() {
+        long milliStart = startTime.getTimeInMillis();
+        long milliEnd = stopTime.getTimeInMillis();
+        millisecondOfSet = milliEnd - milliStart;
+    }
+
+
 
     @Override
     public String toString() {

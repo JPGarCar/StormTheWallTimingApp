@@ -62,7 +62,14 @@ public class ExcelInput {
 
 // FUNCTIONS //
 
-    // EFFECTS: public function to do the entire process
+    /**
+     * Will begin the data import process from an excel file. Calling 3 helper functions.
+     *
+     * @param isHeats   True if user wants to import Heat(s) from the excel, false otherwise.
+     * @param isTeams   True if user wants to import Team(s) from the excel, false otherwise.
+     * @throws InvalidExcelException    from evaluateData()
+     * @helper createFiles(), evaluateData(), dataTransition()
+     */
     public void inputData(boolean isHeats, boolean isTeams) throws InvalidExcelException {
         createFiles(isHeats, isTeams);
         evaluateData(isHeats, isTeams);
@@ -76,27 +83,13 @@ public class ExcelInput {
         return alertMessagesLinkedList;
     }
 
-    // EFFECTS: evaluates all all the sheets to make sure the data is present and well organized
-    private void evaluateData(boolean isHeats, boolean isTeams) throws InvalidExcelException {
-        if (isHeats) {
-            firstRowEvaluateHeats();
-        }
-        if (isTeams) {
-            firstRowEvaluateTeams();
-        }
-    }
-
-    // EFFECTS: import the data itself, last of evaluate and create files
-    private void dataTransition(boolean isHeats, boolean isTeams) {
-        if (isHeats) {
-            addHeatsFromData();
-        }
-        if (isTeams) {
-            addTeamsFromData();
-        }
-    }
-
-    // EFFECTS: starts all the file and var creations
+    /**
+     * Will create the workbook and sheets variables from the input excel to work with.
+     * For this to work the excel sheets must be names appropriately as shown in the code.
+     *
+     * @param isHeats   True if user wants to import Heat(s) from the excel, false otherwise.
+     * @param isTeams   True if user wants to import Team(s) from the excel, false otherwise.
+     */
     private void createFiles(boolean isHeats, boolean isTeams) {
         try {
             workbook = new XSSFWorkbook(fileInputStream);
@@ -108,6 +101,40 @@ public class ExcelInput {
         }
         if (isTeams) {
             teamsSheet = workbook.getSheet("Teams"); // NOTICE file sheet must be names Teams
+        }
+    }
+
+    /**
+     * Will call two helper functions to check the first row of every sheet for the key words. Key words are used to
+     * know what data is located in what column. Each sheet has its unique set of key words.
+     *
+     * @param isHeats   True if user wants to import Heat(s) from the excel, false otherwise.
+     * @param isTeams   True if user wants to import Team(s) from the excel, false otherwise.
+     * @throws InvalidExcelException from firstRowEvaluateHeats() and firstRowEvaluateTeams()
+     * @helper firstRowEvaluateHeat(), firstRowEvaluateTeams()
+     */
+    private void evaluateData(boolean isHeats, boolean isTeams) throws InvalidExcelException {
+        if (isHeats) {
+            firstRowEvaluateHeats();
+        }
+        if (isTeams) {
+            firstRowEvaluateTeams();
+        }
+    }
+
+    /**
+     * Calls two helper functions to start the data import.
+     *
+     * @param isHeats   True if user wants to import Heat(s) from the excel, false otherwise.
+     * @param isTeams   True if user wants to import Team(s) from the excel, false otherwise.
+     * @helper addHeatsFromData(), addTeamsFromData()
+     */
+    private void dataTransition(boolean isHeats, boolean isTeams) {
+        if (isHeats) {
+            addHeatsFromData();
+        }
+        if (isTeams) {
+            addTeamsFromData();
         }
     }
 
@@ -199,19 +226,35 @@ public class ExcelInput {
         }
     }
 
-    // EFFECTS: checks all the rows for data and adds teams
+    /**
+     * Will check every row of the teamSheet and grab the data from every cell in the row as specified from the
+     * colIdentifiers Map.
+     *
+     * <p>Will first check if the team ID cell is filled, if it is not the program will not
+     * grab data from the row and skip it. Then it will grab most of the data. The hard part comes when deciphering
+     * the Team's run time. The hard part is that the time could be set as a string, a number, or a time. All three are
+     * different type of data for an excel sheet and so we have to treat the string option different from the time or
+     * number option. First part of the conditional deals with string option, second deals with number or time option.
+     * There is a fail safe, if the time is not imported correctly, a Heat is not grabbed and so the entire Team is not
+     * imported. An error message is sent to the user, he can try to change the data type and do the import again.</p>
+     */
     private void addTeamsFromData() {
         for (Row row : teamsSheet) {
 
             XSSFCell cell = (XSSFCell) row.getCell(colIndentifiers.get(TEAMIDIden));
 
+            // check that the row has data by ensuring there is a numeric value in the team id cell
             if (cell.getCellType() == CellType.NUMERIC) {
 
+                // most of the data imported
                 String teamName = row.getCell(colIndentifiers.get(TEAMNAMEIden)).getStringCellValue();
                 String poolName = row.getCell(colIndentifiers.get(TEAMPOOLNAMEIden)).getStringCellValue();
                 String teamUnit = row.getCell(colIndentifiers.get(TEAMUNITIden)).getStringCellValue();
                 String teamDayString = row.getCell(colIndentifiers.get(TEAMDAYIden)).getStringCellValue();
+                int teamNumber = (int) row.getCell(colIndentifiers.get(TEAMNUMBERIden)).getNumericCellValue();
+                int teamID = (int) row.getCell(colIndentifiers.get(TEAMIDIden)).getNumericCellValue();
 
+                // work to get the Team run time begins here and ends after the if-elseif-else
                 Heat heat = null;
 
                 XSSFCell runCell = (XSSFCell) row.getCell(colIndentifiers.get(TEAMRUNTIMEIden));
@@ -266,10 +309,7 @@ public class ExcelInput {
                             "team was not able to connect to a heat.");
                 }
 
-
-                int teamNumber = (int) row.getCell(colIndentifiers.get(TEAMNUMBERIden)).getNumericCellValue();
-                int teamID = (int) row.getCell(colIndentifiers.get(TEAMIDIden)).getNumericCellValue();
-
+                // final step, creation of the team and import to the Program
                 Team team = new Team(poolName, teamNumber, teamName, teamID, teamUnit);
                 if (heat != null) {
                     try {
@@ -284,7 +324,11 @@ public class ExcelInput {
         }
     }
 
-    // EFFECTS: checks all the rows for data and adds heats
+    /**
+     * Will check every row of the Heat's sheet to import data. Before importing data from a row, it will check
+     * to see if there is a Heat number in the appropriate cell. If there is nothing found or the data is non
+     * numeric the row will not be imported.
+     */
     private void addHeatsFromData() {
 
         for (Row row : heatsSheet) {
@@ -306,12 +350,7 @@ public class ExcelInput {
 
                 Heat heat = new Heat(startTime, category, heatNumber, day, row.getRowNum()); // TODO add the heat id not the row number
 
-                try {
-                    controller.getProgram().getProgramDays().get(dayToRun).addHeat(heat);
-                } catch (AddRunException e) {
-                    alertMessagesLinkedList.add("Data import was successful, however there was an error while" +
-                            " importing the following data: " + e.getMessage());
-                }
+                controller.getProgram().getProgramDays().get(dayToRun).addHeat(heat);
             }
 
         }

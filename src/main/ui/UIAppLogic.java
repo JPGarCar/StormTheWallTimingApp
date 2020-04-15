@@ -14,7 +14,7 @@ import persistance.PersistanceWithJackson;
  *
  *
  *
- * @author Juan Pablo Garcia
+ *
  */
 import java.util.*;
 

@@ -5,26 +5,26 @@ import models.exceptions.ErrorException;
 
 import java.util.*;
 
-/*
-    General class for the program.
-    Purpose: control list of all teams, builds teams and has list of all days to be run.
-    Contains:
-    - A TreeMap of all the teams available in the program - TreeMap<Integer, Team>
-    - A TreeMap of teams that are currently wait listed by the user - TreeMap<Integer, Team>
-    - A TreeMap of all the days available in the program - TreeMap<String, Day>
-
-    Usage:
-    - Used by edit heat page to control the teams that are in the wait list
-    - Used by HBox to get team by team Number
-    - Used by main timing controller to create heats
-    - Used by main timing controller to get the days available
-
-    Persistence:
-    - This class is not in the database, it will get built every time the program starts using db data
-    - Must keep all three map lists persistent with db
+/**
+ * General class for the program.
+ *
+ * Purpose: control list of all teams, builds teams and has list of all days to be run.
+ *
+ * Contains:
+ *   - A TreeMap of all the teams available in the program - TreeMap<Integer, Team>
+ *   - A TreeMap of teams that are currently wait listed by the user - TreeMap<Integer, Team>
+ *   - A TreeMap of all the days available in the program - TreeMap<String, Day>
+ *
+ * Usage:
+ *   - Used by edit heat page to control the teams that are in the wait list
+ *   - Used by HBox to get team by team Number
+ *   - Used by main timing controller to create heats
+ *   - Used by main timing controller to get the days available
+ *
+ * Persistence:
+ *   - This class is not in the database, it will get built every time the program starts using db data
+ *   - Must keep all three map lists persistent with db
  */
-
-
 public class Program {
 
 // VARIABLES //
@@ -94,10 +94,6 @@ public class Program {
         waitList.put(run.getRunNumber(), run);
     }
 
-    // EFFECTS: returns a team by its team number
-    public Team getTeamByTeamNumber(@NotNull int teamNumber) {
-        return allTeams.get(teamNumber);
-    }
 
     // EFFECTS: remove a team from wait list by its team number
     public void removeRunFromWaitList(@NotNull RunNumber runNumber) {
