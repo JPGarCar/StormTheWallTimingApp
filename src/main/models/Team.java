@@ -8,26 +8,28 @@ import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
-    Represents a team that will run one or more heats during the event
-    Purpose: Control the heats the team is running in, their times and their team information
-    Contains:
-    - Pool Name - String
-    - Team id used by db and access - UNIQUE - int
-    - Team number used by participants and the program - UNIQUE - int
-    - Team´s name - String
-    - All the Runs that the team has - Map<Integer, Run>
-    - Team unit that represents the unit of this team - String
-
-    Usage:
-    -
-
-    Persistence:
-    - This class is an entity in the table name "team_table"
-    - currentRun, heats and runs will be changing during the program's life they
-        must be persist with db, all other vars will not change much or at all
-    - Many To Many relation with Heat, it is mapped by Heat
-    - One To Many with Run
+/**
+ * <h3>Represents</h3> a team that will run one or more heats during the event
+ *
+ * <h3>Purpose:</h3> Control the heats the team is running in, their times and their team information
+ *
+ * <h3>Contains:</h3>
+ *   - Pool Name - String
+ *   - Team id used by db and access - UNIQUE - int
+ *   - Team number used by participants and the program - UNIQUE - int
+ *   - Team´s name - String
+ *   - All the Runs that the team has - Map<Integer, Run>
+ *  - Team unit that represents the unit of this team - String
+ *
+ * <h3>Usage:</h3>
+ *   -
+ *
+ * <h3>Persistence:</h3>
+ *   - This class is an entity in the table name "team_table"
+ *   - currentRun, heats and runs will be changing during the program's life they
+ *      must be persist with db, all other vars will not change much or at all
+ *   - Many To Many relation with Heat, it is mapped by Heat
+ *   - One To Many with Run
  */
 
 

@@ -89,7 +89,6 @@ public class UIAppLogic {
         timerMap = new HashMap<>();
     }
 
-
 // GETTERS AND SETTERS, used by Jackson JSON //
 
     public Day getCurrentDay() {

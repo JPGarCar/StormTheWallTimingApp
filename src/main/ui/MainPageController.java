@@ -91,7 +91,7 @@ public class MainPageController extends UIController {
     }
 
     // EFFECTS: do all the FXMLLoader stuff
-    private void loadNextPage(String pageName, Callback<Class<?>, Object> fun ) {
+    private void loadNextPage(String pageName, Callback<Class<?>, Object> fun) {
         try {
             FXMLLoader root = new FXMLLoader(getClass().getResource(pageName));
             root.setControllerFactory(fun);

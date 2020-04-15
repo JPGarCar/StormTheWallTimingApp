@@ -2,7 +2,6 @@ package ui;
 
 import IO.ExcelInput;
 import com.sun.istack.internal.NotNull;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.function.Consumer;
 
 public class DataIOPageController extends UIController {
 

@@ -8,18 +8,18 @@ import java.util.Calendar;
 /**
  * This class is used to calculate the total time it took a team to finish
  *
- * Purpose: Calculate the total time it took a team to finish using start and end time Calendars
+ * <h3>Purpose:</h3> Calculate the total time it took a team to finish using start and end time Calendars
  *
- * Contains:
+ * <h3>Contains:</h3>
  *   - The difference between start and stop times in milliseconds - long
  *   - The actual minutes, seconds and milliseconds it took the team to finish - int x3
  *   - The start and stop time of the team - Calendar x2
  *
- *   Usage:
+ * <h3>Usage:</h3>
  *   - calculate the time it took a team to finish a Run, aka final time
  *   - display the final time in minutes, seconds, and milliseconds, all as a string
  *
- * Persistence:
+ * <h3>Persistence:</h3>
  *   - No persistence of this class, the data is embedded in the Run class
  */
 public class FinalTime {

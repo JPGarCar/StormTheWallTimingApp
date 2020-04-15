@@ -10,13 +10,13 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 /**
- *   Represents a regular heat that will run during the event. Each Heat will have associated x number of Run(s) that
+ * <h3>Represents</h3> a regular heat that will run during the event. Each Heat will have associated x number of Run(s) that
  *   represent an association to x Team(s). Each Run must be unique and can not repeat within one Heat. RunNumber(s) are
  *   used to differentiate Run(s) from each other.
  *
- *   Purpose: Control the teams that are running in this heat, when it starts and what kind of teams are running
+ * <h3>Purpose:</h3> Control the teams that are running in this heat, when it starts and what kind of teams are running
  *
- *   Contains:
+ * <h3>Contains:</h3>
  *   - Scheduled time to start - Calendar
  *   - Category of the heat - String
  *   - Heat ID (used by db and access) - UNIQUE - int
@@ -27,14 +27,14 @@ import java.util.*;
  *      every Run - LinkedHashMap<Integer, Team>
  *   - Day this heat is assigned to and running on - Day
  *
- *   Usage:
+ * <h3>Usage:</h3>
  *   - add and remove Run(s) associated to this Heat by using either a Run, RunNumber or Team
  *   - start the Heat
  *   - undo the Heat's start
  *   - send non DNS Run(s) to UI and set endTime to DNS Run(s)
  *   - Start time and scheduled time as String(s)
  *
- *   Persistence:
+ * <h3>Persistence:</h3>
  *   - Class is an entity in the table name "heat_table"
  *   - Actual start time, the teams that will run and weather or not heat started will change during the life of program,
  *       all other should not change much or at all

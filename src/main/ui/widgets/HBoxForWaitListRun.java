@@ -8,6 +8,7 @@ import javafx.scene.layout.Priority;
 import models.Run;
 import models.Team;
 import models.exceptions.AddRunException;
+import models.exceptions.CriticalErrorException;
 import ui.UIAppLogic;
 
 /**
@@ -43,11 +44,11 @@ public class HBoxForWaitListRun extends CustomHBox {
         addTeamButton.setText("Add Team");
         addTeamButton.setOnAction(event -> {
             try {
-                controller.getStagedHeat().addRun(run);
+                run.moveRun(controller.getStagedHeat());
                 controller.getProgram().removeRunFromWaitList(run.getRunNumber());
                 controller.getEditHeatController().setTeamHeatListTeams();
                 controller.getEditHeatController().setWaitListTeams();
-            } catch (AddRunException e) {
+            } catch (AddRunException | CriticalErrorException e) {
                 showAlert(Alert.AlertType.ERROR, "If the error persists please " +
                         "contact an admin. Error: " + e.getMessage(),
                         "There has been an error while trying to add wait list team to heat");

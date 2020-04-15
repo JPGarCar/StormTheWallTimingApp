@@ -12,29 +12,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents a day of the race. It will contain all the Heat(s) to run during the day, will also keep track of
+ * <h3>Represents</h3> a day of the race. It will contain all the Heat(s) to run during the day, will also keep track of
  * the next heat number. Will also deal with what needs to happen when the past Heat has to undo.
  *
- * There can not be any duplicate Heat(s) associated to a Day.
+ * <p>There can not be any duplicate Heat(s) associated to a Day.</p>
  *
- * Heat(s) numbers must follow a numerical order without jumping any numbers, aka 101 -> 102 -> 103, etc no 101 -> 103
+ * <p>Heat(s) numbers must follow a numerical order without jumping any
+ * numbers, aka 101 -> 102 -> 103, etc no 101 -> 103 </p>
  *
- * Purpose: Control the Heat(s) to be run during that day.
+ * <h3>Purpose:</h3> Control the Heat(s) to be run during that day.
  *
- * Contains:
+ * <h3>Contains:</h3>
  *   - String representation of the day, ex "Saturday" - String
  *   - Integer representation of the day, starts at 1 in chronological order - int
  *   - Next heat number to be staged - int
  *   - All the heats that will run during this day, key is the heat´s number - Map<Integer, Heat>
  *
- * Usage:
+ * <h3>Usage:</h3>
  *   - main timing controller to advance current heat (atHeat)
  *   - main timing controller to get heat by its number
  *   - main timing controller to undo the last heat start
  *   - Heat to add/remove a heat to this day
  *
  *
- * Persistence:
+ * <h3>Persistence:</h3>
  *   - Class is an entity in the db in table name "day_table"
  *   - atHeat and heats will be changing throughout the program life, dayToRun and dayNumber not much
  *       will have to keep persistent with db
