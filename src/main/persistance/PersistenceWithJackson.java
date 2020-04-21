@@ -11,7 +11,7 @@ import ui.UIAppLogic;
 import java.io.File;
 import java.io.IOException;
 
-public class PersistanceWithJackson {
+public class PersistenceWithJackson {
 
     public static void toJsonProgram(Program program){
         ObjectMapper mapper = new ObjectMapper();

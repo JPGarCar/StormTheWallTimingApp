@@ -57,7 +57,7 @@ public class MainPageController extends UIController {
         dialog.setTitle("Choose day to start");
         dialog.setHeaderText("Choose day to start");
         dialog.setContentText("Please select what day you want to start timing for.");
-        dialog.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource(CSSAPPRESOURCE).toExternalForm());
         dialog.showAndWait();
 
         controller.setCurrentDay(controller.getProgram().getProgramDays().get(dialog.getSelectedItem()));

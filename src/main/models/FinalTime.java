@@ -8,7 +8,7 @@ import java.util.Calendar;
 /**
  * This class is used to calculate the total time it took a team to finish
  *
- * <h3>Purpose:</h3> Calculate the total time it took a team to finish using start and end time Calendars
+ * <h3>Purpose:</h3> Calculate the total time it took a {@link Team} to finish using start and end time Calendars
  *
  * <h3>Contains:</h3>
  *   - The difference between start and stop times in milliseconds - long

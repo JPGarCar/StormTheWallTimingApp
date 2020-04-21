@@ -9,9 +9,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <h3>Represents</h3> a team that will run one or more heats during the event
+ * <h3>Represents</h3> a team that will run one or more {@link Heat}(s) during the event. A Team is unique and it is
+ * represented by a unique team id and team number. One Team is able to participate in multiple Heat(s) during
+ * multiple {@link Day}(s).
  *
- * <h3>Purpose:</h3> Control the heats the team is running in, their times and their team information
+ * A Team is not directly connected to a Heat, for that a {@link Run} is used. The Run is connected to both the
+ * Heat and the Team. A Run can not exist without a Team, but can exist without a Heat, we call that a wait listed
+ * Run.
+ *
+ * <h3>Purpose:</h3> Represent a team in the race,their race times and their team information.
  *
  * <h3>Contains:</h3>
  *   - Pool Name - String
@@ -22,7 +28,8 @@ import java.util.Map;
  *  - Team unit that represents the unit of this team - String
  *
  * <h3>Usage:</h3>
- *   -
+ *   - Grab the Team's Run(s)
+ *   - Add and remove Run(s) to this Team
  *
  * <h3>Persistence:</h3>
  *   - This class is an entity in the table name "team_table"
@@ -31,8 +38,6 @@ import java.util.Map;
  *   - Many To Many relation with Heat, it is mapped by Heat
  *   - One To Many with Run
  */
-
-
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 @Entity
 @Table(name = "team_table")
@@ -40,22 +45,38 @@ public class Team {
 
 // VARIABLES //
 
+    /**
+     * Contains the Pool this Team belongs to.
+     */
     private String poolName;
 
-    // Represents team id used by db and access - UNIQUE
+    /**
+     * Contains the Unit this Team belongs to.
+     */
+    private String teamUnit;
+
+    /**
+     * Contains the team id used by db and access - UNIQUE
+     */
     @Id
     private int teamID;
 
-    // Represents the team number they use during the race and in this program - UNIQUE
+    /**
+     * Contains the team number they use during the race and in this program - UNIQUE
+     */
     private int teamNumber;
 
+    /**
+     * Contains the team name as a String.
+     */
     private String teamName;
 
-    // Contains the Runs that this team will run
+    /**
+     * Contains the Run(s) that this Team will run. The Run(s) are connected to the Heat(s) the Team is
+     * participating in.
+     */
     @OneToMany
     private Map<RunNumber, Run> runs;
-
-    private String teamUnit;
 
 // CONSTRUCTORS //
 

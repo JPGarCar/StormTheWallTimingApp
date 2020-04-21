@@ -7,7 +7,7 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import models.Program;
 import models.exceptions.InvalidExcelException;
-import persistance.PersistanceWithJackson;
+import persistance.PersistenceWithJackson;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -132,8 +132,8 @@ public class DataIOPageController extends UIController {
     private void populateFromSaveData() {
 
         ImportExecutor importExecutor = new ImportExecutor(2);
-        importExecutor.addTask(() -> controller = PersistanceWithJackson.toJavaController());
-        importExecutor.addTask(() -> controller.setProgram(PersistanceWithJackson.toJavaProgram()));
+        importExecutor.addTask(() -> controller = PersistenceWithJackson.toJavaController());
+        importExecutor.addTask(() -> controller.setProgram(PersistenceWithJackson.toJavaProgram()));
         importExecutor.allDone();
         importExecutor.shutDown();
 

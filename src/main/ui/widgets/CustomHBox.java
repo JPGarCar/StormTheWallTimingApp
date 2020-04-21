@@ -67,7 +67,7 @@ public abstract class CustomHBox extends HBox {
      */
     protected Alert showAlert(Alert.AlertType alertType, String message, String header) {
         Alert alert = new Alert(alertType, message);
-        alert.getDialogPane().getStylesheets().add(getClass().getResource("/ui/application.css").toExternalForm());
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/ui/css/application.css").toExternalForm());
         alert.setHeaderText(header);
         alert.setTitle(header);
 

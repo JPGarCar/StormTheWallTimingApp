@@ -7,7 +7,8 @@ import java.util.*;
 
 /**
  * <h3>Represents</h3> a race in the real world. Top most class of the application. It has a list of all
- * the Team(s) involved, as well as a list of all the Day(s) the race will run. The Day(s) include Heat(s) and Run(s).
+ * the {@link Team}(s) involved, as well as a list of all the {@link Day}(s) the race will run.
+ * The Day(s) include {@link Heat}(s) and {@link Run}(s).
  * The Program also controls the wait list, a list to be used to hold Run(s) for which the teams might have missed and
  * are going to be assigned later.
  *

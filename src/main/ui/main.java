@@ -24,7 +24,7 @@ public class main extends Application {
             controller = new UIAppLogic();
             root.setControllerFactory(c -> new MainPageController(controller));
             Scene scene = new Scene(root.load());
-            scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/ui/css/application.css").toExternalForm());
             primaryStage.setTitle("Storm the Wall Timing App");
             primaryStage.setScene(scene);
             primaryStage.show();

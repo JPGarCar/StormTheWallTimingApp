@@ -22,6 +22,7 @@ public class TimingPageController extends UIController {
     // represents milliseconds to wait before not undoing a heat
     final int UNDOHEATAMOUNT = 20000;
 
+
     private UIAppLogic controller;
     private Calendar undoHeatTimer;
 
@@ -49,7 +50,7 @@ public class TimingPageController extends UIController {
         ArrayList<HBoxForActiveRun> hBoxForActiveRuns = new ArrayList<>();
         for (Run run : controller.getActiveRuns().values()) {
             HBoxForActiveRun hBox = new HBoxForActiveRun(run, controller);
-            hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
+            hBox.getStylesheets().add(getClass().getResource(CSSHBOXRESOURCE).toExternalForm());
             hBoxForActiveRuns.add(hBox);
         }
         runningTeamsList.setItems(FXCollections.observableList(hBoxForActiveRuns));
@@ -59,7 +60,7 @@ public class TimingPageController extends UIController {
     public void addToActiveRunList(Run run, boolean top) {
         ArrayList<HBoxForActiveRun> hBoxForActiveRuns = new ArrayList<>();
         HBoxForActiveRun hBox = new HBoxForActiveRun(run, controller);
-        hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
+        hBox.getStylesheets().add(getClass().getResource(CSSHBOXRESOURCE).toExternalForm());
         hBoxForActiveRuns.add(hBox);
         if (top) {
             runningTeamsList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForActiveRuns), runningTeamsList.getItems()));
@@ -79,7 +80,7 @@ public class TimingPageController extends UIController {
         ArrayList<HBoxForPausedRun> hBoxForPausedRuns = new ArrayList<>();
         for (Run run : controller.getPausedRuns().values()) {
             HBoxForPausedRun hBox = new HBoxForPausedRun(run, controller);
-            hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
+            hBox.getStylesheets().add(getClass().getResource(CSSHBOXRESOURCE).toExternalForm());
             hBoxForPausedRuns.add(hBox);
         }
         undoFinishedTeamList.setItems(FXCollections.observableList(hBoxForPausedRuns));
@@ -89,7 +90,7 @@ public class TimingPageController extends UIController {
     private void addToPausedRunList(Run run, boolean top) {
         ArrayList<HBoxForPausedRun> hBoxForPausedRuns = new ArrayList<>();
         HBoxForPausedRun hBox = new HBoxForPausedRun(run, controller);
-        hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
+        hBox.getStylesheets().add(getClass().getResource(CSSHBOXRESOURCE).toExternalForm());
         hBoxForPausedRuns.add(hBox);
         if (top) {
             undoFinishedTeamList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForPausedRuns), undoFinishedTeamList.getItems()));
@@ -110,7 +111,7 @@ public class TimingPageController extends UIController {
         ArrayList<HBoxForFinishedRun> hBoxForFinishedRuns = new ArrayList<>();
         for (Run run : controller.getFinishedRuns().values()) {
             HBoxForFinishedRun hBox =  new HBoxForFinishedRun(run, controller);
-            hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
+            hBox.getStylesheets().add(getClass().getResource(CSSHBOXRESOURCE).toExternalForm());
             hBoxForFinishedRuns.add(hBox);
         }
 
@@ -121,7 +122,7 @@ public class TimingPageController extends UIController {
     private void addToFinishedRunList(@NotNull Run run, boolean top) {
         ArrayList<HBoxForFinishedRun> hBoxForFinishedRuns = new ArrayList<>();
         HBoxForFinishedRun hBox = new HBoxForFinishedRun(run, controller);
-        hBox.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
+        hBox.getStylesheets().add(getClass().getResource(CSSHBOXRESOURCE).toExternalForm());
         hBoxForFinishedRuns.add(hBox);
         if (top) {
             finishedTeamsList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForFinishedRuns), finishedTeamsList.getItems()));
@@ -141,7 +142,7 @@ public class TimingPageController extends UIController {
         ArrayList<HBoxForStagedRun> list = new ArrayList<>();
         for (Run run : controller.getStagedHeat().getRuns().values()) {
             HBoxForStagedRun hBoxForStagedRun = new HBoxForStagedRun(run, controller);
-            hBoxForStagedRun.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
+            hBoxForStagedRun.getStylesheets().add(getClass().getResource(CSSHBOXRESOURCE).toExternalForm());
             list.add(hBoxForStagedRun);
         }
 
@@ -277,8 +278,8 @@ public class TimingPageController extends UIController {
                 Stage stage = new Stage();
                 root.setControllerFactory(c -> new EditHeatPageController(controller));
                 Scene scene = new Scene(root.load());
-                scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-                scene.getStylesheets().add(getClass().getResource("hBoxInList.css").toExternalForm());
+                scene.getStylesheets().add(getClass().getResource(CSSAPPRESOURCE).toExternalForm());
+                scene.getStylesheets().add(getClass().getResource(CSSHBOXRESOURCE).toExternalForm());
                 stage.setScene(scene);
                 stage.setOnCloseRequest(Event::consume);
                 stage.show();

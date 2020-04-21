@@ -6,7 +6,7 @@ import com.sun.istack.internal.NotNull;
 import javafx.application.Platform;
 import models.*;
 import models.exceptions.*;
-import persistance.PersistanceWithJackson;
+import persistance.PersistenceWithJackson;
 
 /**
  *
@@ -351,8 +351,8 @@ public class UIAppLogic {
      * Save the program data by using JSON files. Will save both this controller and the Program.
      */
     public void saveData() {
-        PersistanceWithJackson.toJsonController(this);
-        PersistanceWithJackson.toJsonProgram(program);
+        PersistenceWithJackson.toJsonController(this);
+        PersistenceWithJackson.toJsonProgram(program);
     }
 
     /**

@@ -24,6 +24,9 @@ import java.util.Calendar;
  * moveRun() function in this class because the RunNumber needs to be changed to account for the new Heat number.
  * The RunNumber linked to this Run must always stay up to date with the assocaited Heat's and Team's number.</p>
  *
+ * <p>A Run can not exist without a Team, however, it can exist without a Heat. Run(s) without a Heat are called
+ * wait listed Run(s) and are stored in the wait list Map in the {@link Program} object.</p>
+ *
  * <h3>Purpose:</h3> Controls the time it took the Team to finish the race and if they are in a specific status.
  *
  * <h3>Contains:</h3>
