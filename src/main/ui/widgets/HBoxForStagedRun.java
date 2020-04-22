@@ -46,4 +46,9 @@ public class HBoxForStagedRun extends CustomHBox {
 
         this.getChildren().addAll(id, teamNameLabel, comboBox);
     }
+
+    @Override
+    public Object newObject(Run run, UIAppLogic controller) {
+        return new HBoxForStagedRun(run , controller);
+    }
 }

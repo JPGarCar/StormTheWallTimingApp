@@ -131,4 +131,9 @@ public class HBoxForEditHeatRun extends CustomHBox {
                     "Retry the action");
         }
     }
+
+    @Override
+    public Object newObject(Run run, UIAppLogic controller) {
+        return new HBoxForEditHeatRun(run , controller);
+    }
 }

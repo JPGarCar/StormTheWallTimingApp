@@ -75,4 +75,8 @@ public class HBoxForActiveRun extends CustomHBox {
         this.getChildren().addAll(heatNumber, id, teamName, category, comboBox, button);
     }
 
+    @Override
+    public Object newObject(Run run, UIAppLogic controller) {
+        return new HBoxForActiveRun(run , controller);
+    }
 }

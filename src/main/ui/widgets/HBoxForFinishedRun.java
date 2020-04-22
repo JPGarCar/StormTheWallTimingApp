@@ -50,4 +50,9 @@ public class HBoxForFinishedRun extends CustomHBox {
 
         this.getChildren().addAll(id, this.teamName, comboBox, this.finalTime);
     }
+
+    @Override
+    public Object newObject(Run run, UIAppLogic controller) {
+        return new HBoxForFinishedRun(run , controller);
+    }
 }

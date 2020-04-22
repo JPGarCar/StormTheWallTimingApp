@@ -45,4 +45,9 @@ public class HBoxForPausedRun extends CustomHBox {
 
         this.getChildren().addAll(id, this.teamName, finalTimeLabel, undoButton);
     }
+
+    @Override
+    public Object newObject(Run run, UIAppLogic controller) {
+        return new HBoxForPausedRun(run , controller);
+    }
 }

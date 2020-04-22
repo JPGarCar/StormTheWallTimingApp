@@ -5,6 +5,7 @@ import javafx.scene.layout.HBox;
 import models.Run;
 import models.enums.Sitrep;
 import models.exceptions.*;
+import ui.CustomHBoxFactory;
 import ui.UIAppLogic;
 
 /**
@@ -17,7 +18,7 @@ import ui.UIAppLogic;
  * <p>Looked into the idea of using what the DataPage uses, TreeTables but at the moment I dont have the time
  * to look into it further and if needed do the changes.</p>
  */
-public abstract class CustomHBox extends HBox {
+public abstract class CustomHBox extends HBox implements CustomHBoxFactory {
 
 // VARIABLES //
 

@@ -68,4 +68,9 @@ public class HBoxForWaitListRun extends CustomHBox {
         controller.getEditHeatController().setWaitListTeams();
     }
 
+    @Override
+    public Object newObject(Run run, UIAppLogic controller) {
+        return new HBoxForWaitListRun(run , controller);
+    }
+
 }

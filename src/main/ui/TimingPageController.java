@@ -2,11 +2,13 @@ package ui;
 
 import com.sun.istack.internal.NotNull;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import models.*;
 import models.exceptions.*;
@@ -45,112 +47,189 @@ public class TimingPageController extends UIController {
 
 // FUNCTIONS //
 
-    // EFFECTS: set running run list to the controller's running run list
+    /**
+     * Updates the UI list runningTeamList with the active Run(s) from the {@link UIAppLogic} controller.
+     *
+     * @helper runListToUIList
+     */
     public void updateActiveRunList() {
-        ArrayList<HBoxForActiveRun> hBoxForActiveRuns = new ArrayList<>();
-        for (Run run : controller.getActiveRuns().values()) {
-            HBoxForActiveRun hBox = new HBoxForActiveRun(run, controller);
-            hBox.getStylesheets().add(getClass().getResource(CSSHBOXRESOURCE).toExternalForm());
-            hBoxForActiveRuns.add(hBox);
-        }
-        runningTeamsList.setItems(FXCollections.observableList(hBoxForActiveRuns));
+        runningTeamsList.setItems(runListToUIList(controller.getActiveRuns().values(), HBoxForActiveRun::new));
     }
 
-    // EFFECTS: add a run to the running run list, first is private, second and third are the public ones to use
-    public void addToActiveRunList(Run run, boolean top) {
-        ArrayList<HBoxForActiveRun> hBoxForActiveRuns = new ArrayList<>();
-        HBoxForActiveRun hBox = new HBoxForActiveRun(run, controller);
-        hBox.getStylesheets().add(getClass().getResource(CSSHBOXRESOURCE).toExternalForm());
-        hBoxForActiveRuns.add(hBox);
-        if (top) {
-            runningTeamsList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForActiveRuns), runningTeamsList.getItems()));
-        } else {
-            runningTeamsList.setItems(FXCollections.concat(runningTeamsList.getItems(), FXCollections.observableList(hBoxForActiveRuns)));
-        }
-    }
+    /**
+     * Adds a {@link Run} to the bottom of the UI runningTeamsList.
+     *
+     * @param run   Run to be added to the UI list.
+     */
     public void addToActiveRunListToBottom(@NotNull Run run) {
         addToActiveRunList(run, false);
     }
+
+    /**
+     * Adds a {@link Run} to the top of the UI runningTeamsList.
+     *
+     * @param run   Run to be added to the UI list.
+     */
     public void addToActiveRunListToTop(@NotNull Run run) {
         addToActiveRunList(run, true);
     }
 
-    // EFFECTS: set the UI paused list with the paused Run list
-    public void updatePausedRunList() {
-        ArrayList<HBoxForPausedRun> hBoxForPausedRuns = new ArrayList<>();
-        for (Run run : controller.getPausedRuns().values()) {
-            HBoxForPausedRun hBox = new HBoxForPausedRun(run, controller);
-            hBox.getStylesheets().add(getClass().getResource(CSSHBOXRESOURCE).toExternalForm());
-            hBoxForPausedRuns.add(hBox);
+    /**
+     * Helper function to add a {@link Run} to the UI list runningTeamsList,
+     * can add it to the top or bottom of the list.
+     *
+     * @param run   Run to be added to the UI list.
+     * @param top   Boolean to know if it should go on the top of the list, if false then goes in the bottom.
+     * @helper runToUIList
+     */
+    private void addToActiveRunList(Run run, boolean top) {
+        if (top) {
+            runningTeamsList.setItems(FXCollections.concat(runToUIList(run, HBoxForActiveRun::new), runningTeamsList.getItems()));
+        } else {
+            runningTeamsList.setItems(FXCollections.concat(runningTeamsList.getItems(), runToUIList(run, HBoxForActiveRun::new)));
         }
-        undoFinishedTeamList.setItems(FXCollections.observableList(hBoxForPausedRuns));
     }
 
-    // EFFECTS: add a Run to the paused Run list, first is private, second and third are the public ones to use
-    private void addToPausedRunList(Run run, boolean top) {
-        ArrayList<HBoxForPausedRun> hBoxForPausedRuns = new ArrayList<>();
-        HBoxForPausedRun hBox = new HBoxForPausedRun(run, controller);
-        hBox.getStylesheets().add(getClass().getResource(CSSHBOXRESOURCE).toExternalForm());
-        hBoxForPausedRuns.add(hBox);
-        if (top) {
-            undoFinishedTeamList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForPausedRuns), undoFinishedTeamList.getItems()));
-        } else {
-            undoFinishedTeamList.setItems(FXCollections.concat(undoFinishedTeamList.getItems(), FXCollections.observableList(hBoxForPausedRuns)));
-        }
+    /**
+     * Updates the UI list undoFinishedTeamList to the {@link Run}(s) in the {@link UIAppLogic}
+     * controller's pausedRuns Map.
+     *
+     * @helper runListToUIList
+     */
+    public void updatePausedRunList() {
+        undoFinishedTeamList.setItems(runListToUIList(controller.getPausedRuns().values(), HBoxForPausedRun::new));
     }
+
+    /**
+     * Adds a {@link Run} to the top of the UI pausedRunList.
+     *
+     * @param run   Run to be added to the UI list.
+     */
     public void addToPausedRunListToTop(@NotNull Run run) {
         addToPausedRunList(run, true);
     }
+
+    /**
+     * Adds a {@link Run} to the bottom of the UI pausedRunList.
+     *
+     * @param run   Run to be added to the UI list.
+     */
     public void addToPausedRunListToBottom(@NotNull Run run) {
         addToPausedRunList(run, false);
     }
 
-
-    // EFFECTS: set the list of finished Runs to all those in the controller´s final Runs list
-    public void updateFinishedRunList() {
-        ArrayList<HBoxForFinishedRun> hBoxForFinishedRuns = new ArrayList<>();
-        for (Run run : controller.getFinishedRuns().values()) {
-            HBoxForFinishedRun hBox =  new HBoxForFinishedRun(run, controller);
-            hBox.getStylesheets().add(getClass().getResource(CSSHBOXRESOURCE).toExternalForm());
-            hBoxForFinishedRuns.add(hBox);
-        }
-
-        finishedTeamsList.setItems(FXCollections.observableList(hBoxForFinishedRuns));
-    }
-
-    // EFFECTS: add a Run to the finished Run list, first is private, second and third are the public ones to use
-    private void addToFinishedRunList(@NotNull Run run, boolean top) {
-        ArrayList<HBoxForFinishedRun> hBoxForFinishedRuns = new ArrayList<>();
-        HBoxForFinishedRun hBox = new HBoxForFinishedRun(run, controller);
-        hBox.getStylesheets().add(getClass().getResource(CSSHBOXRESOURCE).toExternalForm());
-        hBoxForFinishedRuns.add(hBox);
+    /**
+     * Helper function to add a {@link Run} to the UI list undoFinishedTeamList,
+     * can add it to the top or bottom of the list.
+     *
+     * @param run   Run to be added to the UI list.
+     * @param top   Boolean to know if it should go on the top of the list, if false then goes in the bottom.
+     * @helper runToUIList
+     */
+    private void addToPausedRunList(Run run, boolean top) {
         if (top) {
-            finishedTeamsList.setItems(FXCollections.concat(FXCollections.observableList(hBoxForFinishedRuns), finishedTeamsList.getItems()));
+            undoFinishedTeamList.setItems(FXCollections.concat(runToUIList(run, HBoxForPausedRun::new), undoFinishedTeamList.getItems()));
         } else {
-            finishedTeamsList.setItems(FXCollections.concat(finishedTeamsList.getItems(), FXCollections.observableList(hBoxForFinishedRuns)));
+            undoFinishedTeamList.setItems(FXCollections.concat(undoFinishedTeamList.getItems(), runToUIList(run, HBoxForPausedRun::new)));
         }
     }
+
+    /**
+     * Updates the UI list finishedTeamsList to the {@link Run}(s) in the {@link UIAppLogic}
+     * controller's finishedRuns Map.
+     *
+     * @helper runListToUIList
+     */
+    public void updateFinishedRunList() {
+        finishedTeamsList.setItems(runListToUIList(controller.getFinishedRuns().values(), HBoxForFinishedRun::new));
+    }
+
+    /**
+     * Adds a {@link Run} to the top of the UI finishedRunList.
+     *
+     * @param run   Run to be added to the UI list.
+     */
     public void addToFinishedRunListToTop(@NotNull Run run) {
         addToFinishedRunList(run, true);
     }
+
+    /**
+     * Adds a {@link Run} to the bottom of the UI finishedRunList.
+     *
+     * @param run   Run to be added to the UI list.
+     */
     public void addToFinishedRunListToBottom(@NotNull Run run) {
         addToFinishedRunList(run, false);
     }
 
-    // EFFECTS: set the UI staged Heat Run list to the Runs of the staged heat
-    public void updateStagedHeatRunList() {
-        ArrayList<HBoxForStagedRun> list = new ArrayList<>();
-        for (Run run : controller.getStagedHeat().getRuns().values()) {
-            HBoxForStagedRun hBoxForStagedRun = new HBoxForStagedRun(run, controller);
-            hBoxForStagedRun.getStylesheets().add(getClass().getResource(CSSHBOXRESOURCE).toExternalForm());
-            list.add(hBoxForStagedRun);
+    /**
+     * Helper function to add a {@link Run} to the UI list finishedTeamList,
+     * can add it to the top or bottom of the list.
+     *
+     * @param run   Run to be added to the UI list.
+     * @param top   Boolean to know if it should go on the top of the list, if false then goes in the bottom.
+     * @helper runToUIList
+     */
+    private void addToFinishedRunList(@NotNull Run run, boolean top) {
+        if (top) {
+            finishedTeamsList.setItems(FXCollections.concat(runToUIList(run, HBoxForFinishedRun::new), finishedTeamsList.getItems()));
+        } else {
+            finishedTeamsList.setItems(FXCollections.concat(finishedTeamsList.getItems(), runToUIList(run, HBoxForFinishedRun::new)));
         }
-
-        stageHeatTeamList.setItems(FXCollections.observableList(list));
     }
 
-    // EFFECTS: makes sure text properties only accept numerical values and initializes the
-    //          stageHeatNumber to the current heat available
+    /**
+     * Updates the UI list stagedHeatTeamList to the {@link Run}(s) in the {@link UIAppLogic}
+     * controller's stagedHeat runs Map.
+     *
+     * @helper runListToUIList
+     */
+    public void updateStagedHeatRunList() {
+        stageHeatTeamList.setItems(runListToUIList(controller.getStagedHeat().getRuns().values(), HBoxForStagedRun::new));
+    }
+
+    /**
+     * Creates an observable list to be added to UI lists with the {@link Run}(s) specified
+     * and the {@link CustomHBox} specified. The CustomHBox must implement {@link CustomHBoxFactory}.
+     *
+     * @param runList   The Run(s) to be used to create the CustomHBox(s).
+     * @param hBoxFactory   The type of CustomHBox to be used.
+     * @param <K>           The type of CustomHBox to be used.
+     * @return  A list of the specified CustomHBox(s) as an observableList to be set to a UI list.
+     */
+    private <K> ObservableList<K> runListToUIList(Iterable<? extends Run> runList, CustomHBoxFactory<K> hBoxFactory) {
+        ArrayList<K> hBoxList = new ArrayList<>();
+
+        for (Run run: runList) {
+            K hBox = hBoxFactory.newObject(run, controller);
+            ((HBox) hBox).getStylesheets().add(getClass().getResource(CSSHBOXRESOURCE).toExternalForm());
+            hBoxList.add(hBox);
+        }
+
+        return FXCollections.observableList(hBoxList);
+    }
+
+    /**
+     * Creates an observable list to be added to UI lists with the {@link Run} specified
+     * and the {@link CustomHBox} specified. The CustomHBox must implement {@link CustomHBoxFactory}.
+     *
+     * @param run   The Run to be used to create the CustomHBox.
+     * @param hBoxFactory   The type of CustomHBox to be used.
+     * @param <K>           The type of CustomHBox to be used.
+     * @return  A list of the specified CustomHBox as an observableList to be set to a UI list.
+     */
+    private <K> ObservableList<K> runToUIList(Run run, CustomHBoxFactory<K> hBoxFactory) {
+        ArrayList<K> hBoxList = new ArrayList<>();
+        K hBox = hBoxFactory.newObject(run, controller);
+        ((HBox) hBox).getStylesheets().add(getClass().getResource(CSSHBOXRESOURCE).toExternalForm());
+        hBoxList.add(hBox);
+        return FXCollections.observableList(hBoxList);
+    }
+
+    /**
+     * Makes sure text properties only accept numerical values and initializes the
+     * stageHeatNumber to the current heat available
+     */
     private void initStuff() {
         stageHeatNumber.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d{0,7}([\\.]\\d{0,4})?")) {
