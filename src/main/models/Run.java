@@ -238,7 +238,7 @@ public class Run {
      * @throws CriticalErrorException   from removeRun().
      * @throws AddRunException from addRun().
      */
-    public void moveRun(Heat newHeat) throws CriticalErrorException, AddRunException {
+    public void moveRunTo(Heat newHeat) throws CriticalErrorException, AddRunException {
         heat.removeRun(runNumber);
         newHeat.addRun(this);
         runNumber = new RunNumber(team.getTeamNumber(), newHeat.getHeatNumber());

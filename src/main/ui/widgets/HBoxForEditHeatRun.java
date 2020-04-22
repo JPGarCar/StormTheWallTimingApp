@@ -7,7 +7,6 @@ import models.Run;
 import models.Team;
 import models.exceptions.*;
 import ui.UIAppLogic;
-import ui.UIController;
 
 /**
  * This HBox is specific for the Edit Heat page. It has the possibility to add, remove and wait list teams that are
@@ -116,7 +115,7 @@ public class HBoxForEditHeatRun extends CustomHBox {
                         "Confirm movement");
 
                 if (alert.getResult() == ButtonType.OK) {
-                    run.moveRun(controller.getCurrentDay().getHeatByHeatNumber(newHeatNumber));
+                    run.moveRunTo(controller.getCurrentDay().getHeatByHeatNumber(newHeatNumber));
 
                     // inform user that change was successful
                     showAlert(Alert.AlertType.INFORMATION, "Team moved successfully to heat " +

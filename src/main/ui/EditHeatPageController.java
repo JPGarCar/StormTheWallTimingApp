@@ -44,6 +44,10 @@ public class EditHeatPageController extends UIController {
 
 // FUNCTIONS //
 
+    /**
+     * Updates the UI TeamHeatList in the edit heat page by grabbing the {@link Run}(s) assocaited to
+     * the {@link Heat} and creating a {@link HBoxForEditHeatRun} for each Run. The HBoxes are added to the UI list.
+     */
     public void setTeamHeatListTeams() {
         ArrayList<HBoxForEditHeatRun> hBoxForEditHeatRuns = new ArrayList<>();
         for (Run run : heat.getRuns().values()) {
@@ -52,6 +56,10 @@ public class EditHeatPageController extends UIController {
         teamHeatList.setItems(FXCollections.observableList(hBoxForEditHeatRuns));
     }
 
+    /**
+     * Updates the UI availableTeamList in the edit heat page by grabbing the {@link Run}(s)
+     * in the {@link models.Program}'s wait list Map and creating a {@link HBoxForWaitListRun} for each Run.
+     */
     public void setWaitListTeams() {
         ArrayList<HBoxForWaitListRun> hBoxForWaitListRuns = new ArrayList<>();
         for (Run run : controller.getProgram().getWaitList().values()) {

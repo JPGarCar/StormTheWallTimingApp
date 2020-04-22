@@ -26,9 +26,11 @@ public class HBoxForWaitListRun extends CustomHBox {
     Label id = new Label();
     Label teamPool = new Label();
     Button addTeamButton = new Button();
+    UIAppLogic controller;
 
     public HBoxForWaitListRun(Run run, UIAppLogic controller){
         super(HBoxSpacing, run);
+        this.controller = controller;
 
         Team team = run.getTeam();
 
@@ -44,10 +46,7 @@ public class HBoxForWaitListRun extends CustomHBox {
         addTeamButton.setText("Add Team");
         addTeamButton.setOnAction(event -> {
             try {
-                run.moveRun(controller.getStagedHeat());
-                controller.getProgram().removeRunFromWaitList(run.getRunNumber());
-                controller.getEditHeatController().setTeamHeatListTeams();
-                controller.getEditHeatController().setWaitListTeams();
+                addTeam();
             } catch (AddRunException | CriticalErrorException e) {
                 showAlert(Alert.AlertType.ERROR, "If the error persists please " +
                         "contact an admin. Error: " + e.getMessage(),
@@ -57,4 +56,16 @@ public class HBoxForWaitListRun extends CustomHBox {
 
         this.getChildren().addAll(id, this.teamName, this.teamPool, addTeamButton);
     }
+
+    /**
+     * Moves the Run to the staged {@link models.Heat} being edited calling the Run's moveRunTo helper and will also
+     * remove the Run from the wait list. Will also update both UI lists in the edit heat page.
+     */
+    private void addTeam() throws CriticalErrorException, AddRunException {
+        run.moveRunTo(controller.getStagedHeat());
+        controller.getProgram().removeRunFromWaitList(run.getRunNumber());
+        controller.getEditHeatController().setTeamHeatListTeams();
+        controller.getEditHeatController().setWaitListTeams();
+    }
+
 }

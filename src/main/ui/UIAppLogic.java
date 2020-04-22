@@ -1,6 +1,5 @@
 package ui;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.internal.NotNull;
 import javafx.application.Platform;
@@ -8,14 +7,6 @@ import models.*;
 import models.exceptions.*;
 import persistance.PersistenceWithJackson;
 
-/**
- *
- *
- *
- *
- *
- *
- */
 import java.util.*;
 
 public class UIAppLogic {
