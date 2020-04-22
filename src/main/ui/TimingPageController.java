@@ -48,12 +48,12 @@ public class TimingPageController extends UIController {
 // FUNCTIONS //
 
     /**
-     * Updates the UI list runningTeamList with the active Run(s) from the {@link UIAppLogic} controller.
+     * Updates the UI list activeRunsUIList with the active Run(s) from the {@link UIAppLogic} controller.
      *
      * @helper runListToUIList
      */
     public void updateActiveRunList() {
-        runningTeamsList.setItems(runListToUIList(controller.getActiveRuns().values(), HBoxForActiveRun::new));
+        activeRunsUIList.setItems(runListToUIList(controller.getActiveRuns().values(), HBoxForActiveRun::new));
     }
 
     /**
@@ -84,20 +84,20 @@ public class TimingPageController extends UIController {
      */
     private void addToActiveRunList(Run run, boolean top) {
         if (top) {
-            runningTeamsList.setItems(FXCollections.concat(runToUIList(run, HBoxForActiveRun::new), runningTeamsList.getItems()));
+            activeRunsUIList.setItems(FXCollections.concat(runToUIList(run, HBoxForActiveRun::new), activeRunsUIList.getItems()));
         } else {
-            runningTeamsList.setItems(FXCollections.concat(runningTeamsList.getItems(), runToUIList(run, HBoxForActiveRun::new)));
+            activeRunsUIList.setItems(FXCollections.concat(activeRunsUIList.getItems(), runToUIList(run, HBoxForActiveRun::new)));
         }
     }
 
     /**
-     * Updates the UI list undoFinishedTeamList to the {@link Run}(s) in the {@link UIAppLogic}
+     * Updates the UI list pausedRunsUIList to the {@link Run}(s) in the {@link UIAppLogic}
      * controller's pausedRuns Map.
      *
      * @helper runListToUIList
      */
     public void updatePausedRunList() {
-        undoFinishedTeamList.setItems(runListToUIList(controller.getPausedRuns().values(), HBoxForPausedRun::new));
+        pausedRunsUIList.setItems(runListToUIList(controller.getPausedRuns().values(), HBoxForPausedRun::new));
     }
 
     /**
@@ -119,7 +119,7 @@ public class TimingPageController extends UIController {
     }
 
     /**
-     * Helper function to add a {@link Run} to the UI list undoFinishedTeamList,
+     * Helper function to add a {@link Run} to the UI list pausedRunsUIList,
      * can add it to the top or bottom of the list.
      *
      * @param run   Run to be added to the UI list.
@@ -128,9 +128,9 @@ public class TimingPageController extends UIController {
      */
     private void addToPausedRunList(Run run, boolean top) {
         if (top) {
-            undoFinishedTeamList.setItems(FXCollections.concat(runToUIList(run, HBoxForPausedRun::new), undoFinishedTeamList.getItems()));
+            pausedRunsUIList.setItems(FXCollections.concat(runToUIList(run, HBoxForPausedRun::new), pausedRunsUIList.getItems()));
         } else {
-            undoFinishedTeamList.setItems(FXCollections.concat(undoFinishedTeamList.getItems(), runToUIList(run, HBoxForPausedRun::new)));
+            pausedRunsUIList.setItems(FXCollections.concat(pausedRunsUIList.getItems(), runToUIList(run, HBoxForPausedRun::new)));
         }
     }
 
@@ -141,7 +141,7 @@ public class TimingPageController extends UIController {
      * @helper runListToUIList
      */
     public void updateFinishedRunList() {
-        finishedTeamsList.setItems(runListToUIList(controller.getFinishedRuns().values(), HBoxForFinishedRun::new));
+        finishedRunsUIList.setItems(runListToUIList(controller.getFinishedRuns().values(), HBoxForFinishedRun::new));
     }
 
     /**
@@ -163,7 +163,7 @@ public class TimingPageController extends UIController {
     }
 
     /**
-     * Helper function to add a {@link Run} to the UI list finishedTeamList,
+     * Helper function to add a {@link Run} to the UI list finishedRunsUIList,
      * can add it to the top or bottom of the list.
      *
      * @param run   Run to be added to the UI list.
@@ -172,20 +172,20 @@ public class TimingPageController extends UIController {
      */
     private void addToFinishedRunList(@NotNull Run run, boolean top) {
         if (top) {
-            finishedTeamsList.setItems(FXCollections.concat(runToUIList(run, HBoxForFinishedRun::new), finishedTeamsList.getItems()));
+            finishedRunsUIList.setItems(FXCollections.concat(runToUIList(run, HBoxForFinishedRun::new), finishedRunsUIList.getItems()));
         } else {
-            finishedTeamsList.setItems(FXCollections.concat(finishedTeamsList.getItems(), runToUIList(run, HBoxForFinishedRun::new)));
+            finishedRunsUIList.setItems(FXCollections.concat(finishedRunsUIList.getItems(), runToUIList(run, HBoxForFinishedRun::new)));
         }
     }
 
     /**
-     * Updates the UI list stagedHeatTeamList to the {@link Run}(s) in the {@link UIAppLogic}
+     * Updates the UI list stagedHeatUIList to the {@link Run}(s) in the {@link UIAppLogic}
      * controller's stagedHeat runs Map.
      *
      * @helper runListToUIList
      */
     public void updateStagedHeatRunList() {
-        stageHeatTeamList.setItems(runListToUIList(controller.getStagedHeat().getRuns().values(), HBoxForStagedRun::new));
+        stagedHeatUIList.setItems(runListToUIList(controller.getStagedHeat().getRuns().values(), HBoxForStagedRun::new));
     }
 
     /**
@@ -248,28 +248,28 @@ public class TimingPageController extends UIController {
 // FXML TAGS //
 
     @FXML
-    private ListView<HBoxForActiveRun> runningTeamsList;
+    private ListView<HBoxForActiveRun> activeRunsUIList;
 
     @FXML
     private TextField stageHeatNumber;
 
     @FXML
-    private ListView<HBoxForFinishedRun> finishedTeamsList;
+    private ListView<HBoxForFinishedRun> finishedRunsUIList;
 
     @FXML
-    private ListView<HBoxForStagedRun> stageHeatTeamList;
+    private ListView<HBoxForStagedRun> stagedHeatUIList;
 
     @FXML
     private TextField stopTeamNumber;
 
     @FXML
-    private Label timeToStartLabel;
+    private Label scheduledStartLabel;
 
     @FXML
     private Label categoryLabel;
 
     @FXML
-    private ListView<HBoxForPausedRun> undoFinishedTeamList;
+    private ListView<HBoxForPausedRun> pausedRunsUIList;
 
 // FXML FUNCTIONS //
 
@@ -284,7 +284,7 @@ public class TimingPageController extends UIController {
             // make sure the heat has not run yet
             if (!stagedHeat.isHasStarted()) {
                 updateStagedHeatRunList();
-                timeToStartLabel.setText(stagedHeat.scheduledTimeString());
+                scheduledStartLabel.setText(stagedHeat.scheduledTimeString());
                 categoryLabel.setText(stagedHeat.getCategory());
             }
 
@@ -309,9 +309,9 @@ public class TimingPageController extends UIController {
             // update controller next heat, staged heat list, and text fields
             controller.goToNextHeat();
             stageHeatNumber.setText(Integer.toString(controller.getCurrentDay().getAtHeat()));
-            stageHeatTeamList.setItems(null);
+            stagedHeatUIList.setItems(null);
 
-            timeToStartLabel.setText("Stage Heat to Get Info");
+            scheduledStartLabel.setText("Stage Heat to Get Info");
             categoryLabel.setText("Stage Heat to Get Info");
 
             controller.saveData();
@@ -400,7 +400,7 @@ public class TimingPageController extends UIController {
     // EFFECTS: go back to the main menu window and close this window, will also save data
     @FXML
     private void backToMainMenuButtonAction() {
-        backToMainMenu(timeToStartLabel.getScene());
+        backToMainMenu(scheduledStartLabel.getScene());
     }
 
     // EFFECTS: skip the staged heat, the heat will just not run
@@ -421,7 +421,7 @@ public class TimingPageController extends UIController {
                 controller.getCurrentDay().goToNextHeat();
                 stageHeatNumber.setText(Integer.toString(controller.getCurrentDay().getAtHeat()));
 
-                timeToStartLabel.setText("Stage Heat to Get Info");
+                scheduledStartLabel.setText("Stage Heat to Get Info");
                 categoryLabel.setText("Stage Heat to Get Info");
             }
         }

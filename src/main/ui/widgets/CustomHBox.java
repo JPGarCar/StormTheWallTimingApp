@@ -5,7 +5,6 @@ import javafx.scene.layout.HBox;
 import models.Run;
 import models.enums.Sitrep;
 import models.exceptions.*;
-import ui.CustomHBoxFactory;
 import ui.UIAppLogic;
 
 /**

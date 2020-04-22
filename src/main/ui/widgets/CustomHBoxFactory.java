@@ -1,6 +1,7 @@
-package ui;
+package ui.widgets;
 
 import models.Run;
+import ui.UIAppLogic;
 
 /**
  * Used to create {@link ui.widgets.CustomHBox}(s) from a type parameter.

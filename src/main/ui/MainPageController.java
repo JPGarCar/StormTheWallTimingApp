@@ -63,7 +63,7 @@ public class MainPageController extends UIController {
         controller.setCurrentDay(controller.getProgram().getProgramDays().get(dialog.getSelectedItem()));
 
 
-        loadNextPage("MainTiming.fxml", c -> new TimingPageController(controller));
+        loadNextPage("TimingPage.fxml", c -> new TimingPageController(controller));
     }
 
     @FXML
