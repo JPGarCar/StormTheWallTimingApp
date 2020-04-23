@@ -8,12 +8,16 @@ import javafx.stage.FileChooser;
 import models.Program;
 import models.exceptions.InvalidExcelException;
 import persistance.PersistenceWithJackson;
+import persistance.RunPolling;
 import ui.UIAppLogic;
 import ui.UIController;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +26,10 @@ import java.util.concurrent.*;
 public class DataIOPageController extends UIController {
 
 // VARIABLES //
+
+    private final String dbUrl = "jdbc:postgresql://localhost:5432/RECTimingApp";
+    private final String dbUser = "tester";
+    private final String dbPassword = "testPassword";
 
     private String fileToImport;
     private UIAppLogic controller;
@@ -149,6 +157,28 @@ public class DataIOPageController extends UIController {
 
     @FXML
     private void connectToDBActionButton() {
+        Connection connection = null;
+
+        try {
+            Class.forName("org.postgresql.Driver");
+            connection = DriverManager.getConnection(
+                    dbUrl, dbUser, dbPassword
+            );
+
+            showAlert(Alert.AlertType.CONFIRMATION,
+                    "Connection to DB was successful", "Connection Successful");
+
+        } catch (ClassNotFoundException | SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "There has been an error while trying to connect to the database",
+                    "There has been a Database connection error", e);
+        }
+        assert(connection != null);
+
+        RunPolling runPolling = new RunPolling(connection, controller);
+
+
+
+
     }
 
     /**

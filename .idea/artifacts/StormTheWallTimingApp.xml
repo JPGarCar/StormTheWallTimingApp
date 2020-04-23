@@ -1,0 +1,30 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="StormTheWallTimingApp">
+    <output-path>$PROJECT_DIR$/out/artifacts/StormTheWallTimingApp</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="ui.main" />
+        <option name="description" value="" />
+        <option name="height" value="800" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="nativeBundle" value="all" />
+        <option name="title" value="Storm The Wall Timing App" />
+        <option name="vendor" value="JP Garcia" />
+        <option name="version" value="2.0" />
+        <option name="width" value="1200" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="StormTheWallTimingApp.jar">
+        <element id="module-output" name="StormTheWallTimingApp" />
+        <element id="library" level="project" name="com.fasterxml.jackson.core:jackson-annotations:2.10.3" />
+        <element id="library" level="project" name="com.fasterxml.jackson.core:jackson-databind:2.10.3" />
+        <element id="library" level="module" name="JUnit5.4" module-name="StormTheWallTimingApp" />
+        <element id="library" level="project" name="org.apache.poi:poi-ooxml:4.1.1" />
+        <element id="library" level="project" name="org.json:json:20190722" />
+        <element id="library" level="project" name="mysql:mysql-connector-java:8.0.19" />
+        <element id="library" level="project" name="com.google.code.maven-play-plugin.org.hibernate:hibernate-core:5.2.10.Final-patched-play-1.5.0" />
+      </element>
+    </root>
+  </artifact>
+</component>
