@@ -98,7 +98,7 @@ public class MainPageController extends UIController {
             startRaceButton.getScene().setRoot(root.load());
         } catch (IOException e) {
             showAlert(Alert.AlertType.ERROR, "There has been a critical error, please contact admin.",
-                    "Critical Error");
+                    "Critical Error", e);
             e.printStackTrace();
         }
     }

@@ -210,7 +210,7 @@ public class DataPageController extends UIController{
 
                 } catch (CriticalErrorException e) {
                     showAlert(Alert.AlertType.ERROR, "If the error persists please contact an admin. Error: "
-                                + e.getMessage(), "There has been an error at actualStartTimeHeatCol cell value factory.");
+                                + e.getMessage(), "There has been an error at actualStartTimeHeatCol cell value factory.", e);
                     return new SimpleStringProperty("");
                 }
             } else {
@@ -245,7 +245,7 @@ public class DataPageController extends UIController{
                     return new SimpleStringProperty(team.getRunByHeatNumber(heat.getHeatNumber()).getSitrep().name());
                 } catch (CriticalErrorException e) {
                     showAlert(Alert.AlertType.ERROR, "If the error persists please contact an admin. Error: "
-                            + e.getMessage(), "There has been an error at teamTypeHeatCol cell value factory.");
+                            + e.getMessage(), "There has been an error at teamTypeHeatCol cell value factory.", e);
                     return new SimpleStringProperty("");
                 }
             }
@@ -318,7 +318,7 @@ public class DataPageController extends UIController{
                     }
                 } catch (CriticalErrorException e) {
                     showAlert(Alert.AlertType.ERROR, "If the error persists please contact an admin. Error: "
-                            + e.getMessage(), "There has been an error at teamNameTeamCol cell value factory.");
+                            + e.getMessage(), "There has been an error at teamNameTeamCol cell value factory.", e);
                     return new SimpleStringProperty("");
                 }
             } else {

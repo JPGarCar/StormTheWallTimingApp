@@ -18,7 +18,7 @@ public class PersistenceWithJackson {
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 
         try {
-            File json = new File("program.json");
+            File json = new File(System.getProperty("user.dir") + "/saveFiles/" + "program.json");
             mapper.writeValue(json, program);
         } catch (IOException e) {
             e.printStackTrace();
@@ -34,7 +34,7 @@ public class PersistenceWithJackson {
 
         Program program = new Program();
         try {
-            File json = new File("program.json");
+            File json = new File(System.getProperty("user.dir") + "/saveFiles/" + "program.json");
             program = mapper.readValue(json, Program.class);
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,7 +47,7 @@ public class PersistenceWithJackson {
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 
         try {
-            File json = new File("controller.json");
+            File json = new File(System.getProperty("user.dir") + "/saveFiles/" + "controller.json");
             mapper.writeValue(json, controller);
         } catch (IOException e) {
             e.printStackTrace();
@@ -63,7 +63,7 @@ public class PersistenceWithJackson {
 
 
         try {
-            File json = new File("controller.json");
+            File json = new File(System.getProperty("user.dir") + "/saveFiles/" + "controller.json");
             return mapper.readValue(json, UIAppLogic.class);
         } catch (IOException e) {
             e.printStackTrace();

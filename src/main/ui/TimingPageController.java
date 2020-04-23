@@ -289,7 +289,7 @@ public class TimingPageController extends UIController {
             }
 
         } catch (CriticalErrorException e) {
-            showAlert(Alert.AlertType.ERROR, e.getMessage(), "The following error while staging the heat has come up." );
+            showAlert(Alert.AlertType.ERROR, e.getMessage(), "The following error while staging the heat has come up.", e);
             stageHeatNumber.setText(Integer.toString(controller.getCurrentDay().getAtHeat()));
         }
     }
@@ -339,7 +339,7 @@ public class TimingPageController extends UIController {
             } catch (CriticalErrorException e) {
                 showAlert(Alert.AlertType.WARNING, "The heat started properly, however, " +
                                 "the following error came up. " + e.getMessage(),
-                        "There has been an error while ending the team.");
+                        "There has been an error while ending the team.", e);
             }
         }
     }
@@ -364,7 +364,7 @@ public class TimingPageController extends UIController {
                 stage.show();
             } catch (IOException e) {
                 showAlert(Alert.AlertType.ERROR, e.getMessage(), "There has been an error while trying " +
-                        "to open the edit heat page. Please talk to an admin if the error persists.");
+                        "to open the edit heat page. Please talk to an admin if the error persists.", e);
             }
         }
     }
@@ -386,7 +386,7 @@ public class TimingPageController extends UIController {
                     controller.undoLastHeat();
                 } catch (CriticalErrorException |CanNotUndoHeatException e) {
                     showAlert(Alert.AlertType.ERROR, "Please contact an admin if the error persists. Error: " +
-                            e.getMessage(), "There has been an error.");
+                            e.getMessage(), "There has been an error.", e);
                 }
                 stageHeatNumber.setText(Integer.toString(controller.getCurrentDay().getAtHeat()));
                 controller.saveData();

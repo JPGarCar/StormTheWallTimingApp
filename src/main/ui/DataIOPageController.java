@@ -74,9 +74,12 @@ public class DataIOPageController extends UIController {
         FileInputStream fileInputStream = null;
 
         // check if a file was selected
-        if (fileToImport.isEmpty())
-            showAlert(Alert.AlertType.ERROR, "There is file selected to import.",
+        if (fileToImport.isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "There is no file selected to import.",
                     "Please select a file first!");
+            return;
+        }
+
 
         // if there is no controller, so new data, build new controller
         if (controller.getProgram() == null)
@@ -88,7 +91,7 @@ public class DataIOPageController extends UIController {
              fileInputStream = new FileInputStream(new File(fileToImport));
         } catch (FileNotFoundException e) {
             showAlert(Alert.AlertType.ERROR, "There was no file provided or the file is corrupted, " +
-                            "please select a file and try again.", "There has been an error!");
+                            "please select a file and try again.", "There has been an error!", e);
         }
 
         ExcelInput excelInput = new ExcelInput(fileInputStream, controller);
@@ -100,7 +103,7 @@ public class DataIOPageController extends UIController {
             } catch (InvalidExcelException e) {
                 showAlert(Alert.AlertType.ERROR, "The file you are trying to use has no " +
                         "column names in the first row. Please look at the Info page for more information. " +
-                        "The import did not occur.", "There has been an error!");
+                        "The import did not occur.", "There has been an error!", e);
             }
         });
         importExecutor.allDone();

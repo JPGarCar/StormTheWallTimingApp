@@ -62,7 +62,7 @@ public class HBoxForActiveRun extends CustomHBox {
             } catch (CriticalErrorException e) {
                 showAlert(Alert.AlertType.ERROR, "If the error persists please " +
                         "contact an admin. Error: " + e.getMessage(),
-                        "There has been an error while trying to finish a team");
+                        "There has been an error while trying to finish a team", e);
             }
         });
 

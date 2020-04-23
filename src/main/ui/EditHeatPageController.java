@@ -103,7 +103,7 @@ public class EditHeatPageController extends UIController {
             setTeamHeatListTeams();
         } catch (AddRunException e) {
             showAlert(Alert.AlertType.WARNING, "The team number: " + addTeamIDField.getText() +
-                    "is not connected to any team. Error: " + e.getMessage(), "Could not add the team");
+                    "is not connected to any team. Error: " + e.getMessage(), "Could not add the team", e);
         }
     }
 }

@@ -71,7 +71,7 @@ public class HBoxForEditHeatRun extends CustomHBox {
         } catch (CriticalErrorException e) {
             showAlert(Alert.AlertType.ERROR, "If the error persists please " +
                             "contact an admin. Error: " + e.getMessage(),
-                    "There has been an error while trying to remove a team from this heat");
+                    "There has been an error while trying to remove a team from this heat", e);
         }
     }
 
@@ -87,7 +87,7 @@ public class HBoxForEditHeatRun extends CustomHBox {
         } catch (CriticalErrorException e) {
             showAlert(Alert.AlertType.ERROR, "If the error persists please " +
                             "contact an admin. Error: " + e.getMessage(),
-                    "There has been an error while trying to wait list the team");
+                    "There has been an error while trying to wait list the team", e);
         }
     }
 
@@ -123,7 +123,7 @@ public class HBoxForEditHeatRun extends CustomHBox {
                 }
             } catch (AddRunException | CriticalErrorException e) {
                 showAlert(Alert.AlertType.ERROR, "There has been an error while trying to move a team to " +
-                        "a different Heat. " + e.getMessage(), "There has been an error");
+                        "a different Heat. " + e.getMessage(), "There has been an error", e);
             }
             controller.getEditHeatController().setTeamHeatListTeams();
         } else {

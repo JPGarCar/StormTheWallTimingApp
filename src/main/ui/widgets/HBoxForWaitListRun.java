@@ -50,7 +50,7 @@ public class HBoxForWaitListRun extends CustomHBox {
             } catch (AddRunException | CriticalErrorException e) {
                 showAlert(Alert.AlertType.ERROR, "If the error persists please " +
                         "contact an admin. Error: " + e.getMessage(),
-                        "There has been an error while trying to add wait list team to heat");
+                        "There has been an error while trying to add wait list team to heat", e);
             }
         });
 
