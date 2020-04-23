@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import ui.MainSectionPages.MainPageController;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,12 +37,12 @@ public class UIController {
     /**
      * String resource path to the hBoxInList.css file.
      */
-    final String CSSHBOXRESOURCE = "/ui/css/hBoxInList.css";
+    final public String CSSHBOXRESOURCE = "/ui/css/hBoxInList.css";
 
     /**
      * String resource path to the application.css file.
      */
-    final String CSSAPPRESOURCE = "/ui/css/application.css";
+    final public String CSSAPPRESOURCE = "/ui/css/application.css";
 
 // GETTERS AND SETTERS
 
@@ -161,7 +162,7 @@ public class UIController {
     protected void backToMainMenu(Scene scene) {
         try {
             controller.saveData();
-            FXMLLoader root = new FXMLLoader(getClass().getResource("MainPage.fxml"));
+            FXMLLoader root = new FXMLLoader(getClass().getResource("/ui/MainSectionPages/MainPage.fxml"));
             root.setControllerFactory(c -> new MainPageController(controller));
             scene.setRoot(root.load());
         } catch (IOException e) {

@@ -6,6 +6,8 @@ import javafx.application.Platform;
 import models.*;
 import models.exceptions.*;
 import persistance.PersistenceWithJackson;
+import ui.TimingPages.TimingPageController;
+import ui.editHeatPages.EditHeatPageController;
 
 import java.util.*;
 
