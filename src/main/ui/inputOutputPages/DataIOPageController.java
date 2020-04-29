@@ -145,8 +145,8 @@ public class DataIOPageController extends UIController {
     private void populateFromSaveData() {
 
         ImportExecutor importExecutor = new ImportExecutor(2);
-        importExecutor.addTask(() -> controller = PersistenceWithJackson.toJavaController());
-        importExecutor.addTask(() -> controller.setProgram(PersistenceWithJackson.toJavaProgram()));
+        importExecutor.addTask(() -> controller = PersistenceWithJackson.toJavaController(controller.getPathToFileSave()));
+        importExecutor.addTask(() -> controller.setProgram(PersistenceWithJackson.toJavaProgram(controller.getPathToFileSave())));
         importExecutor.allDone();
         importExecutor.shutDown();
 

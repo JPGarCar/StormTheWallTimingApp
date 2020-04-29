@@ -10,6 +10,15 @@ import java.io.IOException;
 
 public class RaceChooserPageController {
 
+    /**
+     * Path where to save json files.
+     */
+    private String saveDataPath;
+
+    public RaceChooserPageController(String saveDataPath) {
+        this.saveDataPath = saveDataPath;
+    }
+
     @FXML
     private ImageView firstImage;
 
@@ -39,6 +48,7 @@ public class RaceChooserPageController {
     private void startStormTheWall() {
         FXMLLoader root = new FXMLLoader(getClass().getResource("/ui/MainSectionPages/MainPage.fxml"));
         UIAppLogic controller = new UIAppLogic();
+        controller.setPathToFileSave(saveDataPath);
         root.setControllerFactory(c -> new MainPageController(controller));
 
         try {

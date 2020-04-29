@@ -72,6 +72,12 @@ public class UIAppLogic {
      */
     private Map<RunNumber, Timer> timerMap;
 
+    /**
+     * Contains the path where the json files should be saved.
+     */
+    @JsonIgnore
+    private String pathToFileSave;
+
 // CONSTRUCTORS //
 
     // DUMMY CONSTRUCTOR for Jackson JSON
@@ -116,6 +122,10 @@ public class UIAppLogic {
         return editHeatController;
     }
 
+    public String getPathToFileSave() {
+        return pathToFileSave;
+    }
+
     public void setProgram(Program program) {
         this.program = program;
     }
@@ -148,7 +158,11 @@ public class UIAppLogic {
         this.currentDay = currentDay;
     }
 
-// FUNCTIONS //
+    public void setPathToFileSave(String pathToFileSave) {
+        this.pathToFileSave = pathToFileSave;
+    }
+
+    // FUNCTIONS //
 
     /**
      * Remove a Run from the activeRun list. Uses the RunNumber associated to the Run to remove it from the list.
@@ -344,8 +358,8 @@ public class UIAppLogic {
      * Save the program data by using JSON files. Will save both this controller and the Program.
      */
     public void saveData() {
-        PersistenceWithJackson.toJsonController(this);
-        PersistenceWithJackson.toJsonProgram(program);
+        PersistenceWithJackson.toJsonController(this, pathToFileSave);
+        PersistenceWithJackson.toJsonProgram(program, pathToFileSave);
     }
 
     /**
