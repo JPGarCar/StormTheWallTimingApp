@@ -6,7 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import models.Program;
+import models.exceptions.CriticalErrorException;
 import models.exceptions.InvalidExcelException;
+import persistance.DataBaseConnection;
 import persistance.PersistenceWithJackson;
 import persistance.RunPolling;
 import ui.UIAppLogic;
@@ -157,27 +159,19 @@ public class DataIOPageController extends UIController {
 
     @FXML
     private void connectToDBActionButton() {
-        Connection connection = null;
 
         try {
-            Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection(
-                    dbUrl, dbUser, dbPassword
-            );
+            DataBaseConnection dbConnection = new DataBaseConnection(controller, dbUrl, dbUser, dbPassword);
 
             showAlert(Alert.AlertType.CONFIRMATION,
                     "Connection to DB was successful", "Connection Successful");
 
-        } catch (ClassNotFoundException | SQLException e) {
+            dbConnection.startPolling();
+
+        } catch (ClassNotFoundException | SQLException | CriticalErrorException e) {
             showAlert(Alert.AlertType.ERROR, "There has been an error while trying to connect to the database",
                     "There has been a Database connection error", e);
         }
-        assert(connection != null);
-
-        RunPolling runPolling = new RunPolling(connection, controller);
-
-
-
 
     }
 

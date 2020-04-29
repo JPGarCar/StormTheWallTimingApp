@@ -5,13 +5,16 @@ import com.sun.istack.internal.NotNull;
 import javafx.application.Platform;
 import models.*;
 import models.exceptions.*;
+import persistance.DataBaseConnection;
 import persistance.PersistenceWithJackson;
+import persistance.RunPolling;
 import ui.TimingPages.TimingPageController;
 import ui.editHeatPages.EditHeatPageController;
 
+import java.sql.SQLException;
 import java.util.*;
 
-public class UIAppLogic {
+public class UIAppLogic implements Observer {
 
 // VARIABLES //
 
@@ -71,6 +74,12 @@ public class UIAppLogic {
      * Map of Timer with RunNumber keys. Holds all the Timer(s) used to control paused Run(s).
      */
     private Map<RunNumber, Timer> timerMap;
+
+    /**
+     * Contains the class to control the connection to the database. Used to update db data.
+     */
+    @JsonIgnore
+    private DataBaseConnection dbConnection;
 
 // CONSTRUCTORS //
 
@@ -148,53 +157,93 @@ public class UIAppLogic {
         this.currentDay = currentDay;
     }
 
-// FUNCTIONS //
+    public DataBaseConnection getDbConnection() {
+        return dbConnection;
+    }
+
+    public void setDbConnection(DataBaseConnection dbConnection) {
+        this.dbConnection = dbConnection;
+    }
+
+    // FUNCTIONS //
+
+    /**
+     * Remove a Run from the activeRun list. Uses the RunNumber associated to the Run to remove it from the list.
+     * Also updates db list.
+     *
+     * @param runNumber from the run to be removed from activeRuns list.
+     * @throws SQLException From dbConnection.removeActiveRun.
+     */
+    public void removeActiveRun(RunNumber runNumber) throws SQLException {
+        activeRuns.remove(runNumber);
+        if (dbConnection != null)
+            dbConnection.removeActiveRun(runNumber);
+    }
 
     /**
      * Remove a Run from the activeRun list. Uses the RunNumber associated to the Run to remove it from the list.
      *
      * @param runNumber from the run to be removed from activeRuns list.
      */
-    public void removeActiveRun(RunNumber runNumber) {
+    public void removeActiveRunNoDB(RunNumber runNumber){
         activeRuns.remove(runNumber);
     }
 
     /**
      * Remove a Run from the activeRun list and updates the UI activeRuns list. Uses the RunNumber from the Run
-     * to remove it form the list.
+     * to remove it form the list. Also updates db list.
      *
      * @param runNumber from the run to be removed from activeRuns list.
+     * @throws SQLException From removeActiveRun.
      */
-    public void removeActiveRunWithUpdate(RunNumber runNumber) {
+    public void removeActiveRunWithUpdate(RunNumber runNumber) throws SQLException {
         removeActiveRun(runNumber);
         uiController.updateActiveRunList();
     }
 
     /**
-     * Add a Run to the activeRuns list.
+     * Add a Run to the activeRuns list and update dbList.
      *
-     * @param run   to be added to the activeRuns list.
+     * @param run   Run to be added to the activeRuns list.
+     * @throws SQLException From dbConnection.addActiveRun.
      */
-    public void addActiveRun(Run run) {
-        activeRuns.put(run.getRunNumber(), run);
+    public void addActiveRun(Run run) throws SQLException {
+        addActiveRunNoDB(run);
+        if (dbConnection != null)
+            dbConnection.addActiveRun(run.getRunNumber());
+
     }
 
     /**
-     * Add a Run to the activeRuns list and updates the UI activeRuns list.
+     * Add a Run to the activeRuns list, while making sure there is no doubles.
+     *
+     * @param run   Run to be added to the activeRuns list.
+     */
+    public void addActiveRunNoDB(Run run) {
+        if (!activeRuns.containsKey(run.getRunNumber()))
+            activeRuns.put(run.getRunNumber(), run);
+
+    }
+
+    /**
+     * Add a Run to the activeRuns list and updates the UI activeRuns list. Also updates db list.
      *
      * @param run   to be added to the activeRuns list.
+     * @throws SQLException From addActiveRun.
      */
-    public void addActiveRunWithUpdate(Run run) {
+    public void addActiveRunWithUpdate(Run run) throws SQLException {
         addActiveRun(run);
         uiController.addToActiveRunListToTop(run);
     }
 
     /**
      * Add multiple Runs to the activeRuns list. After all the additions it will update the UI activeRuns list.
+     * Also updates db list.
      *
      * @param runs  ArrayList of Run that will get added to the activeRuns list.
+     * @throws SQLException From addActiveRun.
      */
-    public void addActiveRunsFromRunList(ArrayList<Run> runs) {
+    public void addActiveRunsFromRunList(ArrayList<Run> runs) throws SQLException {
         for (Run run : runs) {
             addActiveRun(run);
         }
@@ -228,7 +277,7 @@ public class UIAppLogic {
      *
      * @param runNumber to be used to undo the Run associated to this RunNumber.
      */
-    public void undoPausedRun(RunNumber runNumber) {
+    public void undoPausedRun(RunNumber runNumber) throws SQLException {
         timerMap.get(runNumber).cancel();
         timerMap.remove(runNumber);
         Run run = pausedRuns.get(runNumber);
@@ -257,7 +306,7 @@ public class UIAppLogic {
      * @helper pauseRunEndRunHelper()
      * @savesData
      */
-    public void endRun(RunNumber runNumber) throws CriticalErrorException {
+    public void endRun(RunNumber runNumber) throws CriticalErrorException, SQLException {
 
         Run run = activeRuns.get(runNumber);
         run.calculateEndTime(Calendar.getInstance());
@@ -308,7 +357,7 @@ public class UIAppLogic {
      * @throws CanNotUndoHeatException  from undoLastHeatStart
      * @helper returnRunsDueToUndoHeat()
      */
-    public void undoLastHeat() throws CriticalErrorException, CanNotUndoHeatException {
+    public void undoLastHeat() throws CriticalErrorException, CanNotUndoHeatException, SQLException {
         // grab the previous heat -> assumes heat are constant
         int lastHeat = currentDay.getAtHeat() - 1;
 
@@ -322,7 +371,7 @@ public class UIAppLogic {
      *
      * @param heatNumber    to be used to select the heat from which to get Run(s) to remove.
      */
-    private void returnRunsDueToUndoHeat(int heatNumber) {
+    private void returnRunsDueToUndoHeat(int heatNumber) throws SQLException {
         /*
         // This code does not work, I don't know why! -> there are runs that don't get removed
         for (Run run : controller.getCurrentDay().getHeatByHeatNumber(heatNumber).getRuns().values()) {
@@ -356,4 +405,35 @@ public class UIAppLogic {
     }
 
 
+    /**
+     * This method is called whenever {@link RunPolling} has new Run(s) to be added to the UI lists from updated in other
+     * machines.
+     *
+     * <p>Will run through the active and finished lists form the RunPolling and try to add all of the Run(s) from
+     * that list. Because it is a Map there will not be any duplicates.</p>
+     *
+     * @param o   the observable object.
+     * @param arg an argument passed to the <code>notifyObservers</code>
+     */
+    @Override
+    public void update(Observable o, Object arg) {
+        for (Run run : ((RunPolling) o).getNewActiveRuns()) {
+            addActiveRunNoDB(run);
+        }
+
+        for (Run run : ((RunPolling) o).getNewFinishedRuns()) {
+            moveFromActiveToFinished(run);
+        }
+        uiController.updateFinishedRunList();
+        uiController.updateActiveRunList();
+
+        ((RunPolling) o).clearNewLists();
+
+        // TODO need to deal with undoed Runs, probably need to add a third table of special cases aka the undoed runs
+    }
+
+    private void moveFromActiveToFinished(Run run) {
+        removeActiveRunNoDB(run.getRunNumber());
+        addFinishedRun(run);
+    }
 }
