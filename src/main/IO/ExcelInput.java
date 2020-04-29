@@ -4,16 +4,14 @@ import javafx.scene.control.Alert;
 import models.Day;
 import models.Heat;
 import models.Team;
-import models.exceptions.AddHeatException;
+import models.exceptions.AddRunException;
 import models.exceptions.InvalidExcelException;
-import models.exceptions.NoDayException;
-import models.exceptions.NoHeatWithStartTimeException;
-import org.apache.commons.math3.analysis.function.Add;
+import models.exceptions.ErrorException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import ui.TimingController;
+import ui.UIAppLogic;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Calendar;
@@ -47,52 +45,51 @@ public class ExcelInput {
     private XSSFSheet heatsSheet;
     private XSSFSheet teamsSheet;
     private Map<Integer, Integer> colIndentifiers;
-    private TimingController controller;
+    private UIAppLogic controller;
 
 
     // Represents all the alerts to send because of errors
-    private LinkedList<Alert> alertLinkedList;
+    private LinkedList<String> alertMessagesLinkedList;
 
 // CONSTRUCTORS //
 
-    public ExcelInput(FileInputStream fileInputStream, TimingController controller) {
+    public ExcelInput(FileInputStream fileInputStream, UIAppLogic controller) {
         this.fileInputStream = fileInputStream;
         this.controller = controller;
         colIndentifiers = new HashMap<>();
-        alertLinkedList = new LinkedList<>();
+        alertMessagesLinkedList = new LinkedList<>();
     }
 
 // FUNCTIONS //
 
-    // EFFECTS: public function to do the entire process
-    public LinkedList<Alert> inputData(boolean isHeats, boolean isTeams) throws InvalidExcelException {
+    /**
+     * Will begin the data import process from an excel file. Calling 3 helper functions.
+     *
+     * @param isHeats   True if user wants to import Heat(s) from the excel, false otherwise.
+     * @param isTeams   True if user wants to import Team(s) from the excel, false otherwise.
+     * @throws InvalidExcelException    from evaluateData()
+     * @helper createFiles(), evaluateData(), dataTransition()
+     */
+    public void inputData(boolean isHeats, boolean isTeams) throws InvalidExcelException {
         createFiles(isHeats, isTeams);
         evaluateData(isHeats, isTeams);
         dataTransition(isHeats, isTeams);
-        return alertLinkedList;
     }
 
-    // EFFECTS: evaluates all all the sheets to make sure the data is present and well organized
-    private void evaluateData(boolean isHeats, boolean isTeams) throws InvalidExcelException {
-        if (isHeats) {
-            firstRowEvaluateHeats();
-        }
-        if (isTeams) {
-            firstRowEvaluateTeams();
-        }
+    /**
+     * @return  the list of alerts generated during the inputData
+     */
+    public LinkedList<String> getAlerts() {
+        return alertMessagesLinkedList;
     }
 
-    // EFFECTS: import the data itself, last of evaluate and create files
-    private void dataTransition(boolean isHeats, boolean isTeams) {
-        if (isHeats) {
-            addHeatsFromData();
-        }
-        if (isTeams) {
-            addTeamsFromData();
-        }
-    }
-
-    // EFFECTS: starts all the file and var creations
+    /**
+     * Will create the workbook and sheets variables from the input excel to work with.
+     * For this to work the excel sheets must be names appropriately as shown in the code.
+     *
+     * @param isHeats   True if user wants to import Heat(s) from the excel, false otherwise.
+     * @param isTeams   True if user wants to import Team(s) from the excel, false otherwise.
+     */
     private void createFiles(boolean isHeats, boolean isTeams) {
         try {
             workbook = new XSSFWorkbook(fileInputStream);
@@ -107,14 +104,65 @@ public class ExcelInput {
         }
     }
 
-    // EFFECTS: evaluate the first row of the excel for heat sheet
+    /**
+     * Will call two helper functions to check the first row of every sheet for the key words. Key words are used to
+     * know what data is located in what column. Each sheet has its unique set of key words.
+     *
+     * @param isHeats   True if user wants to import Heat(s) from the excel, false otherwise.
+     * @param isTeams   True if user wants to import Team(s) from the excel, false otherwise.
+     * @throws InvalidExcelException from firstRowEvaluateHeats() and firstRowEvaluateTeams()
+     * @helper firstRowEvaluateHeat(), firstRowEvaluateTeams()
+     */
+    private void evaluateData(boolean isHeats, boolean isTeams) throws InvalidExcelException {
+        if (isHeats) {
+            firstRowEvaluateHeats();
+        }
+        if (isTeams) {
+            firstRowEvaluateTeams();
+        }
+    }
+
+    /**
+     * Calls two helper functions to start the data import.
+     *
+     * @param isHeats   True if user wants to import Heat(s) from the excel, false otherwise.
+     * @param isTeams   True if user wants to import Team(s) from the excel, false otherwise.
+     * @helper addHeatsFromData(), addTeamsFromData()
+     */
+    private void dataTransition(boolean isHeats, boolean isTeams) {
+        if (isHeats) {
+            addHeatsFromData();
+        }
+        if (isTeams) {
+            addTeamsFromData();
+        }
+    }
+
+    /**
+     * Will evaluate the first row of the Heat excel sheet to look for the key words ignoring case.
+     * Key words:
+     * - Heat ID
+     * - heat #
+     * - time
+     * - category
+     * - day
+     *
+     * The key words are then used to know what data is in what column. The key word must be used appropriately or the
+     * program will not work. The number of the Column associated to each key word is placed in the colIdentifier Map
+     * using the final variable associated to the key word as a Map key.
+     *
+     * @throws InvalidExcelException    if the first row does not contain pure String values aka the key words.
+     */
     private void firstRowEvaluateHeats() throws InvalidExcelException {
         Row titleRow = heatsSheet.getRow(0);
         int lastColUsed = titleRow.getLastCellNum();
+
+        // check for strings in the first row
         if (titleRow.getCell(0).getCellType() != CellType.STRING) {
-            throw new InvalidExcelException("There are no column values on first row.");
+            throw new InvalidExcelException("Could not find the key words in the first row of the sheet.");
         }
 
+        // iterate over the row looking for the key words
         for (int i = 0; i < lastColUsed; i++) {
             String colName = titleRow.getCell(i).getStringCellValue();
             if (colName.equalsIgnoreCase("Heat ID")) {
@@ -131,14 +179,33 @@ public class ExcelInput {
         }
     }
 
-    // EFFECTS: evaluate the first row of the excel for teams sheet
+    /**
+     * Will evaluate the first row of the Team excel sheet to look for the key words ignoring case.
+     * Key words:
+     * - teamID
+     * - team number
+     * - team name
+     * - pool name
+     * - day
+     * - run time
+     * - unit
+     *
+     * The key words are then used to know what data is in what column. The key word must be used appropriately or the
+     * program will not work. The number of the Column associated to each key word is placed in the colIdentifier Map
+     * using the final variable associated to the key word as a Map key.
+     *
+     * @throws InvalidExcelException    if the first row does not contain pure String values aka the key words.
+     */
     private void firstRowEvaluateTeams() throws InvalidExcelException {
         Row titleRow = teamsSheet.getRow(0);
         int lastColUsed = titleRow.getLastCellNum();
+
+        // check for Strings in the first row
         if (titleRow.getCell(0).getCellType() != CellType.STRING) {
             throw new InvalidExcelException("There are no column values on first row.");
         }
 
+        // iterate over the first row looking for the key words
         for (int i = 0; i < lastColUsed; i++) {
             String colName = titleRow.getCell(i).getStringCellValue();
             if (colName.replaceAll(" ", "").equalsIgnoreCase("teamID")) {
@@ -159,19 +226,35 @@ public class ExcelInput {
         }
     }
 
-    // EFFECTS: checks all the rows for data and adds teams
+    /**
+     * Will check every row of the teamSheet and grab the data from every cell in the row as specified from the
+     * colIdentifiers Map.
+     *
+     * <p>Will first check if the team ID cell is filled, if it is not the program will not
+     * grab data from the row and skip it. Then it will grab most of the data. The hard part comes when deciphering
+     * the Team's run time. The hard part is that the time could be set as a string, a number, or a time. All three are
+     * different type of data for an excel sheet and so we have to treat the string option different from the time or
+     * number option. First part of the conditional deals with string option, second deals with number or time option.
+     * There is a fail safe, if the time is not imported correctly, a Heat is not grabbed and so the entire Team is not
+     * imported. An error message is sent to the user, he can try to change the data type and do the import again.</p>
+     */
     private void addTeamsFromData() {
         for (Row row : teamsSheet) {
 
             XSSFCell cell = (XSSFCell) row.getCell(colIndentifiers.get(TEAMIDIden));
 
+            // check that the row has data by ensuring there is a numeric value in the team id cell
             if (cell.getCellType() == CellType.NUMERIC) {
 
+                // most of the data imported
                 String teamName = row.getCell(colIndentifiers.get(TEAMNAMEIden)).getStringCellValue();
                 String poolName = row.getCell(colIndentifiers.get(TEAMPOOLNAMEIden)).getStringCellValue();
                 String teamUnit = row.getCell(colIndentifiers.get(TEAMUNITIden)).getStringCellValue();
                 String teamDayString = row.getCell(colIndentifiers.get(TEAMDAYIden)).getStringCellValue();
+                int teamNumber = (int) row.getCell(colIndentifiers.get(TEAMNUMBERIden)).getNumericCellValue();
+                int teamID = (int) row.getCell(colIndentifiers.get(TEAMIDIden)).getNumericCellValue();
 
+                // work to get the Team run time begins here and ends after the if-elseif-else
                 Heat heat = null;
 
                 XSSFCell runCell = (XSSFCell) row.getCell(colIndentifiers.get(TEAMRUNTIMEIden));
@@ -204,9 +287,9 @@ public class ExcelInput {
 
                         try {
                             heat = controller.getProgram().getProgramDays().get(teamDayString.substring(0, teamDayString.indexOf(","))).getHeatByStartTime(teamRunTime);
-                        } catch (NoHeatWithStartTimeException e) {
-                            alertLinkedList.add(new Alert(Alert.AlertType.WARNING, "Data import was successful, however there was an error while" +
-                                    " importing the team: " + teamName + ". " + e.getMessage()));
+                        } catch (ErrorException e) {
+                            alertMessagesLinkedList.add("Data import was successful, however there was an error while" +
+                                    " importing the team: " + teamName + ". " + e.getMessage());
                         }
                     }
                 } else if (runCell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(runCell)) {
@@ -214,27 +297,26 @@ public class ExcelInput {
                     Cell cellDate = row.getCell(colIndentifiers.get(TEAMRUNTIMEIden));
                     teamRunTime.setTime(cellDate.getDateCellValue());
                     try {
-                        heat = controller.getProgram().getProgramDay(teamDayString.substring(0, teamDayString.indexOf(","))).getHeatByStartTime(teamRunTime);
-                    } catch (NoHeatWithStartTimeException | NoDayException e) {
-                        alertLinkedList.add(new Alert(Alert.AlertType.WARNING, "Data import was successful, however there was an error while" +
-                                " importing the team: " + teamName + ". " + e.getMessage()));
+                        heat = controller.getProgram().getProgramDay(
+                                teamDayString.substring(0, teamDayString.indexOf(","))).getHeatByStartTime(teamRunTime);
+                    } catch (ErrorException e) {
+                        alertMessagesLinkedList.add("Data import was successful, however there was an error while" +
+                                " importing the team: " + teamName + ". " + e.getMessage());
                     }
                 } else {
-                    alertLinkedList.add(new Alert(Alert.AlertType.WARNING, "Data import was successful, however there was an error while" +
-                            " importing the team: " + teamName + ". The Run Time format is incorrect and so the team was not able to connect to a heat."));
+                    alertMessagesLinkedList.add("Data import was successful, however there was an error while" +
+                            " importing the team: " + teamName + ". The Run Time format is incorrect and so the " +
+                            "team was not able to connect to a heat.");
                 }
 
-
-                int teamNumber = (int) row.getCell(colIndentifiers.get(TEAMNUMBERIden)).getNumericCellValue();
-                int teamID = (int) row.getCell(colIndentifiers.get(TEAMIDIden)).getNumericCellValue();
-
+                // final step, creation of the team and import to the Program
                 Team team = new Team(poolName, teamNumber, teamName, teamID, teamUnit);
                 if (heat != null) {
                     try {
-                        team.addHeat(heat);
-                    } catch (AddHeatException e) {
-                        alertLinkedList.add(new Alert(Alert.AlertType.WARNING, "Data import was successful, however there was an error while" +
-                                " importing the following data: " + e.getMessage()));
+                        team.addRunFromHeat(heat);
+                    } catch (AddRunException e) {
+                        alertMessagesLinkedList.add("Data import was successful, however there was an error while" +
+                                " importing the following data: " + e.getMessage());
                     }
                     controller.getProgram().addTeam(team);
                 }
@@ -242,7 +324,11 @@ public class ExcelInput {
         }
     }
 
-    // EFFECTS: checks all the rows for data and adds heats
+    /**
+     * Will check every row of the Heat's sheet to import data. Before importing data from a row, it will check
+     * to see if there is a Heat number in the appropriate cell. If there is nothing found or the data is non
+     * numeric the row will not be imported.
+     */
     private void addHeatsFromData() {
 
         for (Row row : heatsSheet) {
@@ -264,12 +350,7 @@ public class ExcelInput {
 
                 Heat heat = new Heat(startTime, category, heatNumber, day, row.getRowNum()); // TODO add the heat id not the row number
 
-                try {
-                    controller.getProgram().getProgramDays().get(dayToRun).addHeat(heat);
-                } catch (AddHeatException e) {
-                    alertLinkedList.add(new Alert(Alert.AlertType.WARNING, "Data import was successful, however there was an error while" +
-                            " importing the following data: " + e.getMessage()));
-                }
+                controller.getProgram().getProgramDays().get(dayToRun).addHeat(heat);
             }
 
         }
