@@ -157,28 +157,6 @@ public class DataIOPageController extends UIController {
 
     @FXML
     private void connectToDBActionButton() {
-        Connection connection = null;
-
-        try {
-            Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection(
-                    dbUrl, dbUser, dbPassword
-            );
-
-            showAlert(Alert.AlertType.CONFIRMATION,
-                    "Connection to DB was successful", "Connection Successful");
-
-        } catch (ClassNotFoundException | SQLException e) {
-            showAlert(Alert.AlertType.ERROR, "There has been an error while trying to connect to the database",
-                    "There has been a Database connection error", e);
-        }
-        assert(connection != null);
-
-        RunPolling runPolling = new RunPolling(connection, controller);
-
-
-
-
     }
 
     /**
