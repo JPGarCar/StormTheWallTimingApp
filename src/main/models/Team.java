@@ -5,36 +5,39 @@ import com.sun.istack.internal.NotNull;
 import models.exceptions.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
-    Represents a team that will run one or more heats during the event
-    Purpose: Control the heats the team is running in, their times and their team information
-    Contains:
-    - Pool Name - String
-    - Team id used by db and access - UNIQUE - int
-    - Team number used by participants and the program - UNIQUE - int
-    - Team´s name - String
-    - All the heats this team is running in - Map<Integer, Heat>
-    - All the Runs that the team has - Map<Integer, Run>
-    - Current run if the team is running, null otherwise - Run
-    - Team unit that represents the unit of this team - String
-
-    Usage:
-    -
-
-    Persistence:
-    - This class is an entity in the table name "team_table"
-    - currentRun, heats and runs will be changing during the program's life they
-        must be persist with db, all other vars will not change much or at all
-    - Many To Many relation with Heat, it is mapped by Heat
-    - One To Many with Run
+/**
+ * <h3>Represents</h3> a team that will run one or more {@link Heat}(s) during the event. A Team is unique and it is
+ * represented by a unique team id and team number. One Team is able to participate in multiple Heat(s) during
+ * multiple {@link Day}(s).
+ *
+ * A Team is not directly connected to a Heat, for that a {@link Run} is used. The Run is connected to both the
+ * Heat and the Team. A Run can not exist without a Team, but can exist without a Heat, we call that a wait listed
+ * Run.
+ *
+ * <h3>Purpose:</h3> Represent a team in the race,their race times and their team information.
+ *
+ * <h3>Contains:</h3>
+ *   - Pool Name - String
+ *   - Team id used by db and access - UNIQUE - int
+ *   - Team number used by participants and the program - UNIQUE - int
+ *   - Team´s name - String
+ *   - All the Runs that the team has - Map<Integer, Run>
+ *  - Team unit that represents the unit of this team - String
+ *
+ * <h3>Usage:</h3>
+ *   - Grab the Team's Run(s)
+ *   - Add and remove Run(s) to this Team
+ *
+ * <h3>Persistence:</h3>
+ *   - This class is an entity in the table name "team_table"
+ *   - currentRun, heats and runs will be changing during the program's life they
+ *      must be persist with db, all other vars will not change much or at all
+ *   - Many To Many relation with Heat, it is mapped by Heat
+ *   - One To Many with Run
  */
-
-
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 @Entity
 @Table(name = "team_table")
@@ -42,37 +45,44 @@ public class Team {
 
 // VARIABLES //
 
+    /**
+     * Contains the Pool this Team belongs to.
+     */
     private String poolName;
 
-    // Represents team id used by db and access - UNIQUE
+    /**
+     * Contains the Unit this Team belongs to.
+     */
+    private String teamUnit;
+
+    /**
+     * Contains the team id used by db and access - UNIQUE
+     */
     @Id
     private int teamID;
 
-    // Represents the team number they use during the race and in this program - UNIQUE
+    /**
+     * Contains the team number they use during the race and in this program - UNIQUE
+     */
     private int teamNumber;
 
+    /**
+     * Contains the team name as a String.
+     */
     private String teamName;
 
-    // Contains all the heats this team is in, will be mapped by the heats table in db
-    @ManyToMany(mappedBy = "teams")
-    private Map<Integer, Heat> heats;
-
-    // Contains the TeamHeats that have not finished
+    /**
+     * Contains the Run(s) that this Team will run. The Run(s) are connected to the Heat(s) the Team is
+     * participating in.
+     */
     @OneToMany
-    private Map<Integer, Run> runs;
-
-    // Contains the current run the team is running
-    @OneToOne
-    private Run currentRun;
-
-    private String teamUnit;
+    private Map<RunNumber, Run> runs;
 
 // CONSTRUCTORS //
 
     // DUMMY CONSTRUCTOR used by Jackson JSON
     public Team() {
         runs = new HashMap<>();
-        heats = new HashMap<>();
     }
 
     // CONSTRUCTOR
@@ -84,8 +94,6 @@ public class Team {
         this.teamUnit = teamUnit;
 
         runs = new HashMap<>();
-        heats = new HashMap<>();
-
     }
 
 // GETTERS AND SETTERS, used by Jackson JSON //
@@ -93,10 +101,6 @@ public class Team {
 
     public String getTeamUnit() {
         return teamUnit;
-    }
-
-    public Run getCurrentRun() {
-        return currentRun;
     }
 
     public int getTeamID() {
@@ -115,27 +119,15 @@ public class Team {
         return poolName;
     }
 
-    public Map<Integer, Heat> getHeats() {
-        return heats;
-    }
-
-    public Map<Integer, Run> getRuns() {
+    public Map<RunNumber, Run> getRuns() {
         return runs;
-    }
-
-    public void setCurrentRun(@NotNull Run currentRun) {
-        this.currentRun = currentRun;
     }
 
     public void setTeamID(@NotNull int teamID) {
         this.teamID = teamID;
     }
 
-    public void setHeats(@NotNull Map<Integer, Heat> heats) {
-        this.heats = heats;
-    }
-
-    public void setRuns(@NotNull Map<Integer, Run> runs) {
+    public void setRuns(@NotNull Map<RunNumber, Run> runs) {
         this.runs = runs;
     }
 
@@ -157,81 +149,95 @@ public class Team {
 
 // FUNCTIONS //
 
-    // EFFECTS: set the end time to the appropriate TeamHeat, depends on the heat number given.
-    //          will also move the TeamHeat who got a final time to the done heat list
-    public void markEndTime(@NotNull Calendar endTime) throws NoHeatsException, CouldNotCalculateFinalTimeExcpetion, NoRemainingHeatsException {
-        if (runs.size() == 0 || currentRun == null) {
-            throw new NoRemainingHeatsException("Team affected: " + teamNumber);
-        }
-        currentRun.calculateEndTime(endTime);
-    }
+    /**
+     * Associates a Team to a Heat by creating a Run and adding it to the runs list.
+     *
+     * <p>Due to the many to many connection this function also calls the Heat addRun() function to add the
+     * created Run that associates this team with the Heat.</p>
+     *
+     * @param heat  to be associated to this Team with a Run
+     * @throws AddRunException if this team is already associated with the heat. A Heat can not have a
+     * Team associated twice.
+     */
+    public void addRunFromHeat(Heat heat) throws AddRunException {
+        Run run = new Run(heat, this);
 
-    // EFFECTS: add the heats in the input array to the heats array and the remaining heats queue
-    public void addHeats(ArrayList<Heat> heats) throws AddHeatException {
-        for (Heat heat : heats) {
-            addHeat(heat);
-        }
-    }
-
-    // EFFECTS: set the current run that this team is running
-    public void markCurrentRun(int heatNumber) {
-        if (heatNumber == -1) {
-            currentRun = null;
-        } else {
-            setCurrentRun(runs.get(heatNumber));
-        }
-    }
-
-    // Helper function: creates a Run out of a Heat
-    private Run heatToRun(@NotNull Heat heat) {
-        return new Run(heat.getHeatNumber(), this);
-    }
-
-    // EFFECTS: add one heat to the heat array and remaining heat queue and add this team to the heat
-    public void addHeat(Heat heat) throws AddHeatException {
-        if (!heats.containsKey(heat.getHeatNumber())) {
-            heats.put(heat.getHeatNumber(), heat);
-            Run run = heatToRun(heat);
-            runs.put(run.getHeatNumber(), run);
+        if (!runs.containsKey(run.getRunNumber())) {
+            runs.put(run.getRunNumber(), run);
             try {
-                heat.addTeam(this);
-            } catch (AddTeamException e) {
+                heat.addRun(run);
+            } catch (AddRunException e) {
                 // do nothing as we expect this because of the many to many connection
             }
         }
         else {
-            throw new AddHeatException("Team affected: " + teamName + ", with team number: " + teamNumber +
-                    ". Could not be added to heat number: " + heat.getHeatNumber() + ".");
+            throw new AddRunException("Team affected: " + teamName + ", with team number: " + teamNumber +
+                    ". Could not add the team to the heat: " + heat.getHeatNumber() + ".");
         }
     }
 
-    // EFFECTS: remove heat from this team in all three possible array lists and removes this team from heat
-    public void removeHeat(int heatNumber) throws NoHeatsException {
-        if (heats.containsKey(heatNumber)) {
-            try {
-                heats.remove(heatNumber).removeTeam(teamNumber);
-            } catch (NoTeamException e) {
-                // do nothing as we expect this here due to many to many connection
-            }
-            runs.remove(heatNumber);
+    /**
+     * Associate this Team to a Heat with an already crated Run. Assumes the Run to be already associated with a Heat.
+     *
+     * TODO: this does not check if the Heat connected to the Run has already been associated to this Team with a different Run
+     * TODO: we need to check that some way. Probably add functionality to the RunNumber class.
+     *
+     * @param run   to be used to associate this Team with the Heat connected to the Run.
+     * @throws AddRunException if this Team is already connected to this Run. A Team can not have duplicate Run(s).
+     */
+    public void addRun(Run run) throws AddRunException {
+        if (!runs.containsKey(run.getRunNumber())) {
+            runs.put(run.getRunNumber(), run);
         } else {
-            throw new NoHeatsException("Error while trying to remove heat from team. Team affected: " + teamNumber +
-                    ". Heat that could not be removed: " + heatNumber);
+            throw new AddRunException("Team affected: " + teamName + ", with team number: " + teamNumber +
+                    ". Could not add the run: " + run.getRunNumber() +
+                    " because it is already connected to this Team.");
         }
     }
 
-    // EFFECTS: undo the end time stuff
-    public void undoEndTimeMark() {
-        currentRun.setCanUndo(true);
+    /**
+     * Will disassociate this team from a Run. Because a Run can not exist without a Team, the Run will call the
+     * selfDelete() function to disappear. It will also remove the Run from the runs Map.
+     *
+     * @param runNumber RunNumber linked to the Run to be disassociated from this Team.
+     * @throws CriticalErrorException if the RunNumber is not found in the runs list.
+     */
+    public void deleteRun(RunNumber runNumber) throws CriticalErrorException {
+        if (runs.containsKey(runNumber)) {
+            runs.get(runNumber).selfDelete();
+        } else {
+            throw new CriticalErrorException("Error while trying to remove run from team. Team affected: " + teamNumber +
+                    ". Run that could not be removed: " + runNumber);
+        }
     }
 
-    // EFFECTS: get teamHeat by its heat number from remainingHeats
-    public Run getRunByHeatNumber(int heatNumber) throws NoRunFoundException {
-        Run run = runs.get(heatNumber);
-        if (run == null) {
-            throw new NoRunFoundException("Affected team: " + teamNumber + "Searching for run with heat: " + heatNumber);
+    /**
+     * Disassociate a Run from this Team by removing the Run from the runs list.
+     *
+     * @param runNumber RunNumber linked to the Run to be disassociated.
+     */
+    public void removeRun(RunNumber runNumber) {
+        runs.remove(runNumber);
+    }
+
+    /**
+     * Will search through all the Run(s) in runs map find a Run with the imputed Heat number. If no Run is found with
+     * the imputed Heat number then an exception is thrown.
+     *
+     * TODO: make this better by doing a RunNumber with data and using that to search.
+     *
+     * @param heatNumber    int to be used to find a Run associated to that Heat.
+     * @return  The Run in the runs Map that has a Heat associated with the input Heat number.
+     * @throws CriticalErrorException  if no Run is found in the Map with an associated Heat with the imputed Heat number.
+     */
+    public Run getRunByHeatNumber(int heatNumber) throws CriticalErrorException {
+        for(Run run : runs.values()) {
+            if (run.getRunNumber().getHeatNumber() == heatNumber) {
+                return run;
+            }
         }
-        return run;
+        throw new CriticalErrorException("We could not find a Run with the Heat number: " + heatNumber +
+                " in the Team: " + teamNumber + ".");
     }
 
 }

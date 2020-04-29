@@ -10,8 +10,6 @@ import java.io.IOException;
 
 public class main extends Application {
 
-    private TimingController controller;
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -20,12 +18,10 @@ public class main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         try {
-            FXMLLoader root = new FXMLLoader(getClass().getResource("MainPage.fxml"));
-            controller = new TimingController();
-            root.setControllerFactory(c -> new MainPageController(controller));
-            Scene scene = new Scene(root.load());
-            scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-            primaryStage.setTitle("Storm the Wall Timing App");
+            FXMLLoader root = new FXMLLoader(getClass().getResource("/ui/MainSectionPages/RaceChooserPage.fxml"));
+            Scene scene = new Scene(root.load(), 1200, 800);
+            scene.getStylesheets().add(getClass().getResource("/ui/css/application.css").toExternalForm());
+            primaryStage.setTitle("UBC Recreation Timing System");
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (NullPointerException e) {

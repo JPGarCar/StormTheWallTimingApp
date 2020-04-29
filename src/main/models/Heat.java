@@ -9,31 +9,38 @@ import javax.persistence.*;
 import java.text.DecimalFormat;
 import java.util.*;
 
-/*
-    Represents a regular heat that will run during the event
-    Purpose: Control the teams that are running in this heat, when it starts and what kind of teams are running
-    Contains:
-    - Scheduled time to start - Calendar
-    - Category of the heat - String
-    - Heat ID (used by db and access) - UNIQUE - int
-    - Heat Number (used by participants and this program) - UNIQUE - int
-    - Boolean that represents if the heat has started - boolean
-    - The actual time the heat started - Calendar
-    - TreeMap of all the teams that are assigned to this heat, key is the team's number - LinkedHashMap<Integer, Team>
-    - Day this heat is assigned to and running on - Day
-
-    Usage:
-    -
-
-    Persistence:
-    - Class is an entity in the table name "heat_table"
-    - Actual start time, the teams that will run and weather or not heat started will change during the life of program,
-        all other should not change much or at all
-    - Back reference, Many To One relationship with Day
-    - Many to Many relationship with Team
+/**
+ * <h3>Represents</h3> a regular heat that will run during the event. Each Heat will have associated x number of Run(s) that
+ *   represent an association to x Team(s). Each Run must be unique and can not repeat within one Heat. RunNumber(s) are
+ *   used to differentiate Run(s) from each other.
+ *
+ * <h3>Purpose:</h3> Control the teams that are running in this heat, when it starts and what kind of teams are running
+ *
+ * <h3>Contains:</h3>
+ *   - Scheduled time to start - Calendar
+ *   - Category of the heat - String
+ *   - Heat ID (used by db and access) - UNIQUE - int
+ *   - Heat Number (used by participants and this program) - UNIQUE - int
+ *   - Boolean that represents if the heat has started - boolean
+ *   - The actual time the heat started - Calendar
+ *   - TreeMap of all the Run(s) that are associated to this Heat, key is the RunNumber of
+ *      every Run - LinkedHashMap<Integer, Team>
+ *   - Day this heat is assigned to and running on - Day
+ *
+ * <h3>Usage:</h3>
+ *   - add and remove Run(s) associated to this Heat by using either a Run, RunNumber or Team
+ *   - start the Heat
+ *   - undo the Heat's start
+ *   - send non DNS Run(s) to UI and set endTime to DNS Run(s)
+ *   - Start time and scheduled time as String(s)
+ *
+ * <h3>Persistence:</h3>
+ *   - Class is an entity in the table name "heat_table"
+ *   - Actual start time, the teams that will run and weather or not heat started will change during the life of program,
+ *       all other should not change much or at all
+ *   - Back reference, Many To One relationship with Day
+ *   - Many to Many relationship with Team
  */
-
-
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 @Entity
 @Table(name = "heat_table")
@@ -41,29 +48,49 @@ public class Heat {
 
 // VARIABLES //
 
-    // Represents the time this heat should start as a Calendar
+    /**
+     * Represents the time this heat is scheduled to start at. This is only for informational purposes and will
+     * not be used for anything else. This time might not be accurate or represent in any way the time the Heat started.
+     * It only contains the time, not the day, month, year, or any other information. Only hour and minute of day.
+     */
     private Calendar scheduledTime;
 
+    /**
+     * Contains the category of the Heat, for informational purposes only.
+     */
     private String category;
 
-    // Represents the heat id, used by db and access - UNIQUE
+    /**
+     * Contains the heat id, used by db and access. - UNIQUE
+     */
     @Id
     private int heatID;
 
-    // Represents the heat number, usually starts at 1 and goes up as needed - UNIQUE
+    /**
+     * Contains the heat number, needs to start at a certain number and increment by one without
+     * jumping any numbers. This is so that the program works properly. - UNIQUE
+     */
     private int heatNumber;
 
-    // Boolean used to know if the heat has started to run
+    /**
+     * Boolean used to know if the heat has started.
+     */
     private boolean hasStarted;
 
-    // Represents the actual time the heat started as a Calendar
+    /**
+     * Contains the Calendar time the Heat started.
+     */
     private Calendar startTime;
 
-    // All the teams that are running in this heat
+    /**
+     * Contains all the Run(s) associated to this Heat. The Run's RunNumber is used as a key.
+     */
     @ManyToMany
-    private Map<Integer,Team> teams;
+    private Map<RunNumber, Run> runs;
 
-    // A back reference to the day this heat is running in
+    /**
+     * A back reference to the day this heat is associated to, aka the Day this Heat is starting.
+     */
     @ManyToOne
     @JsonBackReference
     private Day dayToRace;
@@ -72,7 +99,7 @@ public class Heat {
 
     // DUMMY CONSTRUCTOR used by Jackson JSON
     public Heat() {
-        teams = new LinkedHashMap<>();
+        runs = new LinkedHashMap<RunNumber, Run>();
         this.hasStarted = false;
     }
 
@@ -85,7 +112,7 @@ public class Heat {
         this.heatID = heatID;
 
         this.hasStarted = false;
-        teams = new LinkedHashMap<>();
+        runs = new LinkedHashMap<RunNumber, Run>();
 
         setDayToRace(dayToRace);
     }
@@ -113,8 +140,8 @@ public class Heat {
         return startTime;
     }
 
-    public Map<Integer, Team> getTeams() {
-        return teams;
+    public Map<RunNumber, Run> getRuns() {
+        return runs;
     }
 
     public Calendar getScheduledTime() {
@@ -145,8 +172,8 @@ public class Heat {
         this.category = category;
     }
 
-    public void setTeams(@NotNull Map<Integer, Team> teams) {
-        this.teams = teams;
+    public void setRuns(@NotNull Map<RunNumber, Run> runs) {
+        this.runs = runs;
     }
 
     public void setScheduledTime(@NotNull Calendar scheduledTime) {
@@ -155,94 +182,118 @@ public class Heat {
 
 // FUNCTIONS //
 
-    // MODIFIES: startTime, hasStarted, teams(children)
-    // EFFECTS: sets the heat's startTime, marks hasStarted to true, and sets this heat's team's current heat to this
+    /**
+     * Will officially start the Heat by setting the startTime and mark hasStarted to true.
+     *
+     * @param startTime Calendar representing the Heat's start time.
+     */
     public void markStartTime(@NotNull Calendar startTime) {
         this.startTime = startTime;
         hasStarted = true;
-        for (Team team : teams.values()) {
-            team.markCurrentRun(heatNumber);
-        }
     }
 
-    // EFFECTS: sets the given day as the day this heat will race, will delete itself from the day it was in
-    public void setDayToRace(@NotNull Day day) {
+    /**
+     * Will associate this Heat with a new Day by setting the given day as the day this heat will race.
+     * Will delete itself from the day it was in, if any.
+     *
+     * @param day   Day this Heat will be associated to.
+     */
+    public void setDayToRace(Day day) {
         if (dayToRace != null) {
             dayToRace.removeHeatByHeatNumber(heatNumber);
         }
-        try {
-            day.addHeat(this);
-        } catch (AddHeatException e) {
-            // nothing because we expect this due to one to one connection
-        }
+        day.addHeat(this);
         this.dayToRace = day;
     }
 
-    // EFFECTS: return the time to start as a string
-    public String scheduledTimeString() {
-        // used to set the time string to two values
-        DecimalFormat decimalFormat = new DecimalFormat("00");
-        return decimalFormat.format(scheduledTime.get(Calendar.HOUR_OF_DAY)) + ":" + decimalFormat.format(scheduledTime.get(Calendar.MINUTE));
-    }
+    /**
+     * Associates a Team to this Heat by building a new Run to use as the medium of association. This new Run will
+     * have this Heat and the imputed Team as its Heat and Team, and thus will add the Run to the Team as well.
+     *
+     * @param team  Team to be associated to this Heat and to be added the new Run.
+     * @throws AddRunException  If the Team is already associated to this Heat.
+     */
+    public void addRunFromTeam(@NotNull Team team) throws AddRunException {
+        Run run = new Run(this, team);
 
-    // EFFECTS: add a team to the heat and add this heat to the team
-    public void addTeam(@NotNull Team team) throws AddTeamException {
-        if (!teams.containsKey(team.getTeamNumber())) {
-            teams.put(team.getTeamNumber(), team);
+        if (!runs.containsKey(run.getRunNumber())) {
+            runs.put(run.getRunNumber(), run);
             try {
-                team.addHeat(this);
-            } catch (AddHeatException e) {
-                // do nothing as we expect this to happen because of the many to many connection
+                run.getTeam().addRun(run);
+            } catch (AddRunException e) {
+                // we expect this
             }
         } else {
-            throw new AddTeamException("Heat affected: " + heatNumber + ". Team number that tried to get added: " + team.getTeamNumber());
+            throw new AddRunException("Heat affected: " + heatNumber + ". RunNumber that tried to get added: " + run.getRunNumber());
         }
     }
 
-    // EFFECTS: remove a team from this heat and this heat from the team by team number
-    public Team removeTeam(@NotNull int teamNumber) throws NoTeamException {
-        if (teams.containsKey(teamNumber)) {
-            Team team = teams.remove(teamNumber);
-            try {
-                team.removeHeat(heatNumber);
-            } catch (NoHeatsException e) {
-                // do nothing as we expect this to happen because of the many to many connection
-            }
-            return team;
+    /**
+     * Associate a Run to this Heat by adding it to the runs Map with the Run's RunNumber as a key and setting
+     * the Run's heat variable to point to this Heat.
+     *
+     * @param run   Run to be associated to this Heat.
+     * @throws AddRunException  If this Heat is already associated to a Run with the same RunNumber.
+     */
+    public void addRun(Run run) throws AddRunException {
+        if (!runs.containsKey(run.getRunNumber())) {
+            runs.put(run.getRunNumber(), run);
+            run.setHeat(this);
         } else {
-            throw new NoTeamException("Could not remove a team. Heat affected: " + heatNumber +
-                    ". Team number that go tried to remove: " + teamNumber);
+            throw new AddRunException("Heat affected: " + heatNumber + ". RunNumber that tried to get added: " + run.getRunNumber());
         }
     }
 
-    // EFFECTS: restart the heat by deleting start time and changing hasStarted
+    /**
+     * Disassociate a Run from this Heat by searching for the Run in the runs Map with the linked RunNumber. It will
+     * remove the Run from the runs list and set the Run's heat to null.
+     *
+     * @param runNumber RunNumber to be used to find the Run to be disassociated.
+     * @return  The Run that was disassociated.
+     * @throws CriticalErrorException  If no Run is disassociated, aka no Run is found with the RunNumber imputed.
+     */
+    public Run removeRun(@NotNull RunNumber runNumber) throws CriticalErrorException {
+        if (runs.containsKey(runNumber)) {
+            Run run = runs.remove(runNumber);
+            run.setHeat(null);
+            return run;
+        } else {
+            throw new CriticalErrorException("Could not remove a run. Heat affected: " + heatNumber +
+                    ". RunNumber that go tried to remove: " + runNumber);
+        }
+    }
+
+    /**
+     * Used when the user wants to Undo the start of this Heat. It will restart the Heat by setting the startTime to
+     * null and hasStated to false.
+     *
+     * @throws CanNotUndoHeatException  if the Heat has not started yet.
+     */
     public void undoHeatStart() throws CanNotUndoHeatException {
         if (hasStarted) {
             hasStarted = false;
             startTime = null;
-            for (Team team : teams.values()) {
-                team.markCurrentRun(-1);
-            }
         } else {
             throw new CanNotUndoHeatException("Affected heat number: " + heatNumber);
         }
     }
 
-    // EFFECTS: return a team from this heat by its team number
-    public Team teamFromHeatByTeamNumber(@NotNull int teamNumber) {
-        return teams.get(teamNumber);
-    }
-
-    // EFFECTS: return only those heats with teamHeats that don't have DNS, those that do get a 0 time
-    public ArrayList<Team> teamsThatWillRun() throws NoRunFoundException, NoHeatsException {
-        ArrayList<Team> runnableTeams = new ArrayList<>();
-        for (Team team : teams.values()) {
-            if (team.getRunByHeatNumber(heatNumber).getSitrep() != Sitrep.DNS) {
-                runnableTeams.add(team);
+    /**
+     * Will go over the Map of Run(s) and select only the Run(s) that do not have a status of "DNS"
+     * For those Run(s) that have DNS status, they will not go active and will be set an end time equal
+     * to its start time to have a 0 final time, representing the Team not running.
+     *
+     * @return  ArrayList of Run(s) that are associated with this Heat and are not DNS status
+     */
+    public ArrayList<Run> listOfRunsWithoutDNS() {
+        ArrayList<Run> runnableTeams = new ArrayList<>();
+        for (Run run : runs.values()) {
+            if (run.getSitrep() != Sitrep.DNS) {
+                runnableTeams.add(run);
             } else {
                 try {
-                    team.getRunByHeatNumber(heatNumber).calculateEndTime(startTime);
-                } catch (CouldNotCalculateFinalTimeExcpetion couldNotCalculateFinalTimeExcpetion) {
+                    run.calculateEndTime(startTime);
+                } catch (CriticalErrorException criticalErrorException) {
                     // Nothing to be done as this is technically impossible
                 }
             }
@@ -250,7 +301,13 @@ public class Heat {
         return runnableTeams;
     }
 
-    // EFFECTS: return the actual start time as a string, if it has not started return empty string
+    /**
+     * DecimalFormat is used to show the single digit numbers with a leading 0 because when talking about time,
+     * 1 != 01, the 1 would be taken as 10.
+     *
+     * @return  Will return the start time of the Heat as a String, if the Heat has not started then an empty string
+     *              is returned
+     */
     public String startTimeString() {
         if (!hasStarted) {
             return "";
@@ -258,6 +315,18 @@ public class Heat {
         // used to format the time string to two values
         DecimalFormat formatter = new DecimalFormat("00");
         return formatter.format(startTime.get(Calendar.HOUR_OF_DAY)) + ":" + formatter.format(startTime.get(Calendar.MINUTE));
+    }
+
+    /**
+     * DecimalFormat is used to show the single digit numbers with a leading 0 because when talking about time,
+     * 1 != 01, the 1 would be taken as 10.
+     *
+     * @return  Will return the scheduled time of the Heat as a String
+     */
+    public String scheduledTimeString() {
+        // used to set the time string to two values
+        DecimalFormat decimalFormat = new DecimalFormat("00");
+        return decimalFormat.format(scheduledTime.get(Calendar.HOUR_OF_DAY)) + ":" + decimalFormat.format(scheduledTime.get(Calendar.MINUTE));
     }
 
 }

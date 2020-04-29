@@ -1,0 +1,19 @@
+This is some information about the application.
+
+
+Class JavaDoc:
+
+/**
+ * <h3>Represents</h3>
+ *
+ * <h3>Purpose:</h3>
+ *
+ * <h3>Contains:</h3>
+ *   -
+ *
+ * <h3>Usage:</h3>
+ *   -
+ *
+ * <h3>Persistence:</h3>
+ *   -
+ */

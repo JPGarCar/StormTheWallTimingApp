@@ -1,12 +1,6 @@
 package persistance;
 
 import models.RunNumber;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.cfg.Configuration;
-import ui.TimingController;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,7 +9,7 @@ import java.util.Map;
 
 /**
  *  The purpose of this class is to keep track of the running and finished runs, as well as the next heat
- *      this class will be polling the data from the database every second, and will use local data as much as possible
+ *      this class will be polling the data from the database every second, and will use local data as much as possible.
  */
 
 @Entity
