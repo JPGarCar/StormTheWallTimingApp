@@ -1,15 +1,8 @@
 package persistance;
 
-import models.Run;
 import models.RunNumber;
-import models.exceptions.CriticalErrorException;
-import ui.UIAppLogic;
 
 import javax.persistence.*;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,97 +17,84 @@ public class RunPolling {
 
 // VARIABLES //
 
+    @Id
+    private int id;
+
     // represents the runs running right now, using RunNumbers
-    private ArrayList<RunNumber> activeRuns;
+    private ArrayList<RunNumber> runningTeamsRunNumbers;
 
     // represents the finished runs by the RunNumber
-    private ArrayList<RunNumber> finishedRuns;
+    private ArrayList<RunNumber> finishedTeamsRunNumbers;
 
     // represents the next heat to stage, depends on day
-    private int nextHeatToStage;
-
-    Connection connection;
-
-    UIAppLogic controller;
-
-    Statement statement;
+    @ElementCollection(targetClass = Integer.class)
+    private Map<String, Integer> nextHeatToStage;
 
 
 // CONSTRUCTOR //
 
-    public RunPolling(Connection connection, UIAppLogic controller) throws SQLException {
-        this.connection = connection;
-        this.controller = controller;
-        activeRuns = new ArrayList();
-        finishedRuns = new ArrayList();
-        statement = connection.createStatement();
+    public RunPolling() {
+        id = 0;
+        runningTeamsRunNumbers = new ArrayList();
+        finishedTeamsRunNumbers = new ArrayList();
+        nextHeatToStage = new HashMap<>();
     }
 
 // GETTERS AND SETTERS //
 
 
-    public ArrayList<RunNumber> getActiveRuns() {
-        return activeRuns;
+    public ArrayList<RunNumber> getRunningTeamsRunNumbers() {
+        return runningTeamsRunNumbers;
     }
 
-    public void setActiveRuns(ArrayList<RunNumber> activeRuns) {
-        this.activeRuns = activeRuns;
+    public void setRunningTeamsRunNumbers(ArrayList<RunNumber> runningTeamsRunNumbers) {
+        this.runningTeamsRunNumbers = runningTeamsRunNumbers;
     }
 
-    public ArrayList<RunNumber> getFinishedRuns() {
-        return finishedRuns;
+    public ArrayList<RunNumber> getFinishedTeamsRunNumbers() {
+        return finishedTeamsRunNumbers;
     }
 
-    public void setFinishedRuns(ArrayList<RunNumber> finishedRuns) {
-        this.finishedRuns = finishedRuns;
+    public void setFinishedTeamsRunNumbers(ArrayList<RunNumber> finishedTeamsRunNumbers) {
+        this.finishedTeamsRunNumbers = finishedTeamsRunNumbers;
     }
 
-    public int getNextHeatToStage() {
+    public Map<String, Integer> getNextHeatToStage() {
         return nextHeatToStage;
     }
 
-    public void setNextHeatToStage(int nextHeatToStage) {
+    public void setNextHeatToStage(Map<String, Integer> nextHeatToStage) {
         this.nextHeatToStage = nextHeatToStage;
     }
 
 // FUNCTIONS //
 
-    /**
-     * Grabs the active and finished Run(s) from the database and adds them to the UI lists.
-     */
-    public void initialDataGrab() throws SQLException, CriticalErrorException {
-        ResultSet rs = statement.executeQuery("SELECT * FROM activeRuns");
-        while (rs.next()) {
-            String str = rs.getString(0);
-            RunNumber runNumber = new RunNumber(Integer.parseInt(str.substring(0, str.indexOf("-"))),
-                    Integer.parseInt(str.substring(str.indexOf("-") + 1)));
-
-            controller.addActiveRun(
-                    controller.getProgram().getAllTeams().get(
-                            runNumber.getTeamNumber()).getRunByHeatNumber(runNumber.getHeatNumber()));
-        }
-        controller.getUiController().updateActiveRunList();
-
-        rs = statement.executeQuery("SELECT * FROM finishedRuns");
-        while (rs.next()) {
-            String str = rs.getString(0);
-            RunNumber runNumber = new RunNumber(Integer.parseInt(str.substring(0, str.indexOf("-"))),
-                    Integer.parseInt(str.substring(str.indexOf("-") + 1)));
-
-            controller.addFinishedRun(
-                    controller.getProgram().getAllTeams().get(
-                            runNumber.getTeamNumber()).getRunByHeatNumber(runNumber.getHeatNumber()));
-        }
-        controller.getUiController().updateFinishedRunList();
-        rs.close();
-        // TODO next heat to stage
+    // EFFECTS: add a RunNumber to running runs
+    public void addRunToRunning(RunNumber runNumber) {
+        runningTeamsRunNumbers.add(runNumber);
     }
 
-    /**
-     *
-     */
-    public void poll() {
-
+    // EFFECTS: remove a RunNumber from running runs
+    public void removeRunFromRunning(RunNumber runNumber) {
+        runningTeamsRunNumbers.remove(runNumber);
     }
+
+    // EFFECTS: add a RunNumber to finished runs
+    public void addRunToFinished(RunNumber runNumber) {
+        finishedTeamsRunNumbers.add(runNumber);
+    }
+
+    // EFFECTS: remove a runNumber from the finished runs
+    public void removeRunFromFinished(RunNumber runNumber) {
+        finishedTeamsRunNumbers.remove(runNumber);
+    }
+
+    // EFFECTS: will update the heat to stage for a certain day
+    public void updateNextHeat(String day, int nextHeat) {
+        nextHeatToStage.remove(day);
+        nextHeatToStage.put(day, nextHeat);
+    }
+
+
 
 }
