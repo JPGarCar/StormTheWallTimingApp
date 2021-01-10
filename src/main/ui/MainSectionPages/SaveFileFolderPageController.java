@@ -53,8 +53,8 @@ public class SaveFileFolderPageController extends UIController {
                     "program's data, please use the previous button to choose a folder.", "Please choose a " +
                     "folder");
         } else {
-            FXMLLoader root = new FXMLLoader(getClass().getResource("/ui/MainSectionPages/RaceChooserPage.fxml"));
-            root.setControllerFactory(c -> new RaceChooserPageController(pathToUse));
+            FXMLLoader root = new FXMLLoader(getClass().getResource("/ui/MainSectionPages/OnlineOfflineSelectionPage.fxml"));
+            root.setControllerFactory(c -> new OnlineOfflineSelectionPageController(pathToUse));
 
             try {
                 confirmAndMoveOnButton.getScene().setRoot(root.load());

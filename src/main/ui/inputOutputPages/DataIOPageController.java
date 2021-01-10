@@ -155,8 +155,17 @@ public class DataIOPageController extends UIController {
                 "Action Was Successful");
     }
 
+    /**
+     * Button will import the data from the database and override any local data stored.
+     * Need to warn user about local data being scrapped!
+     *
+     * This button is for the offline mode (NO constant communication) but you still want to
+     * download the online data once to then use offline.
+     *
+     * Will need to add an upload button to upload the new data from this local save to the database.
+     */
     @FXML
-    private void connectToDBActionButton() {
+    private void importFromDBActionButton() {
     }
 
     /**
